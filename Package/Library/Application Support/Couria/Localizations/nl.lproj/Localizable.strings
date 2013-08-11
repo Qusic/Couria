@@ -1,0 +1,25 @@
+"CLOSE" = "Sluiten";
+"SEND" = "Stuur";
+"REPLY" = "Beantwoorden";
+"READ" = "Lees";
+"OPEN" = "Openen";
+"PASSCODE" = "Codeslot";
+
+"PHOTO" = "Foto";
+"MOVIE" = "Video";
+"TAP_TO_VIEW" = "Tap om te bekijken";
+
+"CAMERA" = "Camera";
+"LIBRARY" = "Filmrol";
+"DOODLE" = "Doodle";
+"VIEW" = "Bekijken";
+"REMOVE" = "Verwijderen";
+
+"OK" = "OK";
+"CANCEL" = "Annuleer";
+
+"CAMERA_NOT_AVAILABLE" = "Camera is niet beschikbaar.";
+"LIBRARY_NOT_AVAILABLE" = "Filmrol is niet beschikbaar.";
+"DOODLE_NOT_AVAILABLE" = "Doodle is niet beschikbaar. Probeer het alstublieft opnieuw na het installeren van Doodle Message vanuit Cydia.";
+
+"ACTIVATOR_LISTENER_DESCRIPTION" = "Start Couria berichtencomposer";

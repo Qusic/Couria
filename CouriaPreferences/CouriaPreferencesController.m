@@ -29,7 +29,7 @@
             [extensionSpecifier setProperty:[UIImage _applicationIconImageForBundleIdentifier:extensionIdentifier format:0 scale:[UIScreen mainScreen].scale] forKey:@"iconImage"];
             _extensions[extensionIdentifier] = extensionSpecifier;
         }
-        
+
         _themes = [NSMutableDictionary dictionary];
         NSArray *themeIdentifiers = CouriaPreferencesGetThemes();
         for (NSString *themeIdentifier in themeIdentifiers) {
@@ -41,7 +41,7 @@
             [themeSpecifier setIdentifier:themeIdentifier];
             _themes[themeIdentifier] = themeSpecifier;
         }
-        
+
         _translationCredits = [NSMutableArray array];
         for (NSString *string in [[self.class translationCreditsData].allKeys sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]) {
             PSSpecifier *dataSpecifier = [PSSpecifier preferenceSpecifierNamed:string
@@ -106,7 +106,7 @@
         [translationCredits setIdentifier:@"TranslationCredits"];
         translationCredits->action = @selector(doActionForSpecifier:);
         [specifiers addObjectsFromArray:@[about, twitter, donate, translationCredits]];
-        
+
         _specifiers = specifiers;
     }
 	return _specifiers;
@@ -151,8 +151,10 @@
 
 + (NSDictionary *)translationCreditsData
 {
-    return @{@"Italiano": @"Bruno Di Marco",
-             @"Deutsch": @"Tim Klute",
+    return @{@"Deutsch": @"Tim Klute",
+             @"Italiano": @"Bruno Di Marco",
+             @"Nederlands": @"Alphyraz",
+             @"繁體中文": @"Hiraku",
              @"العربية": @"Mohamed El Fawal"};
 }
 

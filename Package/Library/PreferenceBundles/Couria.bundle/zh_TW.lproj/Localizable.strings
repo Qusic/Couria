@@ -1,0 +1,16 @@
+"EXTENSIONS" = "外掛";
+"THEMES" = "主題";
+"NO_INSTALLED_ITEMS" = "沒有已安裝的項目";
+
+"ABOUT" = "關於";
+"TWITTER" = "關註 @QusicS 的推特";
+"DONATE" = "捐赠";
+"TRANSLATION_CREDITS" = "翻譯感謝名單";
+"SHARE_TEXT" = "我很喜歡 #Couria# 。他為 iOS 帶來了一個集中且可客製快速回覆與快速編寫訊息的平台。";
+
+"ENABLED" = "啟用";
+"THEME" = "主題";
+"PASSCODE" = "密碼";
+"REQUIRE_WHEN_LOCKED" = "鎖定畫面時啟用";
+"REQUIRE_WHEN_UNLOCKED" = "解鎖時啟用";
+"OTHER_PREFERENCES" = "其它設定";
