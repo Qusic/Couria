@@ -1,0 +1,25 @@
+"CLOSE" = "Close";
+"SEND" = "Send";
+"REPLY" = "Reply";
+"READ" = "Read";
+"OPEN" = "Open";
+"PASSCODE" = "Passcode";
+
+"PHOTO" = "Photo";
+"MOVIE" = "Movie";
+"TAP_TO_VIEW" = "Tap to View";
+
+"CAMERA" = "Camera";
+"LIBRARY" = "Library";
+"DOODLE" = "Doodle";
+"VIEW" = "View";
+"REMOVE" = "Remove";
+
+"OK" = "OK";
+"CANCEL" = "Cancel";
+
+"CAMERA_NOT_AVAILABLE" = "Camera is not available.";
+"LIBRARY_NOT_AVAILABLE" = "Library is not available.";
+"DOODLE_NOT_AVAILABLE" = "Doodle is not available. Please try again after installing Doodle Message from Cydia.";
+
+"ACTIVATOR_LISTENER_DESCRIPTION" = "Launch Couria message composer";

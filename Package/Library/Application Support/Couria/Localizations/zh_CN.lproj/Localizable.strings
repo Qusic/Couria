@@ -1,0 +1,25 @@
+"CLOSE" = "关闭";
+"SEND" = "发送";
+"REPLY" = "回复";
+"READ" = "已读";
+"OPEN" = "打开";
+"PASSCODE" = "密码";
+
+"PHOTO" = "照片";
+"MOVIE" = "录像";
+"TAP_TO_VIEW" = "点击查看";
+
+"CAMERA" = "相机";
+"LIBRARY" = "相册";
+"DOODLE" = "涂鸦";
+"VIEW" = "查看";
+"REMOVE" = "移除";
+
+"OK" = "确定";
+"CANCEL" = "取消";
+
+"CAMERA_NOT_AVAILABLE" = "相机功能当前不可用。";
+"LIBRARY_NOT_AVAILABLE" = "相册功能当前不可用。";
+"DOODLE_NOT_AVAILABLE" = "涂鸦功能当前不可用。请从 Cydia 安装 Doodle Message 后再试。";
+
+"ACTIVATOR_LISTENER_DESCRIPTION" = "启动 Couria 消息编写器";

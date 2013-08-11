@@ -1,0 +1,832 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FE01E1B6179FF72A00ACC80E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE611B53175E1219004E5A8E /* Foundation.framework */; };
+		FE01E1B7179FF72A00ACC80E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE611B74175E267E004E5A8E /* UIKit.framework */; };
+		FE01E1C2179FF72A00ACC80E /* CouriaWidgetController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE01E1C1179FF72A00ACC80E /* CouriaWidgetController.m */; };
+		FE01E1D617A021FC00ACC80E /* AppSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF5B3D817953EA20051BD2D /* AppSupport.framework */; };
+		FE01E1D717A0308000ACC80E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEFE56A2178D3A67007C8C6B /* CoreGraphics.framework */; };
+		FE458278179148C600D94E0F /* CouriaFieldView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE458277179148C600D94E0F /* CouriaFieldView.m */; };
+		FE611B54175E1219004E5A8E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE611B53175E1219004E5A8E /* Foundation.framework */; };
+		FE611B64175E1219004E5A8E /* Couria-Hooks.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE611B63175E1219004E5A8E /* Couria-Hooks.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		FE611B6F175E13FA004E5A8E /* Couria-Localization.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE611B6E175E13FA004E5A8E /* Couria-Localization.mm */; };
+		FE611B73175E1530004E5A8E /* Couria.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE611B71175E1530004E5A8E /* Couria.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		FE611B75175E267E004E5A8E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE611B74175E267E004E5A8E /* UIKit.framework */; };
+		FE9BA28A17AFD77400E8245F /* CouriaImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9BA28917AFD77300E8245F /* CouriaImageView.m */; };
+		FE9BA28D17AFF0F600E8245F /* CouriaSoundEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9BA28C17AFF0F600E8245F /* CouriaSoundEffect.m */; };
+		FE9BA28F17AFF2D600E8245F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE9BA28E17AFF2D500E8245F /* AudioToolbox.framework */; };
+		FEA5F9F1179977C500EF6488 /* CouriaAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA5F9F0179977C500EF6488 /* CouriaAlertView.m */; };
+		FEA5F9F4179A45DC00EF6488 /* CouriaView.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA5F9F3179A45DC00EF6488 /* CouriaView.m */; };
+		FEA5F9F7179A70DE00EF6488 /* CouriaMoviePlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA5F9F6179A70DE00EF6488 /* CouriaMoviePlayerController.m */; };
+		FEB08C351793FFFB00F5EA73 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEB08C341793FFFB00F5EA73 /* QuartzCore.framework */; };
+		FEB08C381794133A00F5EA73 /* CALayer+Couria.m in Sources */ = {isa = PBXBuildFile; fileRef = FEB08C371794133A00F5EA73 /* CALayer+Couria.m */; };
+		FEBF531C178C56A500ADF27F /* CouriaController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBF531A178C56A500ADF27F /* CouriaController.m */; };
+		FEBF5333178C5E8800ADF27F /* UIImage+Couria.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBF5331178C5E8800ADF27F /* UIImage+Couria.m */; };
+		FEBF533C178C77FF00ADF27F /* CouriaTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBF533A178C77FF00ADF27F /* CouriaTheme.m */; };
+		FEDBB19717B0ADE40025AD3C /* CouriaActivatorListener.m in Sources */ = {isa = PBXBuildFile; fileRef = FEDBB19617B0ADE40025AD3C /* CouriaActivatorListener.m */; };
+		FEE5C8B51792981B0007C13F /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEE5C8B41792981B0007C13F /* MobileCoreServices.framework */; };
+		FEE5C8BE1792B1210007C13F /* CouriaImageViewerController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEE5C8BD1792B1210007C13F /* CouriaImageViewerController.m */; };
+		FEE5C8C11792E9AC0007C13F /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEE5C8C01792E9AC0007C13F /* MediaPlayer.framework */; };
+		FEE5C8C51792F7670007C13F /* CouriaMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = FEE5C8C41792F7670007C13F /* CouriaMessage.m */; };
+		FEE5C8C81792F98D0007C13F /* CouriaContactsView.m in Sources */ = {isa = PBXBuildFile; fileRef = FEE5C8C71792F98C0007C13F /* CouriaContactsView.m */; };
+		FEF5B3AB179450C10051BD2D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE611B53175E1219004E5A8E /* Foundation.framework */; };
+		FEF5B3AC179450C10051BD2D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE611B74175E267E004E5A8E /* UIKit.framework */; };
+		FEF5B3BE179450C10051BD2D /* CouriaPreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF5B3BD179450C10051BD2D /* CouriaPreferencesController.m */; };
+		FEF5B3D41795140C0051BD2D /* Preferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF5B3D31795140C0051BD2D /* Preferences.framework */; };
+		FEF5B3D917953EA20051BD2D /* AppSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF5B3D817953EA20051BD2D /* AppSupport.framework */; };
+		FEF5B3DA17953EB40051BD2D /* AppSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF5B3D817953EA20051BD2D /* AppSupport.framework */; };
+		FEF5B3DD179550AF0051BD2D /* CouriaExtensionPreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF5B3DC179550AE0051BD2D /* CouriaExtensionPreferencesController.m */; };
+		FEF5B3E0179567680051BD2D /* CouriaPreferences-Localization.mm in Sources */ = {isa = PBXBuildFile; fileRef = FEF5B3DF179567680051BD2D /* CouriaPreferences-Localization.mm */; };
+		FEF5B3E317957DAC0051BD2D /* CouriaPreferences.mm in Sources */ = {isa = PBXBuildFile; fileRef = FEF5B3E217957DAC0051BD2D /* CouriaPreferences.mm */; };
+		FEF5B3EA179595A90051BD2D /* CouriaCustomPreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF5B3E9179595A90051BD2D /* CouriaCustomPreferencesController.m */; };
+		FEF5B3EC1795B6090051BD2D /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF5B3EB1795B6090051BD2D /* Social.framework */; };
+		FEFE569B178D19F2007C8C6B /* UIColor+Couria.m in Sources */ = {isa = PBXBuildFile; fileRef = FEFE569A178D19F2007C8C6B /* UIColor+Couria.m */; };
+		FEFE56A3178D3A68007C8C6B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEFE56A2178D3A67007C8C6B /* CoreGraphics.framework */; };
+		FEFE56A8178D3E3E007C8C6B /* UIView+Couria.m in Sources */ = {isa = PBXBuildFile; fileRef = FEFE56A7178D3E3D007C8C6B /* UIView+Couria.m */; };
+		FEFE56B3178D569F007C8C6B /* CouriaMessagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = FEFE56B2178D569E007C8C6B /* CouriaMessagesView.m */; };
+		FEFE56B6178D7379007C8C6B /* CouriaMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = FEFE56B5178D7378007C8C6B /* CouriaMessageView.m */; };
+		FEFE56D3178D9F3A007C8C6B /* CouriaMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FEFE56D2178D9F39007C8C6B /* CouriaMessageCell.m */; };
+		FEFE56D6178DC0EB007C8C6B /* NSString+Couria.m in Sources */ = {isa = PBXBuildFile; fileRef = FEFE56D5178DC0E9007C8C6B /* NSString+Couria.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		FE01E1B5179FF72A00ACC80E /* CouriaWidget */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = CouriaWidget; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE01E1BF179FF72A00ACC80E /* CouriaWidget-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CouriaWidget-Prefix.pch"; sourceTree = "<group>"; };
+		FE01E1C0179FF72A00ACC80E /* CouriaWidgetController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CouriaWidgetController.h; sourceTree = "<group>"; };
+		FE01E1C1179FF72A00ACC80E /* CouriaWidgetController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CouriaWidgetController.m; sourceTree = "<group>"; };
+		FE458276179148C600D94E0F /* CouriaFieldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaFieldView.h; sourceTree = "<group>"; };
+		FE458277179148C600D94E0F /* CouriaFieldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaFieldView.m; sourceTree = "<group>"; };
+		FE611B50175E1219004E5A8E /* Couria.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = Couria.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE611B53175E1219004E5A8E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		FE611B62175E1219004E5A8E /* Couria-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Couria-Prefix.pch"; sourceTree = "<group>"; };
+		FE611B63175E1219004E5A8E /* Couria-Hooks.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = "Couria-Hooks.mm"; sourceTree = "<group>"; };
+		FE611B6D175E13A4004E5A8E /* Headers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Headers.h; sourceTree = "<group>"; };
+		FE611B6E175E13FA004E5A8E /* Couria-Localization.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "Couria-Localization.mm"; sourceTree = "<group>"; };
+		FE611B71175E1530004E5A8E /* Couria.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Couria.mm; sourceTree = "<group>"; };
+		FE611B74175E267E004E5A8E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		FE9AB38C17B739C80097B078 /* Package */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Package; sourceTree = "<group>"; };
+		FE9BA28817AFD77200E8245F /* CouriaImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaImageView.h; sourceTree = "<group>"; };
+		FE9BA28917AFD77300E8245F /* CouriaImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaImageView.m; sourceTree = "<group>"; };
+		FE9BA28B17AFF0F600E8245F /* CouriaSoundEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaSoundEffect.h; sourceTree = "<group>"; };
+		FE9BA28C17AFF0F600E8245F /* CouriaSoundEffect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaSoundEffect.m; sourceTree = "<group>"; };
+		FE9BA28E17AFF2D500E8245F /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		FEA5F9EF179977C500EF6488 /* CouriaAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaAlertView.h; sourceTree = "<group>"; };
+		FEA5F9F0179977C500EF6488 /* CouriaAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaAlertView.m; sourceTree = "<group>"; };
+		FEA5F9F2179A45DB00EF6488 /* CouriaView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaView.h; sourceTree = "<group>"; };
+		FEA5F9F3179A45DC00EF6488 /* CouriaView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaView.m; sourceTree = "<group>"; };
+		FEA5F9F5179A70DD00EF6488 /* CouriaMoviePlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaMoviePlayerController.h; sourceTree = "<group>"; };
+		FEA5F9F6179A70DE00EF6488 /* CouriaMoviePlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaMoviePlayerController.m; sourceTree = "<group>"; };
+		FEB08C341793FFFB00F5EA73 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		FEB08C361794133A00F5EA73 /* CALayer+Couria.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CALayer+Couria.h"; sourceTree = "<group>"; };
+		FEB08C371794133A00F5EA73 /* CALayer+Couria.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CALayer+Couria.m"; sourceTree = "<group>"; };
+		FEBF5319178C56A500ADF27F /* CouriaController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaController.h; sourceTree = "<group>"; };
+		FEBF531A178C56A500ADF27F /* CouriaController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaController.m; sourceTree = "<group>"; };
+		FEBF5330178C5E8800ADF27F /* UIImage+Couria.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Couria.h"; sourceTree = "<group>"; };
+		FEBF5331178C5E8800ADF27F /* UIImage+Couria.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Couria.m"; sourceTree = "<group>"; };
+		FEBF5339178C77FF00ADF27F /* CouriaTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaTheme.h; sourceTree = "<group>"; };
+		FEBF533A178C77FF00ADF27F /* CouriaTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaTheme.m; sourceTree = "<group>"; };
+		FEDBB19517B0ADE40025AD3C /* CouriaActivatorListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaActivatorListener.h; sourceTree = "<group>"; };
+		FEDBB19617B0ADE40025AD3C /* CouriaActivatorListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaActivatorListener.m; sourceTree = "<group>"; };
+		FEE5C8B41792981B0007C13F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		FEE5C8BC1792B1210007C13F /* CouriaImageViewerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaImageViewerController.h; sourceTree = "<group>"; };
+		FEE5C8BD1792B1210007C13F /* CouriaImageViewerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaImageViewerController.m; sourceTree = "<group>"; };
+		FEE5C8C01792E9AC0007C13F /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		FEE5C8C31792F7670007C13F /* CouriaMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaMessage.h; sourceTree = "<group>"; };
+		FEE5C8C41792F7670007C13F /* CouriaMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaMessage.m; sourceTree = "<group>"; };
+		FEE5C8C61792F98C0007C13F /* CouriaContactsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaContactsView.h; sourceTree = "<group>"; };
+		FEE5C8C71792F98C0007C13F /* CouriaContactsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaContactsView.m; sourceTree = "<group>"; };
+		FEF5B3AA179450C10051BD2D /* Couria.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Couria.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		FEF5B3BB179450C10051BD2D /* CouriaPreferences-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CouriaPreferences-Info.plist"; sourceTree = "<group>"; };
+		FEF5B3BC179450C10051BD2D /* CouriaPreferencesController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CouriaPreferencesController.h; sourceTree = "<group>"; };
+		FEF5B3BD179450C10051BD2D /* CouriaPreferencesController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CouriaPreferencesController.m; sourceTree = "<group>"; usesTabs = 0; wrapsLines = 1; };
+		FEF5B3C9179450C10051BD2D /* CouriaPreferences-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CouriaPreferences-Prefix.pch"; sourceTree = "<group>"; };
+		FEF5B3D31795140C0051BD2D /* Preferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Preferences.framework; path = System/Library/PrivateFrameworks/Preferences.framework; sourceTree = SDKROOT; };
+		FEF5B3D817953EA20051BD2D /* AppSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppSupport.framework; path = System/Library/PrivateFrameworks/AppSupport.framework; sourceTree = SDKROOT; };
+		FEF5B3DB179550AE0051BD2D /* CouriaExtensionPreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaExtensionPreferencesController.h; sourceTree = "<group>"; };
+		FEF5B3DC179550AE0051BD2D /* CouriaExtensionPreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaExtensionPreferencesController.m; sourceTree = "<group>"; };
+		FEF5B3DF179567680051BD2D /* CouriaPreferences-Localization.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "CouriaPreferences-Localization.mm"; sourceTree = "<group>"; };
+		FEF5B3E217957DAC0051BD2D /* CouriaPreferences.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CouriaPreferences.mm; sourceTree = "<group>"; };
+		FEF5B3E417957F620051BD2D /* Couria.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Couria.h; sourceTree = "<group>"; };
+		FEF5B3E8179595A90051BD2D /* CouriaCustomPreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaCustomPreferencesController.h; sourceTree = "<group>"; };
+		FEF5B3E9179595A90051BD2D /* CouriaCustomPreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaCustomPreferencesController.m; sourceTree = "<group>"; };
+		FEF5B3EB1795B6090051BD2D /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		FEFE5699178D19F2007C8C6B /* UIColor+Couria.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Couria.h"; sourceTree = "<group>"; };
+		FEFE569A178D19F2007C8C6B /* UIColor+Couria.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Couria.m"; sourceTree = "<group>"; };
+		FEFE56A2178D3A67007C8C6B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		FEFE56A6178D3E3D007C8C6B /* UIView+Couria.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Couria.h"; sourceTree = "<group>"; };
+		FEFE56A7178D3E3D007C8C6B /* UIView+Couria.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Couria.m"; sourceTree = "<group>"; };
+		FEFE56B1178D569E007C8C6B /* CouriaMessagesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaMessagesView.h; sourceTree = "<group>"; };
+		FEFE56B2178D569E007C8C6B /* CouriaMessagesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaMessagesView.m; sourceTree = "<group>"; };
+		FEFE56B4178D7378007C8C6B /* CouriaMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaMessageView.h; sourceTree = "<group>"; };
+		FEFE56B5178D7378007C8C6B /* CouriaMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaMessageView.m; sourceTree = "<group>"; };
+		FEFE56D1178D9F37007C8C6B /* CouriaMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaMessageCell.h; sourceTree = "<group>"; };
+		FEFE56D2178D9F39007C8C6B /* CouriaMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaMessageCell.m; sourceTree = "<group>"; };
+		FEFE56D4178DC0E9007C8C6B /* NSString+Couria.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Couria.h"; sourceTree = "<group>"; };
+		FEFE56D5178DC0E9007C8C6B /* NSString+Couria.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Couria.m"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FE01E1B1179FF72A00ACC80E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE01E1B6179FF72A00ACC80E /* Foundation.framework in Frameworks */,
+				FE01E1B7179FF72A00ACC80E /* UIKit.framework in Frameworks */,
+				FE01E1D617A021FC00ACC80E /* AppSupport.framework in Frameworks */,
+				FE01E1D717A0308000ACC80E /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE611B4C175E1219004E5A8E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE9BA28F17AFF2D600E8245F /* AudioToolbox.framework in Frameworks */,
+				FEB08C351793FFFB00F5EA73 /* QuartzCore.framework in Frameworks */,
+				FEE5C8C11792E9AC0007C13F /* MediaPlayer.framework in Frameworks */,
+				FEE5C8B51792981B0007C13F /* MobileCoreServices.framework in Frameworks */,
+				FEFE56A3178D3A68007C8C6B /* CoreGraphics.framework in Frameworks */,
+				FE611B75175E267E004E5A8E /* UIKit.framework in Frameworks */,
+				FE611B54175E1219004E5A8E /* Foundation.framework in Frameworks */,
+				FEF5B3D917953EA20051BD2D /* AppSupport.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FEF5B3A6179450C10051BD2D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FEF5B3EC1795B6090051BD2D /* Social.framework in Frameworks */,
+				FEF5B3AB179450C10051BD2D /* Foundation.framework in Frameworks */,
+				FEF5B3AC179450C10051BD2D /* UIKit.framework in Frameworks */,
+				FEF5B3D41795140C0051BD2D /* Preferences.framework in Frameworks */,
+				FEF5B3DA17953EB40051BD2D /* AppSupport.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FE01E1B8179FF72A00ACC80E /* CouriaWidget */ = {
+			isa = PBXGroup;
+			children = (
+				FE01E1C0179FF72A00ACC80E /* CouriaWidgetController.h */,
+				FE01E1C1179FF72A00ACC80E /* CouriaWidgetController.m */,
+				FE01E1BD179FF72A00ACC80E /* Supporting Files */,
+			);
+			path = CouriaWidget;
+			sourceTree = "<group>";
+		};
+		FE01E1BD179FF72A00ACC80E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FE01E1BF179FF72A00ACC80E /* CouriaWidget-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FE611B46175E1219004E5A8E = {
+			isa = PBXGroup;
+			children = (
+				FEF5B3E417957F620051BD2D /* Couria.h */,
+				FE611B55175E1219004E5A8E /* Couria */,
+				FEF5B3AE179450C10051BD2D /* CouriaPreferences */,
+				FE01E1B8179FF72A00ACC80E /* CouriaWidget */,
+				FE611B52175E1219004E5A8E /* Frameworks */,
+				FE9AB38C17B739C80097B078 /* Package */,
+				FE611B51175E1219004E5A8E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FE611B51175E1219004E5A8E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FE611B50175E1219004E5A8E /* Couria.dylib */,
+				FEF5B3AA179450C10051BD2D /* Couria.bundle */,
+				FE01E1B5179FF72A00ACC80E /* CouriaWidget */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FE611B52175E1219004E5A8E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FE611B6D175E13A4004E5A8E /* Headers.h */,
+				FE9BA28E17AFF2D500E8245F /* AudioToolbox.framework */,
+				FE611B74175E267E004E5A8E /* UIKit.framework */,
+				FE611B53175E1219004E5A8E /* Foundation.framework */,
+				FEF5B3D817953EA20051BD2D /* AppSupport.framework */,
+				FEFE56A2178D3A67007C8C6B /* CoreGraphics.framework */,
+				FEB08C341793FFFB00F5EA73 /* QuartzCore.framework */,
+				FEE5C8B41792981B0007C13F /* MobileCoreServices.framework */,
+				FEE5C8C01792E9AC0007C13F /* MediaPlayer.framework */,
+				FEF5B3D31795140C0051BD2D /* Preferences.framework */,
+				FEF5B3EB1795B6090051BD2D /* Social.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FE611B55175E1219004E5A8E /* Couria */ = {
+			isa = PBXGroup;
+			children = (
+				FE611B71175E1530004E5A8E /* Couria.mm */,
+				FE611B63175E1219004E5A8E /* Couria-Hooks.mm */,
+				FE611B6E175E13FA004E5A8E /* Couria-Localization.mm */,
+				FEBF531D178C571D00ADF27F /* UI */,
+				FEE5C8C21792F7370007C13F /* Objects */,
+				FEDBB19817B0ADFA0025AD3C /* Others */,
+				FE611B5A175E1219004E5A8E /* Supporting Files */,
+			);
+			path = Couria;
+			sourceTree = "<group>";
+		};
+		FE611B5A175E1219004E5A8E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FE611B62175E1219004E5A8E /* Couria-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FEBF5318178C568300ADF27F /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				FEBF5319178C56A500ADF27F /* CouriaController.h */,
+				FEBF531A178C56A500ADF27F /* CouriaController.m */,
+				FEE5C8BC1792B1210007C13F /* CouriaImageViewerController.h */,
+				FEE5C8BD1792B1210007C13F /* CouriaImageViewerController.m */,
+				FEA5F9F5179A70DD00EF6488 /* CouriaMoviePlayerController.h */,
+				FEA5F9F6179A70DE00EF6488 /* CouriaMoviePlayerController.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		FEBF531D178C571D00ADF27F /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				FEBF5318178C568300ADF27F /* Controllers */,
+				FEBF531E178C572800ADF27F /* Views */,
+				FEBF532F178C5E5F00ADF27F /* Categories */,
+				FEFE5681178C8C96007C8C6B /* Others */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		FEBF531E178C572800ADF27F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FEA5F9F2179A45DB00EF6488 /* CouriaView.h */,
+				FEA5F9F3179A45DC00EF6488 /* CouriaView.m */,
+				FEA5F9EF179977C500EF6488 /* CouriaAlertView.h */,
+				FEA5F9F0179977C500EF6488 /* CouriaAlertView.m */,
+				FE9BA28817AFD77200E8245F /* CouriaImageView.h */,
+				FE9BA28917AFD77300E8245F /* CouriaImageView.m */,
+				FEFE56B1178D569E007C8C6B /* CouriaMessagesView.h */,
+				FEFE56B2178D569E007C8C6B /* CouriaMessagesView.m */,
+				FEFE56B4178D7378007C8C6B /* CouriaMessageView.h */,
+				FEFE56B5178D7378007C8C6B /* CouriaMessageView.m */,
+				FEFE56D1178D9F37007C8C6B /* CouriaMessageCell.h */,
+				FEFE56D2178D9F39007C8C6B /* CouriaMessageCell.m */,
+				FE458276179148C600D94E0F /* CouriaFieldView.h */,
+				FE458277179148C600D94E0F /* CouriaFieldView.m */,
+				FEE5C8C61792F98C0007C13F /* CouriaContactsView.h */,
+				FEE5C8C71792F98C0007C13F /* CouriaContactsView.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		FEBF532F178C5E5F00ADF27F /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				FEBF5330178C5E8800ADF27F /* UIImage+Couria.h */,
+				FEBF5331178C5E8800ADF27F /* UIImage+Couria.m */,
+				FEFE5699178D19F2007C8C6B /* UIColor+Couria.h */,
+				FEFE569A178D19F2007C8C6B /* UIColor+Couria.m */,
+				FEFE56A6178D3E3D007C8C6B /* UIView+Couria.h */,
+				FEFE56A7178D3E3D007C8C6B /* UIView+Couria.m */,
+				FEB08C361794133A00F5EA73 /* CALayer+Couria.h */,
+				FEB08C371794133A00F5EA73 /* CALayer+Couria.m */,
+				FEFE56D4178DC0E9007C8C6B /* NSString+Couria.h */,
+				FEFE56D5178DC0E9007C8C6B /* NSString+Couria.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
+		FEDBB19817B0ADFA0025AD3C /* Others */ = {
+			isa = PBXGroup;
+			children = (
+				FEDBB19517B0ADE40025AD3C /* CouriaActivatorListener.h */,
+				FEDBB19617B0ADE40025AD3C /* CouriaActivatorListener.m */,
+			);
+			name = Others;
+			sourceTree = "<group>";
+		};
+		FEE5C8C21792F7370007C13F /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				FEE5C8C31792F7670007C13F /* CouriaMessage.h */,
+				FEE5C8C41792F7670007C13F /* CouriaMessage.m */,
+			);
+			name = Objects;
+			sourceTree = "<group>";
+		};
+		FEF5B3AE179450C10051BD2D /* CouriaPreferences */ = {
+			isa = PBXGroup;
+			children = (
+				FEF5B3E217957DAC0051BD2D /* CouriaPreferences.mm */,
+				FEF5B3DF179567680051BD2D /* CouriaPreferences-Localization.mm */,
+				FEF5B3BC179450C10051BD2D /* CouriaPreferencesController.h */,
+				FEF5B3BD179450C10051BD2D /* CouriaPreferencesController.m */,
+				FEF5B3DB179550AE0051BD2D /* CouriaExtensionPreferencesController.h */,
+				FEF5B3DC179550AE0051BD2D /* CouriaExtensionPreferencesController.m */,
+				FEF5B3E8179595A90051BD2D /* CouriaCustomPreferencesController.h */,
+				FEF5B3E9179595A90051BD2D /* CouriaCustomPreferencesController.m */,
+				FEF5B3B3179450C10051BD2D /* Supporting Files */,
+			);
+			path = CouriaPreferences;
+			sourceTree = "<group>";
+		};
+		FEF5B3B3179450C10051BD2D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FEF5B3BB179450C10051BD2D /* CouriaPreferences-Info.plist */,
+				FEF5B3C9179450C10051BD2D /* CouriaPreferences-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FEFE5681178C8C96007C8C6B /* Others */ = {
+			isa = PBXGroup;
+			children = (
+				FEBF5339178C77FF00ADF27F /* CouriaTheme.h */,
+				FEBF533A178C77FF00ADF27F /* CouriaTheme.m */,
+				FE9BA28B17AFF0F600E8245F /* CouriaSoundEffect.h */,
+				FE9BA28C17AFF0F600E8245F /* CouriaSoundEffect.m */,
+			);
+			name = Others;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FE01E1B4179FF72A00ACC80E /* CouriaWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FE01E1CD179FF72A00ACC80E /* Build configuration list for PBXNativeTarget "CouriaWidget" */;
+			buildPhases = (
+				FE01E1B0179FF72A00ACC80E /* Sources */,
+				FE01E1B1179FF72A00ACC80E /* Frameworks */,
+				FE01E1D517A00ECE00ACC80E /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CouriaWidget;
+			productName = CouriaWidget;
+			productReference = FE01E1B5179FF72A00ACC80E /* CouriaWidget */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		FE611B4F175E1219004E5A8E /* Couria */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FE611B6A175E1219004E5A8E /* Build configuration list for PBXNativeTarget "Couria" */;
+			buildPhases = (
+				FE611B4B175E1219004E5A8E /* Sources */,
+				FE611B4C175E1219004E5A8E /* Frameworks */,
+				FE611B4E175E1219004E5A8E /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Couria;
+			productName = Couria;
+			productReference = FE611B50175E1219004E5A8E /* Couria.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		FEF5B3A9179450C10051BD2D /* CouriaPreferences */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FEF5B3CA179450C10051BD2D /* Build configuration list for PBXNativeTarget "CouriaPreferences" */;
+			buildPhases = (
+				FEF5B3A5179450C10051BD2D /* Sources */,
+				FEF5B3A6179450C10051BD2D /* Frameworks */,
+				FE01E1D417A00DB400ACC80E /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CouriaPreferences;
+			productName = CouriaPreferences;
+			productReference = FEF5B3AA179450C10051BD2D /* Couria.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FE611B47175E1219004E5A8E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = Qusic;
+			};
+			buildConfigurationList = FE611B4A175E1219004E5A8E /* Build configuration list for PBXProject "Couria" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				zh_CN,
+			);
+			mainGroup = FE611B46175E1219004E5A8E;
+			productRefGroup = FE611B51175E1219004E5A8E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FE611B4F175E1219004E5A8E /* Couria */,
+				FEF5B3A9179450C10051BD2D /* CouriaPreferences */,
+				FE01E1B4179FF72A00ACC80E /* CouriaWidget */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		FE01E1D417A00DB400ACC80E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/opt/iOSOpenDev/bin/iosod sign $BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH\ncp -f $BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH $PROJECT_DIR/Package/$INSTALL_PATH/$EXECUTABLE_PATH";
+		};
+		FE01E1D517A00ECE00ACC80E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/opt/iOSOpenDev/bin/iosod sign $BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH\ncp -f $BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH $PROJECT_DIR/Package/$INSTALL_PATH/$EXECUTABLE_PATH";
+		};
+		FE611B4E175E1219004E5A8E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/opt/iOSOpenDev/bin/iosod sign $BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH\ncp -f $BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH $PROJECT_DIR/Package/$INSTALL_PATH/$EXECUTABLE_PATH";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FE01E1B0179FF72A00ACC80E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE01E1C2179FF72A00ACC80E /* CouriaWidgetController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE611B4B175E1219004E5A8E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE611B73175E1530004E5A8E /* Couria.mm in Sources */,
+				FE611B64175E1219004E5A8E /* Couria-Hooks.mm in Sources */,
+				FE611B6F175E13FA004E5A8E /* Couria-Localization.mm in Sources */,
+				FEBF531C178C56A500ADF27F /* CouriaController.m in Sources */,
+				FEBF5333178C5E8800ADF27F /* UIImage+Couria.m in Sources */,
+				FEBF533C178C77FF00ADF27F /* CouriaTheme.m in Sources */,
+				FEFE569B178D19F2007C8C6B /* UIColor+Couria.m in Sources */,
+				FEFE56A8178D3E3E007C8C6B /* UIView+Couria.m in Sources */,
+				FEFE56B3178D569F007C8C6B /* CouriaMessagesView.m in Sources */,
+				FEFE56B6178D7379007C8C6B /* CouriaMessageView.m in Sources */,
+				FEFE56D3178D9F3A007C8C6B /* CouriaMessageCell.m in Sources */,
+				FEFE56D6178DC0EB007C8C6B /* NSString+Couria.m in Sources */,
+				FE458278179148C600D94E0F /* CouriaFieldView.m in Sources */,
+				FEE5C8BE1792B1210007C13F /* CouriaImageViewerController.m in Sources */,
+				FEE5C8C51792F7670007C13F /* CouriaMessage.m in Sources */,
+				FEE5C8C81792F98D0007C13F /* CouriaContactsView.m in Sources */,
+				FEB08C381794133A00F5EA73 /* CALayer+Couria.m in Sources */,
+				FEA5F9F1179977C500EF6488 /* CouriaAlertView.m in Sources */,
+				FEA5F9F4179A45DC00EF6488 /* CouriaView.m in Sources */,
+				FEA5F9F7179A70DE00EF6488 /* CouriaMoviePlayerController.m in Sources */,
+				FE9BA28A17AFD77400E8245F /* CouriaImageView.m in Sources */,
+				FE9BA28D17AFF0F600E8245F /* CouriaSoundEffect.m in Sources */,
+				FEDBB19717B0ADE40025AD3C /* CouriaActivatorListener.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FEF5B3A5179450C10051BD2D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FEF5B3BE179450C10051BD2D /* CouriaPreferencesController.m in Sources */,
+				FEF5B3DD179550AF0051BD2D /* CouriaExtensionPreferencesController.m in Sources */,
+				FEF5B3E0179567680051BD2D /* CouriaPreferences-Localization.mm in Sources */,
+				FEF5B3E317957DAC0051BD2D /* CouriaPreferences.mm in Sources */,
+				FEF5B3EA179595A90051BD2D /* CouriaCustomPreferencesController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		FE01E1CB179FF72A00ACC80E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_NAME = CouriaWidget;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CouriaWidget/CouriaWidget-Prefix.pch";
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				INSTALL_PATH = /Library/WeeLoader/Plugins/CouriaWidget.bundle;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
+				iOSOpenDevBuildPackageOnAnyBuild = NO;
+				iOSOpenDevCopyOnBuild = NO;
+				iOSOpenDevDevice = "";
+				iOSOpenDevInstallOnAnyBuild = NO;
+				iOSOpenDevInstallOnProfiling = YES;
+				iOSOpenDevRespringOnInstall = YES;
+				iOSOpenDevUsePackageVersionPList = YES;
+			};
+			name = Debug;
+		};
+		FE01E1CC179FF72A00ACC80E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_NAME = CouriaWidget;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CouriaWidget/CouriaWidget-Prefix.pch";
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				INSTALL_PATH = /Library/WeeLoader/Plugins/CouriaWidget.bundle;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
+				iOSOpenDevBuildPackageOnAnyBuild = NO;
+				iOSOpenDevCopyOnBuild = NO;
+				iOSOpenDevDevice = "";
+				iOSOpenDevInstallOnAnyBuild = NO;
+				iOSOpenDevInstallOnProfiling = YES;
+				iOSOpenDevRespringOnInstall = YES;
+				iOSOpenDevUsePackageVersionPList = YES;
+			};
+			name = Release;
+		};
+		FE611B68175E1219004E5A8E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = YES;
+				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.gch (*) .DS_Store CVS .svn .git .hg *.xcodeproj *.xcode *.pbproj *.pbxproj";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(iOSOpenDevPath)/frameworks/**",
+					"$(SDKROOT)/System/Library/PrivateFrameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(iOSOpenDevPath)/include/**";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				LIBRARY_SEARCH_PATHS = "$(iOSOpenDevPath)/lib/**";
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = NO;
+				VALID_ARCHS = armv7;
+				iOSOpenDevPath = /opt/iOSOpenDev;
+			};
+			name = Debug;
+		};
+		FE611B69175E1219004E5A8E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = YES;
+				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.gch (*) .DS_Store CVS .svn .git .hg *.xcodeproj *.xcode *.pbproj *.pbxproj";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(iOSOpenDevPath)/frameworks/**",
+					"$(SDKROOT)/System/Library/PrivateFrameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(iOSOpenDevPath)/include/**";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				LIBRARY_SEARCH_PATHS = "$(iOSOpenDevPath)/lib/**";
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = armv7;
+				iOSOpenDevPath = /opt/iOSOpenDev;
+			};
+			name = Release;
+		};
+		FE611B6B175E1219004E5A8E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Couria/Couria-Prefix.pch";
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
+				iOSOpenDevBuildPackageOnAnyBuild = NO;
+				iOSOpenDevCopyOnBuild = NO;
+				iOSOpenDevDevice = "";
+				iOSOpenDevInstallOnAnyBuild = NO;
+				iOSOpenDevInstallOnProfiling = YES;
+				iOSOpenDevRespringOnInstall = YES;
+				iOSOpenDevUsePackageVersionPList = YES;
+			};
+			name = Debug;
+		};
+		FE611B6C175E1219004E5A8E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Couria/Couria-Prefix.pch";
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
+				iOSOpenDevBuildPackageOnAnyBuild = NO;
+				iOSOpenDevCopyOnBuild = NO;
+				iOSOpenDevDevice = "";
+				iOSOpenDevInstallOnAnyBuild = NO;
+				iOSOpenDevInstallOnProfiling = YES;
+				iOSOpenDevRespringOnInstall = YES;
+				iOSOpenDevUsePackageVersionPList = YES;
+			};
+			name = Release;
+		};
+		FEF5B3CB179450C10051BD2D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CouriaPreferences/CouriaPreferences-Prefix.pch";
+				INFOPLIST_FILE = "CouriaPreferences/CouriaPreferences-Info.plist";
+				INSTALL_PATH = /Library/PreferenceBundles;
+				MACH_O_TYPE = mh_bundle;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = Couria;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
+				WRAPPER_EXTENSION = bundle;
+				iOSOpenDevBuildPackageOnAnyBuild = NO;
+				iOSOpenDevCopyOnBuild = NO;
+				iOSOpenDevDevice = "";
+				iOSOpenDevInstallOnAnyBuild = NO;
+				iOSOpenDevInstallOnProfiling = YES;
+				iOSOpenDevRespringOnInstall = YES;
+				iOSOpenDevUsePackageVersionPList = YES;
+			};
+			name = Debug;
+		};
+		FEF5B3CC179450C10051BD2D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CouriaPreferences/CouriaPreferences-Prefix.pch";
+				INFOPLIST_FILE = "CouriaPreferences/CouriaPreferences-Info.plist";
+				INSTALL_PATH = /Library/PreferenceBundles;
+				MACH_O_TYPE = mh_bundle;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = Couria;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
+				WRAPPER_EXTENSION = bundle;
+				iOSOpenDevBuildPackageOnAnyBuild = NO;
+				iOSOpenDevCopyOnBuild = NO;
+				iOSOpenDevDevice = "";
+				iOSOpenDevInstallOnAnyBuild = NO;
+				iOSOpenDevInstallOnProfiling = YES;
+				iOSOpenDevRespringOnInstall = YES;
+				iOSOpenDevUsePackageVersionPList = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FE01E1CD179FF72A00ACC80E /* Build configuration list for PBXNativeTarget "CouriaWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE01E1CB179FF72A00ACC80E /* Debug */,
+				FE01E1CC179FF72A00ACC80E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FE611B4A175E1219004E5A8E /* Build configuration list for PBXProject "Couria" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE611B68175E1219004E5A8E /* Debug */,
+				FE611B69175E1219004E5A8E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FE611B6A175E1219004E5A8E /* Build configuration list for PBXNativeTarget "Couria" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE611B6B175E1219004E5A8E /* Debug */,
+				FE611B6C175E1219004E5A8E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FEF5B3CA179450C10051BD2D /* Build configuration list for PBXNativeTarget "CouriaPreferences" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FEF5B3CB179450C10051BD2D /* Debug */,
+				FEF5B3CC179450C10051BD2D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FE611B47175E1219004E5A8E /* Project object */;
+}

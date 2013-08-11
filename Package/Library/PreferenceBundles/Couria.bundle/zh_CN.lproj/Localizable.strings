@@ -1,0 +1,16 @@
+"EXTENSIONS" = "插件";
+"THEMES" = "主题";
+"NO_INSTALLED_ITEMS" = "没有已安装的项目";
+
+"ABOUT" = "关于";
+"TWITTER" = "关注推特 @QusicS";
+"DONATE" = "捐赠";
+"TRANSLATION_CREDITS" = "翻译致谢名单";
+"SHARE_TEXT" = "我很喜欢 #Couria# 。它为 iOS 带来了一个集中的可定制的消息快捷回复和快捷编写的平台。";
+
+"ENABLED" = "启用";
+"THEME" = "主题";
+"PASSCODE" = "密码";
+"REQUIRE_WHEN_LOCKED" = "锁定时启用";
+"REQUIRE_WHEN_UNLOCKED" = "解锁时启用";
+"OTHER_PREFERENCES" = "其它设置";

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ThemeName</key>
+	<string>Default</string>
+	<key>TitleColor</key>
+	<string>FFFFFF</string>
+	<key>TitleShadowColor</key>
+	<string>0000005A</string>
+	<key>ButtonTitleNormalColor</key>
+	<string>FFFFFF</string>
+	<key>ButtonTitleHighlightedColor</key>
+	<string>FFFFFF</string>
+	<key>ButtonTitleShadowNormalColor</key>
+	<string>0000005A</string>
+	<key>ButtonTitleShadowHighlightedColor</key>
+	<string>0000005A</string>
+	<key>FieldBackgroundColor</key>
+	<string>FFFFFF</string>
+	<key>FieldTextColor</key>
+	<string>000000</string>
+	<key>SendButtonTitleNormalColor</key>
+	<string>FFFFFF</string>
+	<key>SendButtonTitleHighlightedColor</key>
+	<string>FFFFFF</string>
+	<key>SendButtonTitleShadowNormalColor</key>
+	<string>5376AC</string>
+	<key>SendButtonTitleShadowHighlightedColor</key>
+	<string>5376AC</string>
+	<key>MessageColor</key>
+	<string>000000</string>
+	<key>TimestampColor</key>
+	<string>8892A5</string>
+	<key>TimestampShadowColor</key>
+	<string>FFFFFF</string>
+	<key>ContactNicknameColor</key>
+	<string>000000</string>
+	<key>ContactIdentifierColor</key>
+	<string>8892A5</string>
+	<key>PasscodeFieldTextColor</key>
+	<string>000000</string>
+</dict>
+</plist>
