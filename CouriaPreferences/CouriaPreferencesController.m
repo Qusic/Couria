@@ -155,6 +155,7 @@
              @"Italiano": @"Bruno Di Marco",
              @"Nederlands": @"Alphyraz",
              @"繁體中文": @"Hiraku",
+             @"日本語": @"wakinchan",
              @"العربية": @"Mohamed El Fawal"};
 }
 

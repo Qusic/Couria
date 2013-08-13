@@ -1,0 +1,25 @@
+"CLOSE" = "閉じる";
+"SEND" = "送る";
+"REPLY" = "返信";
+"READ" = "既読";
+"OPEN" = "開く";
+"PASSCODE" = "パスコード";
+
+"PHOTO" = "写真";
+"MOVIE" = "ムービー";
+"TAP_TO_VIEW" = "Tap to View";
+
+"CAMERA" = "カメラ";
+"LIBRARY" = "ライブラリ";
+"DOODLE" = "Doodle";
+"VIEW" = "ビュー";
+"REMOVE" = "移動";
+
+"OK" = "OK";
+"CANCEL" = "キャンセル";
+
+"CAMERA_NOT_AVAILABLE" = "カメラが利用できません.";
+"LIBRARY_NOT_AVAILABLE" = "ライブラリが利用できません.";
+"DOODLE_NOT_AVAILABLE" = "Doodleが利用できません. CydiaからDoodle Messageをインストールしてから再度試してください.";
+
+"ACTIVATOR_LISTENER_DESCRIPTION" = "Couria message composerを起動";

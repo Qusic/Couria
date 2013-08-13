@@ -1,0 +1,16 @@
+"EXTENSIONS" = "エクステンション";
+"THEMES" = "テーマ";
+"NO_INSTALLED_ITEMS" = "アイテムがインストールされていません.";
+
+"ABOUT" = "詳細";
+"TWITTER" = "@QusicS on Twitter";
+"DONATE" = "寄付";
+"TRANSLATION_CREDITS" = "翻訳者";
+"SHARE_TEXT" = "I'm Loving #Couria, which brings a Centralized and Customizable Quick Reply and Quick Compose System to iOS.";
+
+"ENABLED" = "有効";
+"THEME" = "テーマ";
+"PASSCODE" = "パスコード";
+"REQUIRE_WHEN_LOCKED" = "ロック時に要求";
+"REQUIRE_WHEN_UNLOCKED" = "ロック解除時に要求";
+"OTHER_PREFERENCES" = "その他の設定";
