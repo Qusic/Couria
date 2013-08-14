@@ -181,27 +181,6 @@ extern "C" {
 - (BOOL)launchApplicationWithIdentifier:(NSString *)identifier suspended:(BOOL)suspended;
 @end
 
-@interface UIViewController (Private)
-- (void)_willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(NSTimeInterval)duration forwardToChildControllers:(BOOL)forward skipSelf:(BOOL)skipSelf;
-@end
-
-@interface UIWindow (Private)
-- (void)setDelegate:(id)delegate;
-- (id)delegate;
-- (void)_setRotatableViewOrientation:(UIInterfaceOrientation)orientation duration:(double)duration force:(BOOL)force;
-@end
-
-@interface UIDevice (Private)
-- (void)setOrientation:(UIDeviceOrientation)orientation animated:(BOOL)animated;
-@end
-
-@interface UIAutoRotatingWindow : UIWindow
-- (void)updateForOrientation:(UIInterfaceOrientation)orientation;
-@end
-
-@interface _UIAlertNormalizingOverlayWindow : UIWindow
-@end
-
 @interface UIAlertView (Private)
 - (void)popupAlertAnimated:(BOOL)animated;
 - (void)dismissAnimated:(BOOL)animated;
@@ -217,15 +196,8 @@ extern "C" {
 - (BOOL)requiresPortraitOrientation;
 @end
 
-@interface UIActionSheet (Private)
-- (void)_buttonClicked:(id)button;
-@end
-
 @interface UITextEffectsWindow : UIWindow
 + (UITextEffectsWindow *)sharedTextEffectsWindow;
-- (void)resetTransform;
-- (void)updateForOrientation:(UIInterfaceOrientation)orientation;
-- (void)updateForOrientation:(UIInterfaceOrientation)orientation forceResetTransform:(BOOL)force;
 @end
 
 @interface UIPeripheralHostView : UIView
