@@ -14,7 +14,7 @@
 {
     self = [self initWithFrame:frame];
     if (self) {
-        _textView = [[UITextView alloc]initWithFrame:CGRectMake(1, 3, frame.size.width-2, frame.size.height-10)];
+        _textView = [[UITextView alloc]initWithFrame:CGRectMake(1, 3, frame.size.width-(iOS7() ? 5 : 2), frame.size.height-10)];
         _textView.delegate = delegate;
         _textView.backgroundColor = theme.fieldBackgroundColor;
         _textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -34,7 +34,5 @@
     }
     return self;
 }
-
-
 
 @end

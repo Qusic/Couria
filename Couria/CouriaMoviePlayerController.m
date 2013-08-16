@@ -1,5 +1,6 @@
 #import "CouriaMoviePlayerController.h"
 #import "UIView+Couria.h"
+#import "UIScreen+Couria.h"
 
 @interface CouriaMoviePlayerController ()
 
@@ -9,7 +10,7 @@
 
 - (void)playInView:(UIView *)view
 {
-    CGRect startFrame = view.frame, endFrame = startFrame;
+    CGRect startFrame = [UIScreen mainScreen].viewFrame, endFrame = startFrame;
     startFrame.origin.y += endFrame.size.height;
     [view addSubview:self.view];
     self.view.frame = startFrame;
@@ -30,7 +31,7 @@
 
 - (void)doneAction:(id)sender
 {
-    CGRect startFrame = self.view.superview.frame, endFrame = startFrame;
+    CGRect startFrame = [UIScreen mainScreen].viewFrame, endFrame = startFrame;
     endFrame.origin.y += startFrame.size.height;
     self.view.frame = startFrame;
     [UIView animateWithDuration:0.4 animations:^{

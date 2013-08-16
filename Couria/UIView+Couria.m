@@ -123,8 +123,14 @@
 
 + (UIButton *)lightButton
 {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeInfoLight];
-    [button setImage:nil forState:UIControlStateNormal];
+    UIButton *button = nil;
+    if (iOS7()) {
+        //TODO: a better-looking button. currently this button is invisible
+        button = [UIButton buttonWithType:UIButtonTypeCustom];
+    } else {
+        button = [UIButton buttonWithType:UIButtonTypeInfoLight];
+        [button setImage:nil forState:UIControlStateNormal];
+    }
     return button;
 }
 

@@ -7,6 +7,4 @@
 - (void)present;
 - (void)dismiss;
 
-- (void)layout;
-
 @end

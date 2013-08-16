@@ -8,8 +8,10 @@ static SystemSoundID messageSentSound;
 
 + (void)load
 {
-    AudioServicesCreateSystemSoundID(CFURLCreateWithFileSystemPath(kCFAllocatorDefault, CFSTR("/System/Library/Audio/UISounds/ReceivedMessage.caf"), kCFURLPOSIXPathStyle, false), &messageReceivedSound);
-    AudioServicesCreateSystemSoundID(CFURLCreateWithFileSystemPath(kCFAllocatorDefault, CFSTR("/System/Library/Audio/UISounds/SentMessage.caf"), kCFURLPOSIXPathStyle, false), &messageSentSound);
+    CFURLRef receivedSoundURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, CFSTR("/System/Library/Audio/UISounds/ReceivedMessage.caf"), kCFURLPOSIXPathStyle, false);
+    CFURLRef sentSoundURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, CFSTR("/System/Library/Audio/UISounds/SentMessage.caf"), kCFURLPOSIXPathStyle, false);
+    AudioServicesCreateSystemSoundID(receivedSoundURL, &messageReceivedSound);
+    AudioServicesCreateSystemSoundID(sentSoundURL, &messageSentSound);
 }
 
 + (void)playMessageReceivedSound
