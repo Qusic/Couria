@@ -1,0 +1,16 @@
+"EXTENSIONS" = "Extensiones";
+"THEMES" = "Temas";
+"NO_INSTALLED_ITEMS" = "Elementos no instalados";
+
+"ABOUT" = "Acerca de";
+"TWITTER" = "@QusicS en Twitter";
+"DONATE" = "Donar";
+"TRANSLATION_CREDITS" = "Créditos de Traducción";
+"SHARE_TEXT" = "Me Encanta #Couria, me ofrece un sistema de respuesta y redacción rápida, centralizada y personalizada en iOS.";
+
+"ENABLED" = "Habilitado";
+"THEME" = "Tema";
+"PASSCODE" = "Contraseña";
+"REQUIRE_WHEN_LOCKED" = "Requerido cuando esta Bloqueado";
+"REQUIRE_WHEN_UNLOCKED" = "Requerido cuando esta desbloqueado";
+"OTHER_PREFERENCES" = "Otras Configuraciones";
