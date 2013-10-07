@@ -552,6 +552,9 @@ extern "C" {
 
 #pragma mark - Ayra
 
+@interface AyraCenterWindow : UIWindow
+@end
+
 @interface AyraCenterListCell : SBAwayBulletinCell
 +(CGFloat)optionsRowHeight;
 -(void)lockBarStartedTracking:(id)arg1;

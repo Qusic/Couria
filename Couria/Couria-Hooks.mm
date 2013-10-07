@@ -212,6 +212,12 @@ CHOptimizedMethod(1, self, void, AyraCenterDataSource, didLaunchRowAtIndexPath, 
 {
     BBBulletin *bulletin = CHIvar(self, bulletins, NSArray *)[indexPath.row];
     if (CouriaCanHandleBulletin(bulletin)) {
+        AyraCenterWindow *window = [[UIApplication sharedApplication].windows filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(UIWindow *window, NSDictionary *bindings) {
+            return [window isKindOfClass:NSClassFromString(@"AyraCenterWindow")] && !CGRectIsEmpty(window.frame);
+        }]].firstObject;
+        CGRect frame = window.frame;
+        frame.size.height = 20;
+        window.frame = frame;
         CouriaHandleBulletin(bulletin);
         return;
     }
