@@ -6,4 +6,6 @@
 @property(retain) id media;
 @property(assign) BOOL outgoing;
 
+@property(retain) NSDate *timestamp;
+
 @end
