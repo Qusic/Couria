@@ -152,6 +152,7 @@
 + (NSDictionary *)translationCreditsData
 {
     return @{@"Deutsch": @"Tim Klute",
+             @"Español": @"MXNMike",
              @"Italiano": @"Bruno Di Marco",
              @"Nederlands": @"Alphyraz",
              @"繁體中文": @"Hiraku",

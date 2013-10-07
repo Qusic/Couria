@@ -236,11 +236,16 @@ void CouriaMarkRead(NSString *application, NSString *userIdentifier)
         }
     }
     if (CouriaShouldClearReadNotifications(application)) {
-        SBAwayBulletinListController *bulletinController = [NSClassFromString(@"SBAwayController")sharedAwayController].awayView.bulletinController;
+        SBAwayBulletinListController *awayBulletinController = [NSClassFromString(@"SBAwayController")sharedAwayController].awayView.bulletinController;
         LIBulletinListController *lockinfoBulletinListController = ((LIController *)[NSClassFromString(@"LIController")sharedInstance]).widgetController.bulletinController;
+        BOOL isIOS7 = iOS7();
         for (BBBulletin *bulletin in readBulletins) {
-            [bbServer removeBulletinID:bulletin.bulletinID fromListSection:bulletin.sectionID];
-            [bulletinController observer:nil removeBulletin:bulletin];
+            if (isIOS7) {
+                [bbServer removeBulletinID:bulletin.bulletinID fromSection:bulletin.sectionID inFeed:0xFF];
+            } else {
+                [bbServer removeBulletinID:bulletin.bulletinID fromListSection:bulletin.sectionID];
+            }
+            [awayBulletinController observer:nil removeBulletin:bulletin];
             [lockinfoBulletinListController observer:nil removeBulletin:bulletin];
         }
     }
@@ -249,7 +254,7 @@ void CouriaMarkRead(NSString *application, NSString *userIdentifier)
         SBApplicationIcon *applicationIcon = [iconModel applicationIconForDisplayIdentifier:application];
         NSInteger unreadCount = applicationIcon.badgeValue - readBulletins.count;
         if (unreadCount < 0) { unreadCount = 0; }
-        [applicationIcon setBadge:unreadCount > 0 ? @(unreadCount).stringValue : nil];
+        [applicationIcon setBadge:unreadCount > 0 ? @(unreadCount).stringValue : @""];
     }
     if ([Delegates[application]respondsToSelector:@selector(markRead:)]) {
         [CouriaDelegateOperationQueue addOperationWithBlock:^{
@@ -296,6 +301,7 @@ BOOL CouriaShouldDecreaseBadgeNumber(NSString *application)
 
 void CouriaOpenApp(NSString *application)
 {
+    //TODO: ios7. cant test with passcode on simulator
     SBAwayController *awayController = [NSClassFromString(@"SBAwayController")sharedAwayController];
     if (awayController.isLocked) {
         [awayController couria_unlockAndOpenApplication:application];

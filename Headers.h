@@ -20,6 +20,14 @@
 #define RequirePasscodeWhenLockedKey @"RequirePasscodeWhenLocked"
 #define RequirePasscodeWhenUnlockedKey @"RequirePasscodeWhenUnlocked"
 
+#define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
+#define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
+
+#define iOS7() (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
+
 #pragma mark - Couria
 
 @class BBBulletin, CouriaController;
@@ -94,24 +102,6 @@ extern "C" {
 
 #pragma mark - SpringBoard
 
-@protocol UIWindowDelegate
-@optional
-- (BOOL)window:(UIWindow*)window shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation;
-- (void)window:(UIWindow*)window willRotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration;
-- (void)window:(UIWindow*)window willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration;
-- (void)window:(UIWindow*)window willAnimateFromContentFrame:(CGRect)fromFrame toContentFrame:(CGRect)toFrame;
-- (void)window:(UIWindow*)window willAnimateFirstHalfOfRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration;
-- (void)window:(UIWindow*)window didAnimateFirstHalfOfRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation;
-- (void)window:(UIWindow*)window willAnimateSecondHalfOfRotationFromInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration;
-- (void)window:(UIWindow*)window didRotateFromInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation;
-- (BOOL)shouldWindowUseOnePartInterfaceRotationAnimation:(UIWindow*)window;
-- (UIView*)rotatingContentViewForWindow:(UIWindow*)window;
-- (UIView*)rotatingHeaderViewForWindow:(UIWindow*)window;
-- (UIView*)rotatingFooterViewForWindow:(UIWindow*)window;
-- (id)clientsForRotationForWindow:(UIWindow*)window;
-- (void)getRotationContentSettings:(void*)settings forWindow:(UIWindow*)window;
-@end
-
 @protocol BBWeeAppController <NSObject>
 - (UIView *)view;
 @optional
@@ -162,6 +152,177 @@ extern "C" {
 @property(copy, nonatomic) NSString *subtitle;
 @property(copy, nonatomic) NSString *message;
 @property(retain, nonatomic) NSDictionary *context;
+@end
+
+@class SBAlertView, SBAlertManager, SBActivationContext;
+
+@interface SBAlert : UIViewController
+@property(retain, nonatomic) SBAlertManager *alertManager;
+@property(assign, nonatomic, getter=_requestedDismissal, setter=_setRequestedDismissal:) BOOL requestedDismissal;
+@property(copy, nonatomic) SBActivationContext *activationContext;
++ (void)registerForAlerts;
+- (BOOL)_isLockAlert;
+- (void)_removeFromImpersonatedAppIfNecessary;
+- (id)_impersonatesApplicationWithBundleID;
+- (void)removeFromView;
+- (void)alertViewIsReadyToDismiss:(id)dismiss;
+- (void)setDisplay:(id)display;
+- (void)setAlertDelegate:(id)delegate;
+- (id)alertDelegate;
+- (BOOL)_shouldDismissSwitcherOnActivation;
+- (BOOL)suppressesControlCenter;
+- (BOOL)suppressesNotificationCenter;
+- (BOOL)suppressesBanners;
+- (void)handleAutoLock;
+- (BOOL)handleHeadsetButtonPressed:(BOOL)pressed;
+- (BOOL)handleVolumeDownButtonPressed;
+- (BOOL)handleVolumeUpButtonPressed;
+- (BOOL)handleLockButtonPressed;
+- (BOOL)hasTranslucentBackground;
+- (BOOL)shouldPendAlertItemsWhileActive;
+- (void)handleSlideshowHardwareButton;
+- (BOOL)handleMenuButtonHeld;
+- (BOOL)handleMenuButtonDoubleTap;
+- (BOOL)handleMenuButtonTap;
+- (void)animateDeactivation;
+- (BOOL)currentlyAnimatingDeactivation;
+- (void)didFinishAnimatingOut;
+- (void)didFinishAnimatingIn;
+- (void)didAnimateLockKeypadOut;
+- (void)didAnimateLockKeypadIn;
+- (id)legibilitySettings;
+- (id)effectiveStatusBarStyleRequest;
+- (int)effectiveStatusBarStyle;
+- (id)statusBarStyleRequest;
+- (int)starkStatusBarStyle;
+- (int)statusBarStyle;
+- (double)autoLockTime;
+- (BOOL)managesOwnStatusBarAtActivation;
+- (double)autoDimTime;
+- (BOOL)allowsEventOnlySuspension;
+- (BOOL)expectsFaceContactInLandscape;
+- (BOOL)expectsFaceContact;
+- (void)setExpectsFaceContact:(BOOL)contact inLandscape:(BOOL)landscape;
+- (void)setExpectsFaceContact:(BOOL)contact;
+- (double)accelerometerSampleInterval;
+- (void)setAccelerometerSampleInterval:(double)interval;
+- (BOOL)orientationChangedEventsEnabled;
+- (void)setOrientationChangedEventsEnabled:(BOOL)enabled;
+- (id)description;
+- (void)deactivate;
+- (int)interfaceOrientationForActivation;
+- (void)activate;
+- (int)statusBarStyleOverridesToCancel;
+- (void)displayDidDisappear;
+- (float)finalAlpha;
+- (BOOL)showsSpringBoardStatusBar;
+- (BOOL)undimsDisplay;
+- (BOOL)allowsStackingOfAlert:(id)alert;
+- (void)removeObjectForKey:(id)key;
+- (id)objectForKey:(id)key;
+- (void)setObject:(id)object forKey:(id)key;
+- (id)alertDisplayViewWithSize:(CGSize)size;
+- (id)deactivationValue:(unsigned)value;
+- (BOOL)deactivationFlag:(unsigned)flag;
+- (void)setDeactivationSetting:(unsigned)setting value:(id)value;
+- (void)setDeactivationSetting:(unsigned)setting flag:(BOOL)flag;
+- (void)clearDeactivationSettings;
+- (id)activationValue:(unsigned)value;
+- (BOOL)activationFlag:(unsigned)flag;
+- (void)setActivationSetting:(unsigned)setting value:(id)value;
+- (void)setActivationSetting:(unsigned)setting flag:(BOOL)flag;
+- (void)clearActivationSettings;
+- (void)removeBackgroundStyleWithAnimationFactory:(id)animationFactory;
+- (void)setBackgroundStyle:(int)style withAnimationFactory:(id)animationFactory;
+- (int)customBackgroundStyle;
+- (BOOL)wantsCustomBackgroundStyle;
+- (BOOL)isWallpaperTunnelActive;
+- (void)setWallpaperTunnelActive:(BOOL)active;
+- (BOOL)displayFlag:(unsigned)flag;
+- (id)displayValue:(unsigned)value;
+- (void)setDisplaySetting:(unsigned)setting value:(id)value;
+- (void)setDisplaySetting:(unsigned)setting flag:(BOOL)flag;
+- (void)clearDisplaySettings;
+- (void)dismissAlert;
+- (void)clearDisplay;
+- (SBAlertView *)display;
+- (void)didRotateFromInterfaceOrientation:(int)interfaceOrientation;
+- (void)willAnimateRotationToInterfaceOrientation:(int)interfaceOrientation duration:(double)duration;
+- (void)willRotateToInterfaceOrientation:(int)interfaceOrientation duration:(double)duration;
+- (BOOL)shouldAutorotateToInterfaceOrientation:(int)interfaceOrientation;
+- (void)didMoveToParentViewController:(id)parentViewController;
+- (void)viewDidDisappear:(BOOL)view;
+- (void)viewWillDisappear:(BOOL)view;
+- (void)viewDidAppear:(BOOL)view;
+- (void)viewWillAppear:(BOOL)view;
+- (void)loadView;
+- (BOOL)wantsFullScreenLayout;
+- (id)_screen;
+- (void)_setTargetScreen:(id)screen;
+- (void)dealloc;
+- (id)init;
+- (BOOL)isRemote;
+- (BOOL)matchesRemoteAlertService:(id)service options:(id)options;
+- (id)effectiveViewController;
+@end
+
+@interface CouriaAlert : SBAlert
+@end
+
+@interface SBAlertView : UIView
+- (void)alertWindowViewControllerResizedFromContentFrame:(CGRect)contentFrame toContentFrame:(CGRect)contentFrame2;
+- (void)setAlert:(id)alert;
+- (BOOL)shouldAddClippingViewDuringRotation;
+- (void)didRotateFromInterfaceOrientation:(int)interfaceOrientation;
+- (void)willAnimateRotationToInterfaceOrientation:(int)interfaceOrientation duration:(double)duration;
+- (void)willRotateToInterfaceOrientation:(int)interfaceOrientation duration:(double)duration;
+- (BOOL)isSupportedInterfaceOrientation:(int)orientation;
+- (void)layoutForInterfaceOrientation:(int)interfaceOrientation;
+- (BOOL)isAnimatingOut;
+- (BOOL)shouldAnimateIn;
+- (void)setShouldAnimateIn:(BOOL)animateIn;
+- (BOOL)isReadyToBeRemovedFromView;
+- (void)alertDisplayBecameVisible;
+- (void)alertDisplayWillBecomeVisible;
+- (void)dismiss;
+- (id)alert;
+- (id)initWithFrame:(CGRect)frame;
+@end
+
+@interface SBAlertManager : NSObject
+@property(assign, nonatomic) id delegate;
+- (void)alertIsReadyToBeRemovedFromView:(id)view;
+- (void)alertIsReadyToBeDeactivated:(id)beDeactivated;
+- (void)alert:(id)alert requestsBackgroundStyleChangeWithAnimationFactory:(id)animationFactory;
+- (void)_makeAlertWindowOpaque:(BOOL)opaque;
+- (void)_resetAlertWindowOpacity;
+- (void)_removeFromView:(id)view;
+- (void)_deactivate:(id)deactivate;
+- (void)_activate:(id)activate;
+- (void)removeObserver:(id)observer;
+- (void)addObserver:(id)observer;
+- (id)debugDescription;
+- (id)description;
+- (void)applicationFinishedAnimatingBeneathAlert;
+- (void)applicationWillAnimateActivation;
+- (void)deactivateAlertsAfterLaunch;
+- (void)setAlertsShouldDeactivateAfterLaunch;
+- (void)deactivateAll;
+- (void)deactivate:(SBAlert *)deactivate;
+- (void)activate:(SBAlert *)activate;
+- (id)allAlerts;
+- (BOOL)containsAlert:(id)alert;
+- (id)stackedAlertsIncludingActiveAlert:(BOOL)alert;
+- (BOOL)hasStackedAlerts;
+- (id)activeAlert;
+- (id)windows;
+- (id)windowForAlert:(id)alert;
+- (id)activeAlertWindow;
+- (id)topMostWindow;
+- (id)screen;
+- (void)dealloc;
+- (id)init;
+- (id)initWithScreen:(UIScreen *)screen;
 @end
 
 @interface SBOrientationLockManager : NSObject
@@ -234,9 +395,37 @@ extern "C" {
 - (BBBulletin *)seedBulletin;
 @end
 
+@protocol SBUIBannerSource <NSObject>
+-(id)newBannerViewForContext:(id)context;
+-(id)dequeueNextBannerItemForTarget:(id)target;
+-(id)peekNextBannerItemForTarget:(id)target;
+@optional
+-(void)bannerViewDidDismiss:(id)bannerView forReason:(int)reason;
+-(void)bannerViewWillDismiss:(id)bannerView forReason:(int)reason;
+-(void)bannerViewDidAppear:(id)bannerView;
+-(void)bannerViewWillAppear:(id)bannerView;
+@end
+
+@interface SBUIBannerItem : NSObject
+- (BBBulletin *)pullDownNotification;
+@end
+
+@interface SBUIBannerContext : NSObject
+@property(readonly, assign, nonatomic) SBUIBannerItem *item;
+@end
+
 @interface SBBannerController : NSObject
 - (void)_handleBannerTapGesture:(UITapGestureRecognizer *)gestureRecognizer;
-- (SBBulletinBannerItem *)currentBannerItem;
+- (SBBulletinBannerItem *)currentBannerItem; // iOS 6
+- (SBUIBannerContext *)currentBannerContextForSource:(id<SBUIBannerSource>)source; // iOS 7
+@end
+
+@interface SBBulletinBannerController : NSObject <SBUIBannerSource>
++ (SBBulletinBannerController *)sharedInstance;
+@end
+
+@interface SBNotificationCenterController : NSObject
+- (BOOL)handleActionForBulletin:(BBBulletin *)bulletin;
 @end
 
 @interface SBBulletinListController : UIViewController
@@ -304,17 +493,24 @@ extern "C" {
 - (void)couria_unlockAndOpenApplication:(NSString *)applicationIdentifier;
 @end
 
+@interface SBUnlockActionContext : NSObject
+@property(retain, nonatomic) NSString *identifier;
+@end
+
+@interface SBLockScreenNotificationListController : NSObject
+- (void)unlockUIWithActionContext:(SBUnlockActionContext *)actionContext;
+- (SBAwayBulletinListItem *)_listItemContainingBulletinID:(NSString *)bulletinID;
+@end
+
 @interface SBUIController : NSObject
-- (void)window:(UIWindow *)window willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(NSTimeInterval)duration;
-- (void)finishedUnscattering;
 - (BOOL)clickedMenuButton;
 @end
 
 @interface BBServer : NSObject
-- (void)_loadAllDataProviderPluginBundles;
 - (NSSet *)_allBulletinsForSectionID:(NSString *)sectionID;
 - (void)publishBulletin:(BBBulletin *)bulletin destinations:(int)destinations alwaysToLockScreen:(BOOL)lockScreen;
-- (void)removeBulletinID:(NSString *)bulletinID fromListSection:(NSString *)sectionID;
+- (void)removeBulletinID:(NSString *)bulletinID fromListSection:(NSString *)sectionID; // iOS 6
+- (void)removeBulletinID:(NSString *)bulletinID fromSection:(NSString *)sectionID inFeed:(unsigned)feed; // iOS 7
 @end
 
 @interface BBServer (Couria)

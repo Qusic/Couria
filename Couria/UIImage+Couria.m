@@ -17,7 +17,7 @@
     NSString *modifier = @"";
     NSUInteger scale = (NSUInteger)round([UIScreen mainScreen].scale);
     if (scale != 1) {
-        modifier = [NSString stringWithFormat:@"@%dx", scale];
+        modifier = [NSString stringWithFormat:@"@%lux", (unsigned long)scale];
     }
 
     NSString *resolutionDependentName = [NSString stringWithFormat:@"%@%@", name, modifier];

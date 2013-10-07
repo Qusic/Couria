@@ -12,6 +12,7 @@
 		FE01E1C2179FF72A00ACC80E /* CouriaWidgetController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE01E1C1179FF72A00ACC80E /* CouriaWidgetController.m */; };
 		FE01E1D617A021FC00ACC80E /* AppSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF5B3D817953EA20051BD2D /* AppSupport.framework */; };
 		FE01E1D717A0308000ACC80E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEFE56A2178D3A67007C8C6B /* CoreGraphics.framework */; };
+		FE0BC7EE17BCDA4F001D0F5C /* UIScreen+Couria.m in Sources */ = {isa = PBXBuildFile; fileRef = FE0BC7ED17BCDA4F001D0F5C /* UIScreen+Couria.m */; };
 		FE458278179148C600D94E0F /* CouriaFieldView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE458277179148C600D94E0F /* CouriaFieldView.m */; };
 		FE611B54175E1219004E5A8E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE611B53175E1219004E5A8E /* Foundation.framework */; };
 		FE611B64175E1219004E5A8E /* Couria-Hooks.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE611B63175E1219004E5A8E /* Couria-Hooks.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -21,8 +22,6 @@
 		FE9BA28A17AFD77400E8245F /* CouriaImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9BA28917AFD77300E8245F /* CouriaImageView.m */; };
 		FE9BA28D17AFF0F600E8245F /* CouriaSoundEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9BA28C17AFF0F600E8245F /* CouriaSoundEffect.m */; };
 		FE9BA28F17AFF2D600E8245F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE9BA28E17AFF2D500E8245F /* AudioToolbox.framework */; };
-		FEA5F9F1179977C500EF6488 /* CouriaAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA5F9F0179977C500EF6488 /* CouriaAlertView.m */; };
-		FEA5F9F4179A45DC00EF6488 /* CouriaView.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA5F9F3179A45DC00EF6488 /* CouriaView.m */; };
 		FEA5F9F7179A70DE00EF6488 /* CouriaMoviePlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEA5F9F6179A70DE00EF6488 /* CouriaMoviePlayerController.m */; };
 		FEB08C351793FFFB00F5EA73 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEB08C341793FFFB00F5EA73 /* QuartzCore.framework */; };
 		FEB08C381794133A00F5EA73 /* CALayer+Couria.m in Sources */ = {isa = PBXBuildFile; fileRef = FEB08C371794133A00F5EA73 /* CALayer+Couria.m */; };
@@ -30,6 +29,10 @@
 		FEBF5333178C5E8800ADF27F /* UIImage+Couria.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBF5331178C5E8800ADF27F /* UIImage+Couria.m */; };
 		FEBF533C178C77FF00ADF27F /* CouriaTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBF533A178C77FF00ADF27F /* CouriaTheme.m */; };
 		FEDBB19717B0ADE40025AD3C /* CouriaActivatorListener.m in Sources */ = {isa = PBXBuildFile; fileRef = FEDBB19617B0ADE40025AD3C /* CouriaActivatorListener.m */; };
+		FEDCBF2218015B9400500D1A /* MessagesExtension.mm in Sources */ = {isa = PBXBuildFile; fileRef = FEDCBF2118015B9400500D1A /* MessagesExtension.mm */; };
+		FEDCBF27180195B200500D1A /* IMCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDCBF25180180F600500D1A /* IMCore.framework */; };
+		FEDCBF291801A05800500D1A /* ChatKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDCBF281801A05800500D1A /* ChatKit.framework */; };
+		FEDCBF2B1802DACD00500D1A /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDCBF2A1802DACD00500D1A /* libsqlite3.dylib */; };
 		FEE5C8B51792981B0007C13F /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEE5C8B41792981B0007C13F /* MobileCoreServices.framework */; };
 		FEE5C8BE1792B1210007C13F /* CouriaImageViewerController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEE5C8BD1792B1210007C13F /* CouriaImageViewerController.m */; };
 		FEE5C8C11792E9AC0007C13F /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEE5C8C01792E9AC0007C13F /* MediaPlayer.framework */; };
@@ -60,6 +63,8 @@
 		FE01E1BF179FF72A00ACC80E /* CouriaWidget-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CouriaWidget-Prefix.pch"; sourceTree = "<group>"; };
 		FE01E1C0179FF72A00ACC80E /* CouriaWidgetController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CouriaWidgetController.h; sourceTree = "<group>"; };
 		FE01E1C1179FF72A00ACC80E /* CouriaWidgetController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CouriaWidgetController.m; sourceTree = "<group>"; };
+		FE0BC7EC17BCDA4F001D0F5C /* UIScreen+Couria.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScreen+Couria.h"; sourceTree = "<group>"; };
+		FE0BC7ED17BCDA4F001D0F5C /* UIScreen+Couria.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScreen+Couria.m"; sourceTree = "<group>"; };
 		FE458276179148C600D94E0F /* CouriaFieldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaFieldView.h; sourceTree = "<group>"; };
 		FE458277179148C600D94E0F /* CouriaFieldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaFieldView.m; sourceTree = "<group>"; };
 		FE611B50175E1219004E5A8E /* Couria.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = Couria.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,10 +81,6 @@
 		FE9BA28B17AFF0F600E8245F /* CouriaSoundEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaSoundEffect.h; sourceTree = "<group>"; };
 		FE9BA28C17AFF0F600E8245F /* CouriaSoundEffect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaSoundEffect.m; sourceTree = "<group>"; };
 		FE9BA28E17AFF2D500E8245F /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		FEA5F9EF179977C500EF6488 /* CouriaAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaAlertView.h; sourceTree = "<group>"; };
-		FEA5F9F0179977C500EF6488 /* CouriaAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaAlertView.m; sourceTree = "<group>"; };
-		FEA5F9F2179A45DB00EF6488 /* CouriaView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaView.h; sourceTree = "<group>"; };
-		FEA5F9F3179A45DC00EF6488 /* CouriaView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaView.m; sourceTree = "<group>"; };
 		FEA5F9F5179A70DD00EF6488 /* CouriaMoviePlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaMoviePlayerController.h; sourceTree = "<group>"; };
 		FEA5F9F6179A70DE00EF6488 /* CouriaMoviePlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaMoviePlayerController.m; sourceTree = "<group>"; };
 		FEB08C341793FFFB00F5EA73 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -93,6 +94,10 @@
 		FEBF533A178C77FF00ADF27F /* CouriaTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaTheme.m; sourceTree = "<group>"; };
 		FEDBB19517B0ADE40025AD3C /* CouriaActivatorListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaActivatorListener.h; sourceTree = "<group>"; };
 		FEDBB19617B0ADE40025AD3C /* CouriaActivatorListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaActivatorListener.m; sourceTree = "<group>"; };
+		FEDCBF2118015B9400500D1A /* MessagesExtension.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MessagesExtension.mm; sourceTree = "<group>"; };
+		FEDCBF25180180F600500D1A /* IMCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IMCore.framework; path = System/Library/PrivateFrameworks/IMCore.framework; sourceTree = SDKROOT; };
+		FEDCBF281801A05800500D1A /* ChatKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChatKit.framework; path = System/Library/PrivateFrameworks/ChatKit.framework; sourceTree = SDKROOT; };
+		FEDCBF2A1802DACD00500D1A /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		FEE5C8B41792981B0007C13F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		FEE5C8BC1792B1210007C13F /* CouriaImageViewerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaImageViewerController.h; sourceTree = "<group>"; };
 		FEE5C8BD1792B1210007C13F /* CouriaImageViewerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaImageViewerController.m; sourceTree = "<group>"; };
@@ -147,6 +152,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FEDCBF2B1802DACD00500D1A /* libsqlite3.dylib in Frameworks */,
+				FEDCBF291801A05800500D1A /* ChatKit.framework in Frameworks */,
+				FEDCBF27180195B200500D1A /* IMCore.framework in Frameworks */,
 				FE9BA28F17AFF2D600E8245F /* AudioToolbox.framework in Frameworks */,
 				FEB08C351793FFFB00F5EA73 /* QuartzCore.framework in Frameworks */,
 				FEE5C8C11792E9AC0007C13F /* MediaPlayer.framework in Frameworks */,
@@ -218,6 +226,8 @@
 			isa = PBXGroup;
 			children = (
 				FE611B6D175E13A4004E5A8E /* Headers.h */,
+				FEDCBF281801A05800500D1A /* ChatKit.framework */,
+				FEDCBF25180180F600500D1A /* IMCore.framework */,
 				FE9BA28E17AFF2D500E8245F /* AudioToolbox.framework */,
 				FE611B74175E267E004E5A8E /* UIKit.framework */,
 				FE611B53175E1219004E5A8E /* Foundation.framework */,
@@ -228,6 +238,7 @@
 				FEE5C8C01792E9AC0007C13F /* MediaPlayer.framework */,
 				FEF5B3D31795140C0051BD2D /* Preferences.framework */,
 				FEF5B3EB1795B6090051BD2D /* Social.framework */,
+				FEDCBF2A1802DACD00500D1A /* libsqlite3.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -241,6 +252,7 @@
 				FEBF531D178C571D00ADF27F /* UI */,
 				FEE5C8C21792F7370007C13F /* Objects */,
 				FEDBB19817B0ADFA0025AD3C /* Others */,
+				FEDCBF1F18015B0400500D1A /* BuiltinExtensions */,
 				FE611B5A175E1219004E5A8E /* Supporting Files */,
 			);
 			path = Couria;
@@ -281,10 +293,6 @@
 		FEBF531E178C572800ADF27F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				FEA5F9F2179A45DB00EF6488 /* CouriaView.h */,
-				FEA5F9F3179A45DC00EF6488 /* CouriaView.m */,
-				FEA5F9EF179977C500EF6488 /* CouriaAlertView.h */,
-				FEA5F9F0179977C500EF6488 /* CouriaAlertView.m */,
 				FE9BA28817AFD77200E8245F /* CouriaImageView.h */,
 				FE9BA28917AFD77300E8245F /* CouriaImageView.m */,
 				FEFE56B1178D569E007C8C6B /* CouriaMessagesView.h */,
@@ -310,6 +318,8 @@
 				FEFE569A178D19F2007C8C6B /* UIColor+Couria.m */,
 				FEFE56A6178D3E3D007C8C6B /* UIView+Couria.h */,
 				FEFE56A7178D3E3D007C8C6B /* UIView+Couria.m */,
+				FE0BC7EC17BCDA4F001D0F5C /* UIScreen+Couria.h */,
+				FE0BC7ED17BCDA4F001D0F5C /* UIScreen+Couria.m */,
 				FEB08C361794133A00F5EA73 /* CALayer+Couria.h */,
 				FEB08C371794133A00F5EA73 /* CALayer+Couria.m */,
 				FEFE56D4178DC0E9007C8C6B /* NSString+Couria.h */,
@@ -325,6 +335,14 @@
 				FEDBB19617B0ADE40025AD3C /* CouriaActivatorListener.m */,
 			);
 			name = Others;
+			sourceTree = "<group>";
+		};
+		FEDCBF1F18015B0400500D1A /* BuiltinExtensions */ = {
+			isa = PBXGroup;
+			children = (
+				FEDCBF2118015B9400500D1A /* MessagesExtension.mm */,
+			);
+			name = BuiltinExtensions;
 			sourceTree = "<group>";
 		};
 		FEE5C8C21792F7370007C13F /* Objects */ = {
@@ -514,6 +532,7 @@
 				FE611B64175E1219004E5A8E /* Couria-Hooks.mm in Sources */,
 				FE611B6F175E13FA004E5A8E /* Couria-Localization.mm in Sources */,
 				FEBF531C178C56A500ADF27F /* CouriaController.m in Sources */,
+				FE0BC7EE17BCDA4F001D0F5C /* UIScreen+Couria.m in Sources */,
 				FEBF5333178C5E8800ADF27F /* UIImage+Couria.m in Sources */,
 				FEBF533C178C77FF00ADF27F /* CouriaTheme.m in Sources */,
 				FEFE569B178D19F2007C8C6B /* UIColor+Couria.m in Sources */,
@@ -527,11 +546,10 @@
 				FEE5C8C51792F7670007C13F /* CouriaMessage.m in Sources */,
 				FEE5C8C81792F98D0007C13F /* CouriaContactsView.m in Sources */,
 				FEB08C381794133A00F5EA73 /* CALayer+Couria.m in Sources */,
-				FEA5F9F1179977C500EF6488 /* CouriaAlertView.m in Sources */,
-				FEA5F9F4179A45DC00EF6488 /* CouriaView.m in Sources */,
 				FEA5F9F7179A70DE00EF6488 /* CouriaMoviePlayerController.m in Sources */,
 				FE9BA28A17AFD77400E8245F /* CouriaImageView.m in Sources */,
 				FE9BA28D17AFF0F600E8245F /* CouriaSoundEffect.m in Sources */,
+				FEDCBF2218015B9400500D1A /* MessagesExtension.mm in Sources */,
 				FEDBB19717B0ADE40025AD3C /* CouriaActivatorListener.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -554,6 +572,7 @@
 		FE01E1CB179FF72A00ACC80E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				COPY_PHASE_STRIP = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -572,6 +591,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = YES;
 				STRIP_STYLE = all;
+				VALID_ARCHS = armv7;
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
 				iOSOpenDevCopyOnBuild = NO;
 				iOSOpenDevDevice = "";
@@ -585,6 +605,7 @@
 		FE01E1CC179FF72A00ACC80E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				COPY_PHASE_STRIP = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -603,6 +624,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = YES;
 				STRIP_STYLE = all;
+				VALID_ARCHS = armv7;
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
 				iOSOpenDevCopyOnBuild = NO;
 				iOSOpenDevDevice = "";
@@ -616,6 +638,7 @@
 		FE611B68175E1219004E5A8E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = YES;
@@ -642,7 +665,7 @@
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = NO;
-				VALID_ARCHS = armv7;
+				VALID_ARCHS = "armv7 armv7s arm64";
 				iOSOpenDevPath = /opt/iOSOpenDev;
 			};
 			name = Debug;
@@ -650,6 +673,7 @@
 		FE611B69175E1219004E5A8E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = YES;
@@ -670,7 +694,7 @@
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = armv7;
+				VALID_ARCHS = "armv7 armv7s arm64";
 				iOSOpenDevPath = /opt/iOSOpenDev;
 			};
 			name = Release;
@@ -678,12 +702,14 @@
 		FE611B6B175E1219004E5A8E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				COPY_PHASE_STRIP = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+					"\\\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\\\"",
+					"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Couria/Couria-Prefix.pch";
@@ -692,6 +718,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = YES;
 				STRIP_STYLE = all;
+				VALID_ARCHS = armv7;
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
 				iOSOpenDevCopyOnBuild = NO;
 				iOSOpenDevDevice = "";
@@ -705,12 +732,14 @@
 		FE611B6C175E1219004E5A8E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				COPY_PHASE_STRIP = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+					"\\\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\\\"",
+					"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Couria/Couria-Prefix.pch";
@@ -719,6 +748,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = YES;
 				STRIP_STYLE = all;
+				VALID_ARCHS = armv7;
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
 				iOSOpenDevCopyOnBuild = NO;
 				iOSOpenDevDevice = "";
@@ -732,6 +762,7 @@
 		FEF5B3CB179450C10051BD2D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -747,6 +778,7 @@
 				PRODUCT_NAME = Couria;
 				STRIP_INSTALLED_PRODUCT = YES;
 				STRIP_STYLE = all;
+				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = bundle;
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
 				iOSOpenDevCopyOnBuild = NO;
@@ -761,6 +793,7 @@
 		FEF5B3CC179450C10051BD2D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -776,6 +809,7 @@
 				PRODUCT_NAME = Couria;
 				STRIP_INSTALLED_PRODUCT = YES;
 				STRIP_STYLE = all;
+				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = bundle;
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
 				iOSOpenDevCopyOnBuild = NO;

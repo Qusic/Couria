@@ -5,12 +5,11 @@
 #import "CouriaContactsView.h"
 #import "CouriaFieldView.h"
 #import "UIView+Couria.h"
+#import "UIScreen+Couria.h"
 #import "CALayer+Couria.h"
 #import "CouriaImageViewerController.h"
 #import "CouriaMoviePlayerController.h"
 #import "CouriaMessage.h"
-#import "CouriaView.h"
-#import "CouriaAlertView.h"
 #import <QuartzCore/QuartzCore.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
@@ -49,7 +48,7 @@
 
 @property(strong, nonatomic) CouriaImageViewerController *imageViewer;
 
-@property(strong, nonatomic) CouriaAlertView *alertView;
+@property(strong, nonatomic) CouriaAlert *alert;
 @property(strong, nonatomic) UIViewController *presentedController;
 
 @end
@@ -71,11 +70,24 @@
     return self;
 }
 
++ (SBAlertManager *)sharedAlertManager
+{
+    static SBAlertManager *alertManager;
+    if (alertManager == nil) {
+        if (iOS7()) {
+            alertManager = [[NSClassFromString(@"SBAlertManager") alloc]initWithScreen:[UIScreen mainScreen]];
+        } else {
+            alertManager = [[NSClassFromString(@"SBAlertManager") alloc]init];
+        }
+    }
+    return alertManager;
+}
+
 - (void)loadView
 {
     _shadowView = [[UIView alloc]initWithFrame:CGRectZero];
     _shadowView.layer.anchorPoint = CGPointMake(0.5, 0);
-    _shadowView.layer.position = CGPointMake([UIScreen mainScreen].bounds.size.width/2, -300);
+    _shadowView.layer.position = CGPointMake([UIScreen mainScreen].viewFrame.size.width/2, -300);
     _shadowView.layer.bounds = (CGRect){CGPointZero, CGSizeMake(300, 250)};
     _borderLayer = [CALayer borderLayerWithSize:CGSizeMake(300, 250) cornerRadius:4];
     _shadowLayer = [CALayer shadowLayerWithSize:CGSizeMake(300, 250) cornerRadius:4];
@@ -175,31 +187,39 @@
         _titleButton.enabled = NO;
     }
 
-    self.view = [[CouriaView alloc]initWithFrame:[UIScreen mainScreen].bounds];
+    self.view = [[UIView alloc]initWithFrame:UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone ? [UIScreen mainScreen].bounds : [UIScreen mainScreen].viewFrame];
     [self.view addSubview:_shadowView];
 }
 
 - (void)present
 {
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        [(SBOrientationLockManager *)[NSClassFromString(@"SBOrientationLockManager")sharedInstance]enableLockOverrideForReason:CouriaIdentifier forceOrientation:UIInterfaceOrientationPortrait];
-    }
-    _alertView = [[CouriaAlertView alloc]initWithController:self];
-    [_alertView popupAlertAnimated:NO];
+    [(SBOrientationLockManager *)[NSClassFromString(@"SBOrientationLockManager")sharedInstance]setLockOverrideEnabled:YES forReason:CouriaIdentifier];
+    SBAlertManager *alertManager = [self.class sharedAlertManager];
+    [alertManager deactivateAll];
+    _alert = [[NSClassFromString(@"CouriaAlert") alloc]init];
+    [_alert setOrientationChangedEventsEnabled:YES];
+    [alertManager activate:_alert];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardFrameChanged:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardFrameChanged:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(newBulletinPublished:) name:@NewBulletinPublishedNotification object:nil];
+    [_alert.display addSubview:self.view];
 }
 
 - (void)dismiss
 {
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        [(SBOrientationLockManager *)[NSClassFromString(@"SBOrientationLockManager")sharedInstance]setLockOverrideEnabled:NO forReason:CouriaIdentifier];
-    }
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:@NewBulletinPublishedNotification object:nil];
-    if (_dismissHandler != nil) {
-        _dismissHandler();
-    }
-    [_alertView dismissAnimated:YES];
-    _alertView = nil;
+    [(SBOrientationLockManager *)[NSClassFromString(@"SBOrientationLockManager")sharedInstance]setLockOverrideEnabled:NO forReason:CouriaIdentifier];
+    [UIView animateWithDuration:0.25 animations:^{
+        self.view.alpha = 0;
+    } completion:^(BOOL finished) {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:@NewBulletinPublishedNotification object:nil];
+        if (_dismissHandler != nil) {
+            _dismissHandler();
+        }
+        [[self.class sharedAlertManager]deactivateAll];
+        _alert = nil;
+    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -280,78 +300,6 @@
     }
 }
 
-- (void)layoutMainView
-{
-    CGSize mainSize = _mainView.bounds.size;
-    CGFloat bottombarHeight = _bottombarView.bounds.size.height;
-    _topbarView.frame = CGRectMake(0, 0, mainSize.width, 44);
-    _bottombarView.frame = CGRectMake(0, mainSize.height - bottombarHeight, mainSize.width, bottombarHeight);
-    _messagesView.frame = CGRectMake(0, 44, mainSize.width, mainSize.height - 44 - 40);
-    _contactsView.frame = CGRectMake(0, 44, mainSize.width, mainSize.height - 44);
-}
-
-- (void)layout
-{
-    [self layoutMainView];
-    CGFloat xMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? 10 : 100;
-    CGFloat yMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? 10 : 50;
-    CGFloat topMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && UIInterfaceOrientationIsLandscape(((SpringBoard *)[NSClassFromString(@"SpringBoard")sharedApplication])._frontMostAppOrientation)) ? 0 : 20;
-    CGSize viewSize = self.view.frame.size;
-    CGFloat keyboardHeight = 0;
-    for (UIView *view in [UITextEffectsWindow sharedTextEffectsWindow].subviews) {
-        if ([view isKindOfClass:NSClassFromString(@"UIPeripheralHostView")]) {
-            keyboardHeight = view.frame.size.height;
-        }
-    }
-    CGFloat width = viewSize.width - xMargin * 2;
-    CGFloat height = viewSize.height - yMargin * 2 - topMargin - keyboardHeight;
-    CGRect startFrame;
-    if (_shadowView.frame.origin.y == yMargin + topMargin) {
-        startFrame = _shadowView.frame;
-    } else {
-        startFrame = CGRectMake(xMargin, - (height + topMargin), width, height);
-    }
-    CGRect endFrame = CGRectMake(xMargin, yMargin + topMargin, width, height);
-    CGRect startBounds = {CGPointZero, startFrame.size};
-    CGRect endBounds = {CGPointZero, endFrame.size};
-    CGPathRef startPath = [UIBezierPath bezierPathWithRoundedRect:startBounds cornerRadius:4].CGPath;
-    CGPathRef endPath = [UIBezierPath bezierPathWithRoundedRect:endBounds cornerRadius:4].CGPath;
-
-    _shadowView.frame = startFrame;
-    _borderLayer.shadowPath = startPath;
-    _shadowLayer.shadowPath = startPath;
-
-    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        _shadowView.frame = endFrame;
-    } completion:^(BOOL finished) {
-        [self layoutMainView];
-        [_messagesView scrollToBottomAnimated:YES];
-        [_contactsView scrollToTopAnimated:YES];
-    }];
-    [CATransaction begin];
-    [CATransaction setAnimationDuration:0.25];
-    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-    CABasicAnimation *shadowAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
-    shadowAnimation.fromValue = (__bridge id)startPath;
-    shadowAnimation.toValue = (__bridge id)endPath;
-    [_borderLayer addAnimation:shadowAnimation forKey:nil];
-    [_shadowLayer addAnimation:shadowAnimation forKey:nil];
-    [CATransaction commit];
-    _borderLayer.shadowPath = endPath;
-    _shadowLayer.shadowPath = endPath;
-
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && _photoButton != nil) {
-        CGSize bottombarSize = _bottombarView.frame.size;
-        if (UIInterfaceOrientationIsPortrait(((SpringBoard *)[NSClassFromString(@"SpringBoard")sharedApplication])._frontMostAppOrientation)) {
-            _photoButton.hidden = NO;
-            _fieldView.frame = CGRectMake(38, 0, bottombarSize.width - 103, bottombarSize.height);
-        } else {
-            _photoButton.hidden = YES;
-            _fieldView.frame = CGRectMake(6, 0, bottombarSize.width - 71, bottombarSize.height);
-        }
-    }
-}
-
 - (void)presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion
 {
     if (viewControllerToPresent == nil) {
@@ -359,7 +307,7 @@
     }
     [self.view endEditing:YES];
     _presentedController = viewControllerToPresent;
-    CGRect startFrame = self.view.frame, endFrame = startFrame;
+    CGRect startFrame = [UIScreen mainScreen].viewFrame, endFrame = startFrame;
     startFrame.origin.y += endFrame.size.height;
     if (flag) {
         viewControllerToPresent.view.frame = startFrame;
@@ -389,7 +337,7 @@
     if (_presentedController == nil) {
         return;
     }
-    CGRect startFrame = self.view.frame, endFrame = startFrame;
+    CGRect startFrame = [UIScreen mainScreen].viewFrame, endFrame = startFrame;
     endFrame.origin.y += startFrame.size.height;
     if (flag) {
         _presentedController.view.frame = startFrame;
@@ -413,6 +361,59 @@
             completion();
         }
     }
+}
+
+- (void)keyboardFrameChanged:(NSNotification *)notification
+{
+    UIInterfaceOrientation orientation = [UIScreen mainScreen].frontMostAppOrientation;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && UIInterfaceOrientationIsLandscape(orientation)) {
+        self.view.transform = CGAffineTransformMakeRotation(orientation == UIInterfaceOrientationLandscapeLeft ? -M_PI_2 : M_PI_2);
+        self.view.frame = [UIScreen mainScreen].bounds;
+    }
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        self.view.frame = [UIScreen mainScreen].viewFrame;
+    }
+    CGFloat xMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? 10 : 100;
+    CGFloat yMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? 10 : 50;
+    CGFloat topMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && UIInterfaceOrientationIsLandscape(orientation)) ? 0 : 20;
+    CGSize viewSize = [UIScreen mainScreen].viewFrame.size;
+    CGSize keyboardSize = [notification.userInfo[UIKeyboardFrameEndUserInfoKey]CGRectValue].size;
+    CGFloat keyboardHeight = [notification.name isEqualToString:UIKeyboardWillHideNotification] ? 0 : (UIInterfaceOrientationIsPortrait(orientation) ? keyboardSize.height : keyboardSize.width);
+    CGFloat width = viewSize.width - xMargin * 2;
+    CGFloat height = viewSize.height - yMargin * 2 - topMargin - keyboardHeight;
+    CGRect startFrame;
+    if (_shadowView.frame.origin.y == yMargin + topMargin) {
+        startFrame = _shadowView.frame;
+    } else {
+        startFrame = CGRectMake(xMargin, - (height + topMargin), width, height);
+    }
+    CGRect endFrame = CGRectMake(xMargin, yMargin + topMargin, width, height);
+    CGRect startBounds = {CGPointZero, startFrame.size};
+    CGRect endBounds = {CGPointZero, endFrame.size};
+    CGPathRef startPath = [UIBezierPath bezierPathWithRoundedRect:startBounds cornerRadius:4].CGPath;
+    CGPathRef endPath = [UIBezierPath bezierPathWithRoundedRect:endBounds cornerRadius:4].CGPath;
+
+    _shadowView.frame = startFrame;
+    _borderLayer.shadowPath = startPath;
+    _shadowLayer.shadowPath = startPath;
+
+    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        _shadowView.frame = endFrame;
+    } completion:^(BOOL finished) {
+        [_messagesView scrollToBottomAnimated:YES];
+        [_contactsView scrollToTopAnimated:YES];
+    }];
+    [CATransaction begin];
+    [CATransaction setAnimationDuration:0.25];
+    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+    CABasicAnimation *shadowAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
+    shadowAnimation.fromValue = (__bridge id)startPath;
+    shadowAnimation.toValue = (__bridge id)endPath;
+    [_borderLayer addAnimation:shadowAnimation forKey:nil];
+    [_shadowLayer addAnimation:shadowAnimation forKey:nil];
+    [CATransaction commit];
+    _borderLayer.shadowPath = endPath;
+    _shadowLayer.shadowPath = endPath;
 }
 
 - (void)newBulletinPublished:(NSNotification *)notification
@@ -440,8 +441,19 @@
 {
     CGFloat mainHeight = _mainView.bounds.size.height;
     CGFloat maxViewHeight = mainHeight - _topbarView.bounds.size.height;
-    CGFloat textHeight = textView.contentSize.height;
-    CGFloat viewHeight = MIN(textHeight+4, maxViewHeight);
+    CGFloat viewHeight = 0;
+    if (iOS7()) {
+        //TODO: text not displaying properly. sometimes crash when moving the caret. need more test and investigation on real device
+        NSString *text = textView.text;
+        if ([text hasSuffix:@"\n"]) {
+            text = [text stringByAppendingString:@" "];
+        }
+        CGFloat textHeight = [text boundingRectWithSize:CGSizeMake(textView.bounds.size.width - 10, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: textView.font} context:nil].size.height;
+        viewHeight = MAX(40, MIN(textHeight + 21, maxViewHeight));
+    } else {
+        CGFloat textHeight = textView.contentSize.height;
+        viewHeight = MAX(40, MIN(textHeight + 4, maxViewHeight));
+    }
 
     textView.scrollEnabled = (viewHeight == maxViewHeight);
     CGRect startFrame = _bottombarView.frame, endFrame = startFrame;

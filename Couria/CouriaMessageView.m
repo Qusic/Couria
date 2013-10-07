@@ -28,6 +28,7 @@
         _imageView = [[CouriaImageView alloc]initWithFrame:CGRectZero];
         _imageView.image = outgoing ? _outgoingBackgroundImage : _incomingBackgroundImage;
         _imageView.backgroundColor = [UIColor clearColor];
+        //TODO: text not displaying properly. need more test and investigation on real device
         _textView = [[UITextView alloc]initWithFrame:CGRectZero];
         _textView.backgroundColor = [UIColor clearColor];
         _textView.font = [UIFont systemFontOfSize:15];

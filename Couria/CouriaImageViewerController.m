@@ -1,6 +1,7 @@
 // Heavily based on https://github.com/autresphere/ASMediaFocusManager
 
 #import "CouriaImageViewerController.h"
+#import "UIScreen+Couria.h"
 
 @interface CouriaImageViewerView : UIScrollView
 
@@ -28,7 +29,7 @@
 
 - (void)viewImage:(UIImage *)image inView:(UIView *)view
 {
-    CGRect startFrame = view.frame, endFrame = startFrame;
+    CGRect startFrame = [UIScreen mainScreen].viewFrame, endFrame = startFrame;
     startFrame.origin.y += endFrame.size.height;
     [_viewerView setImage:image];
     [view addSubview:_viewerView];
@@ -41,7 +42,7 @@
 - (void)viewerViewTapped:(UITapGestureRecognizer *)gestureRecognizer
 {
     if (gestureRecognizer.state == UIGestureRecognizerStateRecognized) {
-        CGRect startFrame = _viewerView.superview.frame, endFrame = startFrame;
+        CGRect startFrame = [UIScreen mainScreen].viewFrame, endFrame = startFrame;
         endFrame.origin.y += startFrame.size.height;
         _viewerView.frame = startFrame;
         [UIView animateWithDuration:0.4 animations:^{
@@ -131,7 +132,7 @@
     return self.imageView;
 }
 
-- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale
 {
     
 }
