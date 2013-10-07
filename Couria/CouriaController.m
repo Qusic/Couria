@@ -421,7 +421,9 @@
     BBBulletin *bulletin = notification.userInfo[BulletinKey];
     if ([_applicationIdentifier isEqualToString:bulletin.sectionID] && [CouriaGetUserIdentifier(bulletin)isEqualToString:_userIdentifier]) {
         [_messagesView refreshData];
-        CouriaMarkRead(_applicationIdentifier, _userIdentifier);
+        if (_passcodeField.superview == nil) {
+            CouriaMarkRead(_applicationIdentifier, _userIdentifier);
+        }
     }
 }
 
