@@ -209,8 +209,9 @@ static NSArray *querySMSDB(NSString *sqlString)
 @interface CouriaMessagesDataSource ()
 
 @property(retain, readonly) NSMutableArray *recentContacts;
+@property(retain, readonly) NSDate *lastRefreshRecent;
 @property(retain, readonly) NSArray *allPersons;
-@property(retain, readonly) NSDate *lastRefresh;
+@property(retain, readonly) NSDate *lastRefreshAll;
 
 @end
 
@@ -275,13 +276,20 @@ static NSArray *querySMSDB(NSString *sqlString)
 
 - (NSArray *)getContacts:(NSString *)keyword
 {
-    if (_lastRefresh == nil || [[NSDate date]timeIntervalSinceDate:_lastRefresh] > 60) {
+    if (_lastRefreshRecent == nil || [[NSDate date]timeIntervalSinceDate:_lastRefreshRecent] > 10) {
         _recentContacts = [NSMutableArray array];
         for (IMChat *chat in [[IMChatRegistry sharedInstance].allExistingChats sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastMessage.time" ascending:NO]]]) {
-            [_recentContacts addObject:chat.recipient.ID];
+            if (chat.lastMessage.time) {
+                [_recentContacts addObject:chat.recipient.ID];
+            } else {
+                [_recentContacts insertObject:chat.recipient.ID atIndex:0];
+            }
         }
+        _lastRefreshRecent = [NSDate date];
+    }
+    if (_lastRefreshAll == nil || [[NSDate date]timeIntervalSinceDate:_lastRefreshAll] > 600) {
         _allPersons = [IMPerson allPeople];
-        _lastRefresh = [NSDate date];
+        _lastRefreshAll = [NSDate date];
     }
     if (keyword.length == 0) {
         return _recentContacts;
