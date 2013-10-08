@@ -242,7 +242,7 @@ static NSArray *querySMSDB(NSString *sqlString)
         [serviceManager availabilityForAddress:userIdentifier onService:imessageService checkWithServer:YES];
     }
     NSMutableArray *messages = [NSMutableArray array];
-    NSArray *dbMessages = querySMSDB([NSString stringWithFormat:@"SELECT ROWID, text, is_from_me, date, cache_has_attachments FROM message WHERE handle_id IN (SELECT ROWID FROM handle WHERE id = '%@') ORDER BY date DESC LIMIT 20;", userIdentifier]);
+    NSArray *dbMessages = querySMSDB([NSString stringWithFormat:@"SELECT ROWID, text, is_from_me, date, cache_has_attachments FROM message WHERE handle_id IN (SELECT ROWID FROM handle WHERE id = '%@') ORDER BY ROWID DESC LIMIT 20;", userIdentifier]);
     for (NSDictionary *dbMessage in dbMessages.reverseObjectEnumerator) {
         NSString *text = [dbMessage[@"text"]stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         BOOL outgoing = [dbMessage[@"is_from_me"]boolValue];
