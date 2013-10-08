@@ -195,7 +195,11 @@
 {
     [(SBOrientationLockManager *)[NSClassFromString(@"SBOrientationLockManager")sharedInstance]setLockOverrideEnabled:YES forReason:CouriaIdentifier];
     SBAlertManager *alertManager = [self.class sharedAlertManager];
-    [alertManager deactivateAll];
+    for (SBAlert *alert in alertManager.allAlerts) {
+        if ([alert isKindOfClass:NSClassFromString(@"CouriaAlert")]) {
+            [alertManager deactivate:alert];
+        }
+    }
     _alert = [[NSClassFromString(@"CouriaAlert") alloc]init];
     [_alert setOrientationChangedEventsEnabled:YES];
     [alertManager activate:_alert];
@@ -217,8 +221,18 @@
         if (_dismissHandler != nil) {
             _dismissHandler();
         }
-        [[self.class sharedAlertManager]deactivateAll];
+        SBAlertManager *alertManager = [self.class sharedAlertManager];
+        for (SBAlert *alert in alertManager.allAlerts) {
+            if ([alert isKindOfClass:NSClassFromString(@"CouriaAlert")]) {
+                [alertManager deactivate:alert];
+            }
+        }
         _alert = nil;
+        SBAwayController *awayController = [NSClassFromString(@"SBAwayController")sharedAwayController];
+        if (awayController.isLocked) {
+            [awayController.awayView addSubview:awayController.awayViewFakeStatusBar];
+        }
+        [[NSClassFromString(@"SBStatusBarDataManager")sharedDataManager]resetData];
     }];
 }
 

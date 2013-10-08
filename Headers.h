@@ -310,7 +310,7 @@ extern "C" {
 - (void)deactivateAll;
 - (void)deactivate:(SBAlert *)deactivate;
 - (void)activate:(SBAlert *)activate;
-- (id)allAlerts;
+- (NSArray *)allAlerts;
 - (BOOL)containsAlert:(id)alert;
 - (id)stackedAlertsIncludingActiveAlert:(BOOL)alert;
 - (BOOL)hasStackedAlerts;
@@ -326,7 +326,7 @@ extern "C" {
 @end
 
 @interface SBOrientationLockManager : NSObject
-+ (id)sharedInstance;
++ (instancetype)sharedInstance;
 - (void)updateLockOverrideForCurrentDeviceOrientation;
 - (BOOL)lockOverrideEnabled;
 - (void)enableLockOverrideForReason:(NSString *)reason forceOrientation:(UIInterfaceOrientation)orientation;
@@ -473,7 +473,7 @@ extern "C" {
 - (SBAwayListActionContext *)visibleActionContext;
 @end
 
-@interface SBAwayView : NSObject
+@interface SBAwayView : UIView
 - (SBAwayBulletinListController *)bulletinController;
 @end
 
@@ -487,6 +487,7 @@ extern "C" {
 - (void)unlockWithSound:(BOOL)sound;
 - (void)willAnimateToggleDeviceLockWithStyle:(int)style toVisibility:(BOOL)visibility withDuration:(double)duration;
 - (void)_finishUnlockWithSound:(BOOL)sound unlockSource:(int)source isAutoUnlock:(BOOL)autoUnlock;
+- (UIView *)awayViewFakeStatusBar;
 @end
 
 @interface SBAwayController (Couria)
@@ -504,6 +505,11 @@ extern "C" {
 
 @interface SBUIController : NSObject
 - (BOOL)clickedMenuButton;
+@end
+
+@interface SBStatusBarDataManager : NSObject
++ (instancetype)sharedDataManager;
+- (void)resetData;
 @end
 
 @interface BBServer : NSObject
