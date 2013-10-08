@@ -243,14 +243,20 @@ static NSArray *querySMSDB(NSString *sqlString)
     }
     NSMutableArray *messages = [NSMutableArray array];
     NSArray *dbMessages = querySMSDB([NSString stringWithFormat:@"SELECT ROWID, text, is_from_me, date, cache_has_attachments FROM message WHERE handle_id IN (SELECT ROWID FROM handle WHERE id = '%@') ORDER BY ROWID DESC LIMIT 20;", userIdentifier]);
+    NSTimeInterval lastDate = 0;
     for (NSDictionary *dbMessage in dbMessages.reverseObjectEnumerator) {
         NSString *text = [dbMessage[@"text"]stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         BOOL outgoing = [dbMessage[@"is_from_me"]boolValue];
         BOOL hasAttachments = [dbMessage[@"cache_has_attachments"]boolValue];
+        NSTimeInterval date = [dbMessage[@"date"]doubleValue];
         if (text.length > 0 && ((signed char)[text cStringUsingEncoding:NSUTF8StringEncoding][0]) != -17) {
             CouriaMessage *message = [[CouriaMessage alloc]init];
             message.text = text;
             message.outgoing = outgoing;
+            if (round(date - lastDate) >= 60) {
+                message.timestamp = [NSDate dateWithTimeIntervalSinceReferenceDate:date];
+                lastDate = date;
+            }
             [messages addObject:message];
         }
         if (hasAttachments) {
