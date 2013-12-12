@@ -1,5 +1,22 @@
-# Xcode
+# Linux
+*~
+
+#Mac OSX file system
 .DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must ends with two \r.
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# Xcode
 */build/*
 *.pbxuser
 !default.pbxuser
