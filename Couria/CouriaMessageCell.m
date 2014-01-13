@@ -16,10 +16,8 @@
 {
     self = [self initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     if (self) {
-        CGRect messageViewRect = self.contentView.bounds;
-        messageViewRect.size.height -= 14.5;
         _messageView = [[CouriaMessageView alloc]initWithFrame:self.contentView.bounds outgoing:outgoing theme:theme];
-        _timestampLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 14.5)];
+        _timestampLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.contentView.bounds.size.width, 14)];
         _timestampLabel.backgroundColor = [UIColor clearColor];
         _timestampLabel.autoresizingMask =  UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
         _timestampLabel.font = [UIFont boldSystemFontOfSize:11.5f];
@@ -63,7 +61,8 @@
             [self.contentView addSubview:_timestampLabel];
             _hasTimestamp = YES;
         }
-        [_timestampLabel setText:[NSDateFormatter localizedStringFromDate:timestamp dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterShortStyle]];
+        _timestampLabel.text = nil;
+        _timestampLabel.text = [NSDateFormatter localizedStringFromDate:timestamp dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterShortStyle];
     } else {
         if (_hasTimestamp) {
             CGRect messageViewRect = _messageView.frame;
@@ -72,6 +71,19 @@
             [_timestampLabel removeFromSuperview];
             _hasTimestamp = NO;
         }
+    }
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    CGRect bounds = self.contentView.bounds;
+    if (_hasTimestamp) {
+        _timestampLabel.frame = CGRectMake(0, 0, bounds.size.width, 14);
+        bounds.origin.y = 14;
+        _messageView.frame = bounds;
+    } else {
+        _messageView.frame = bounds;
     }
 }
 

@@ -28,6 +28,7 @@
 		FEBF531C178C56A500ADF27F /* CouriaController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBF531A178C56A500ADF27F /* CouriaController.m */; };
 		FEBF5333178C5E8800ADF27F /* UIImage+Couria.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBF5331178C5E8800ADF27F /* UIImage+Couria.m */; };
 		FEBF533C178C77FF00ADF27F /* CouriaTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = FEBF533A178C77FF00ADF27F /* CouriaTheme.m */; };
+		FED27573188434590073B8C9 /* JTSTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = FED27571188434590073B8C9 /* JTSTextView.m */; };
 		FEDBB19717B0ADE40025AD3C /* CouriaActivatorListener.m in Sources */ = {isa = PBXBuildFile; fileRef = FEDBB19617B0ADE40025AD3C /* CouriaActivatorListener.m */; };
 		FEDCBF2218015B9400500D1A /* MessagesExtension.mm in Sources */ = {isa = PBXBuildFile; fileRef = FEDCBF2118015B9400500D1A /* MessagesExtension.mm */; };
 		FEDCBF27180195B200500D1A /* IMCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEDCBF25180180F600500D1A /* IMCore.framework */; };
@@ -92,6 +93,8 @@
 		FEBF5331178C5E8800ADF27F /* UIImage+Couria.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Couria.m"; sourceTree = "<group>"; };
 		FEBF5339178C77FF00ADF27F /* CouriaTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaTheme.h; sourceTree = "<group>"; };
 		FEBF533A178C77FF00ADF27F /* CouriaTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaTheme.m; sourceTree = "<group>"; };
+		FED27570188434590073B8C9 /* JTSTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JTSTextView.h; sourceTree = "<group>"; };
+		FED27571188434590073B8C9 /* JTSTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JTSTextView.m; sourceTree = "<group>"; };
 		FEDBB19517B0ADE40025AD3C /* CouriaActivatorListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaActivatorListener.h; sourceTree = "<group>"; };
 		FEDBB19617B0ADE40025AD3C /* CouriaActivatorListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaActivatorListener.m; sourceTree = "<group>"; };
 		FEDCBF2118015B9400500D1A /* MessagesExtension.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MessagesExtension.mm; sourceTree = "<group>"; };
@@ -253,6 +256,7 @@
 				FEE5C8C21792F7370007C13F /* Objects */,
 				FEDBB19817B0ADFA0025AD3C /* Others */,
 				FEDCBF1F18015B0400500D1A /* BuiltinExtensions */,
+				FED2756E188434400073B8C9 /* External */,
 				FE611B5A175E1219004E5A8E /* Supporting Files */,
 			);
 			path = Couria;
@@ -327,6 +331,24 @@
 			);
 			name = Categories;
 			sourceTree = "<group>";
+		};
+		FED2756E188434400073B8C9 /* External */ = {
+			isa = PBXGroup;
+			children = (
+				FED2756F188434590073B8C9 /* JTSTextView */,
+			);
+			name = External;
+			sourceTree = "<group>";
+		};
+		FED2756F188434590073B8C9 /* JTSTextView */ = {
+			isa = PBXGroup;
+			children = (
+				FED27570188434590073B8C9 /* JTSTextView.h */,
+				FED27571188434590073B8C9 /* JTSTextView.m */,
+			);
+			name = JTSTextView;
+			path = External/JTSTextView;
+			sourceTree = SOURCE_ROOT;
 		};
 		FEDBB19817B0ADFA0025AD3C /* Others */ = {
 			isa = PBXGroup;
@@ -529,6 +551,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FE611B73175E1530004E5A8E /* Couria.mm in Sources */,
+				FED27573188434590073B8C9 /* JTSTextView.m in Sources */,
 				FE611B64175E1219004E5A8E /* Couria-Hooks.mm in Sources */,
 				FE611B6F175E13FA004E5A8E /* Couria-Localization.mm in Sources */,
 				FEBF531C178C56A500ADF27F /* CouriaController.m in Sources */,
@@ -573,7 +596,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_EXTENSION = "";
@@ -591,7 +614,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = YES;
 				STRIP_STYLE = all;
-				VALID_ARCHS = armv7;
+				VALID_ARCHS = "armv7 armv7s arm64";
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
 				iOSOpenDevCopyOnBuild = NO;
 				iOSOpenDevDevice = "";
@@ -606,7 +629,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_EXTENSION = "";
@@ -624,7 +647,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = YES;
 				STRIP_STYLE = all;
-				VALID_ARCHS = armv7;
+				VALID_ARCHS = "armv7 armv7s arm64";
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
 				iOSOpenDevCopyOnBuild = NO;
 				iOSOpenDevDevice = "";
@@ -703,7 +726,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -718,7 +741,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = YES;
 				STRIP_STYLE = all;
-				VALID_ARCHS = armv7;
+				VALID_ARCHS = "armv7 armv7s arm64";
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
 				iOSOpenDevCopyOnBuild = NO;
 				iOSOpenDevDevice = "";
@@ -733,7 +756,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -748,7 +771,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = YES;
 				STRIP_STYLE = all;
-				VALID_ARCHS = armv7;
+				VALID_ARCHS = "armv7 armv7s arm64";
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
 				iOSOpenDevCopyOnBuild = NO;
 				iOSOpenDevDevice = "";
@@ -763,7 +786,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
@@ -778,7 +801,7 @@
 				PRODUCT_NAME = Couria;
 				STRIP_INSTALLED_PRODUCT = YES;
 				STRIP_STYLE = all;
-				VALID_ARCHS = armv7;
+				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = bundle;
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
 				iOSOpenDevCopyOnBuild = NO;
@@ -794,7 +817,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
@@ -809,7 +832,7 @@
 				PRODUCT_NAME = Couria;
 				STRIP_INSTALLED_PRODUCT = YES;
 				STRIP_STYLE = all;
-				VALID_ARCHS = armv7;
+				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = bundle;
 				iOSOpenDevBuildPackageOnAnyBuild = NO;
 				iOSOpenDevCopyOnBuild = NO;

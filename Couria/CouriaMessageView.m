@@ -28,7 +28,6 @@
         _imageView = [[CouriaImageView alloc]initWithFrame:CGRectZero];
         _imageView.image = outgoing ? _outgoingBackgroundImage : _incomingBackgroundImage;
         _imageView.backgroundColor = [UIColor clearColor];
-        //TODO: text not displaying properly. need more test and investigation on real device
         _textView = [[UITextView alloc]initWithFrame:CGRectZero];
         _textView.backgroundColor = [UIColor clearColor];
         _textView.font = [UIFont systemFontOfSize:15];
@@ -56,6 +55,7 @@
 - (void)setMessage:(NSString *)message
 {
     _message = message;
+    _textView.text = nil;
     _textView.text = message;
     [self setNeedsLayout];
 }
@@ -66,7 +66,7 @@
     CGSize textSize = [_message messageTextSizeWithWidth:215];
     CGSize backgroundSize = [_message messageBackgroundSizeWithWidth:215];
     CGRect backgroundFrame = {CGPointMake(_outgoing ? self.frame.size.width - backgroundSize.width : 0, 2), backgroundSize};
-    CGRect textFrame = CGRectMake(backgroundFrame.origin.x + backgroundImage.capInsets.left, 6, textSize.width + 16, textSize.height);
+    CGRect textFrame = CGRectMake(backgroundFrame.origin.x + backgroundImage.capInsets.left, 6, textSize.width + 16, textSize.height + (iOS7() ? 8 : 0));
 
     _imageView.frame = backgroundFrame;
     _textView.frame = textFrame;

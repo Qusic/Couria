@@ -14,6 +14,30 @@ CHOptimizedMethod(1, self, void, SBBannerController, _handleBannerTapGesture, UI
     }
 }
 
+CHDeclareClass(SBAlertItemsController)
+CHOptimizedMethod(1, self, void, SBAlertItemsController, activateAlertItem, SBAlertItem *, alertItem)
+{
+    if ([alertItem isKindOfClass:NSClassFromString(@"SBBulletinModalAlert")]) {
+        BBBulletin *bulletin = CHIvar(alertItem, _bulletin, BBBulletin *);
+        if (!CouriaIsHandling() && CouriaCanHandleBulletin(bulletin)) {
+            CouriaHandleBulletin(bulletin);
+            return;
+        }
+    }
+    CHSuper(1, SBAlertItemsController, activateAlertItem, alertItem);
+}
+
+CHDeclareClass(SBNotificationCenterController)
+CHOptimizedMethod(1, self, BOOL, SBNotificationCenterController, handleActionForBulletin, BBBulletin *, bulletin)
+{
+    if (CouriaCanHandleBulletin(bulletin)) {
+        CouriaHandleBulletin(bulletin);
+        return YES;
+    } else {
+        return CHSuper(1, SBNotificationCenterController, handleActionForBulletin, bulletin);
+    }
+}
+
 CHDeclareClass(SBBulletinListController)
 CHOptimizedMethod(2, self, void, SBBulletinListController, tableView, UITableView *, tableView, didSelectRowAtIndexPath, NSIndexPath *, indexPath)
 {
@@ -32,30 +56,6 @@ CHOptimizedMethod(1, self, void, SBBulletinListController, positionListViewAtY, 
     if (currentController != nil) {
         [currentController.view endEditing:YES];
     }
-}
-
-CHDeclareClass(SBNotificationCenterController)
-CHOptimizedMethod(1, self, BOOL, SBNotificationCenterController, handleActionForBulletin, BBBulletin *, bulletin)
-{
-    if (CouriaCanHandleBulletin(bulletin)) {
-        CouriaHandleBulletin(bulletin);
-        return YES;
-    } else {
-        return CHSuper(1, SBNotificationCenterController, handleActionForBulletin, bulletin);
-    }
-}
-
-CHDeclareClass(SBAlertItemsController)
-CHOptimizedMethod(1, self, void, SBAlertItemsController, activateAlertItem, SBAlertItem *, alertItem)
-{
-    if ([alertItem isKindOfClass:NSClassFromString(@"SBBulletinModalAlert")]) {
-        BBBulletin *bulletin = CHIvar(alertItem, _bulletin, BBBulletin *);
-        if (!CouriaIsHandling() && CouriaCanHandleBulletin(bulletin)) {
-            CouriaHandleBulletin(bulletin);
-            return;
-        }
-    }
-    CHSuper(1, SBAlertItemsController, activateAlertItem, alertItem);
 }
 
 CHDeclareClass(SBBulletinLockBar)
@@ -86,16 +86,46 @@ CHOptimizedMethod(0, self, void, SBBulletinLockBar, unlock)
 }
 
 static NSString *ApplicationIdentifierToOpen;
+
+CHDeclareClass(SBLockScreenManager)
+CHMethod(2, void, SBLockScreenManager, _finishUIUnlockFromSource, NSInteger, source, withOptions, id, options)
+{
+    CHSuper(2, SBLockScreenManager, _finishUIUnlockFromSource, source, withOptions, options);
+    if (ApplicationIdentifierToOpen != nil) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
+            [[UIApplication sharedApplication]launchApplicationWithIdentifier:ApplicationIdentifierToOpen suspended:NO];
+            [ApplicationIdentifierToOpen release];
+            ApplicationIdentifierToOpen = nil;
+        });
+    }
+}
+CHMethod(1, void, SBLockScreenManager, couria_unlockAndOpenApplication, NSString *, applicationIdentifier)
+{
+    ApplicationIdentifierToOpen = [applicationIdentifier copy];
+    [self unlockUIFromSource:0 withOptions:nil];
+}
+
+CHDeclareClass(SBLockScreenViewController)
+CHMethod(2, void, SBLockScreenViewController, lockScreenView, SBLockScreenView *, view, didEndScrollingOnPage, NSInteger, page)
+{
+    CHSuper(2, SBLockScreenViewController, lockScreenView, view, didEndScrollingOnPage, page);
+    if (page == 1) {
+        [ApplicationIdentifierToOpen release];
+        ApplicationIdentifierToOpen = nil;
+    }
+}
+
 CHDeclareClass(SBAwayController)
 CHMethod(1, void, SBAwayController, couria_unlockAndOpenApplication, NSString *, applicationIdentifier)
 {
-    ApplicationIdentifierToOpen = [applicationIdentifier retain];
-    [[NSClassFromString(@"SBAwayController")sharedAwayController]unlockWithSound:NO];
+    ApplicationIdentifierToOpen = [applicationIdentifier copy];
+    [self unlockWithSound:NO];
 }
 CHOptimizedMethod(3, self, void, SBAwayController, willAnimateToggleDeviceLockWithStyle, NSInteger, style, toVisibility, BOOL, visibility, withDuration, double, duration)
 {
     CHSuper(3, SBAwayController, willAnimateToggleDeviceLockWithStyle, style, toVisibility, visibility, withDuration, duration);
     if (visibility == NO) {
+        [ApplicationIdentifierToOpen release];
         ApplicationIdentifierToOpen = nil;
     }
 }
@@ -105,6 +135,7 @@ CHOptimizedMethod(3, self, void, SBAwayController, _finishUnlockWithSound, BOOL,
     if (ApplicationIdentifierToOpen != nil) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
             [[UIApplication sharedApplication]launchApplicationWithIdentifier:ApplicationIdentifierToOpen suspended:NO];
+            [ApplicationIdentifierToOpen release];
             ApplicationIdentifierToOpen = nil;
         });
     }
@@ -144,15 +175,22 @@ CHOptimizedMethod(3, self, void, BBServer, publishBulletin, BBBulletin *, bullet
     });
 }
 
-//TODO: this may be no longer needed when using SBAlert
 CHDeclareClass(UIWindow)
 CHOptimizedMethod(1, self, void, UIWindow, sendEvent, UIEvent *, event)
 {
     CHSuper(1, UIWindow, sendEvent, event);
-    SBAwayController *awayController = [NSClassFromString(@"SBAwayController")sharedAwayController];
-    if (awayController.isLocked) {
-        if (CouriaIsHandling()) {
-            [awayController restartDimTimer:60];
+    if (iOS7()) {
+        SBLockScreenManager *lockscreenManager = (SBLockScreenManager *)[NSClassFromString(@"SBLockScreenManager")sharedInstance];
+        if (lockscreenManager.isUILocked) {
+            SBBacklightController *backlightController = (SBBacklightController *)[NSClassFromString(@"SBBacklightController")sharedInstance];
+            [backlightController resetLockScreenIdleTimer];
+        }
+    } else {
+        SBAwayController *awayController = [NSClassFromString(@"SBAwayController")sharedAwayController];
+        if (awayController.isLocked) {
+            if (CouriaIsHandling()) {
+                [awayController restartDimTimer:60];
+            }
         }
     }
 }
@@ -170,6 +208,12 @@ CHOptimizedMethod(0, self, BOOL, SBUIController, clickedMenuButton)
 }
 
 CHDeclareClass(SpringBoard);
+CHOptimizedMethod(6, self, void, SpringBoard, _openURLCore, NSURL *, url, display, id, display, animating, BOOL, animating, sender, id, sender, additionalActivationFlags, id, flags, activationHandler, id, handler)
+{
+    [CouriaCurrentController() dismiss];
+    CHSuper(6, SpringBoard, _openURLCore, url, display, display, animating, animating, sender, sender, additionalActivationFlags, flags, activationHandler, handler);
+}
+
 CHOptimizedMethod(5, self, void, SpringBoard, _openURLCore, NSURL *, url, display, id, display, animating, BOOL, animating, sender, id, sender, additionalActivationFlags, id, flags)
 {
     [CouriaCurrentController() dismiss];
@@ -188,7 +232,7 @@ CHDeclareClass(SBAlert);
 CHDeclareClass(CouriaAlert);
 CHMethod(1, SBAlertView *, CouriaAlert, alertDisplayViewWithSize, CGSize, size)
 {
-    return [[NSClassFromString(@"SBAlertView") alloc]initWithFrame:(CGRect){CGPointZero, size}];
+    return [[[NSClassFromString(@"SBAlertView") alloc]initWithFrame:(CGRect){CGPointZero, size}]autorelease];
 }
 
 #pragma mark - Ayra
@@ -326,21 +370,29 @@ CHConstructor
         if ([application isEqualToString:@"com.apple.springboard"]) {
             CHLoadLateClass(SBBannerController);
             CHHook(1, SBBannerController, _handleBannerTapGesture);
-            CHLoadLateClass(SBBulletinListController);
-            CHHook(2, SBBulletinListController, tableView, didSelectRowAtIndexPath);
-            CHHook(1, SBBulletinListController, positionListViewAtY);
-            CHLoadLateClass(SBNotificationCenterController);
-            CHHook(1, SBNotificationCenterController, handleActionForBulletin);
             CHLoadLateClass(SBAlertItemsController);
             CHHook(1, SBAlertItemsController, activateAlertItem);
-            CHLoadLateClass(SBBulletinLockBar);
-            CHHook(0, SBBulletinLockBar, unlock);
-            CHLoadLateClass(SBAwayController);
-            CHHook(1, SBAwayController, couria_unlockAndOpenApplication);
-            CHHook(3, SBAwayController, willAnimateToggleDeviceLockWithStyle, toVisibility, withDuration);
-            CHHook(3, SBAwayController, _finishUnlockWithSound, unlockSource, isAutoUnlock);
-            CHLoadLateClass(SBLockScreenNotificationListController);
-            CHHook(1, SBLockScreenNotificationListController, unlockUIWithActionContext);
+            if (iOS7()) {
+                CHLoadLateClass(SBNotificationCenterController);
+                CHHook(1, SBNotificationCenterController, handleActionForBulletin);
+                CHLoadLateClass(SBLockScreenManager);
+                CHHook(2, SBLockScreenManager, _finishUIUnlockFromSource, withOptions);
+                CHHook(1, SBLockScreenManager, couria_unlockAndOpenApplication);
+                CHLoadLateClass(SBLockScreenViewController);
+                CHHook(2, SBLockScreenViewController, lockScreenView, didEndScrollingOnPage);
+                CHLoadLateClass(SBLockScreenNotificationListController);
+                CHHook(1, SBLockScreenNotificationListController, unlockUIWithActionContext);
+            } else {
+                CHLoadLateClass(SBBulletinListController);
+                CHHook(2, SBBulletinListController, tableView, didSelectRowAtIndexPath);
+                CHHook(1, SBBulletinListController, positionListViewAtY);
+                CHLoadLateClass(SBAwayController);
+                CHHook(1, SBAwayController, couria_unlockAndOpenApplication);
+                CHHook(3, SBAwayController, willAnimateToggleDeviceLockWithStyle, toVisibility, withDuration);
+                CHHook(3, SBAwayController, _finishUnlockWithSound, unlockSource, isAutoUnlock);
+                CHLoadLateClass(SBBulletinLockBar);
+                CHHook(0, SBBulletinLockBar, unlock);
+            }
             CHLoadLateClass(BBServer);
             CHHook(0, BBServer, sharedInstance);
             CHHook(0, BBServer, init);
@@ -350,8 +402,10 @@ CHConstructor
             CHLoadLateClass(SBUIController);
             CHHook(0, SBUIController, clickedMenuButton);
             CHLoadLateClass(SpringBoard);
-            CHHook(5, SpringBoard, _openURLCore, display, animating, sender, additionalActivationFlags);
-            if (!iOS7()) {
+            if (iOS7()) {
+                CHHook(6, SpringBoard, _openURLCore, display, animating, sender, additionalActivationFlags, activationHandler);
+            } else {
+                CHHook(5, SpringBoard, _openURLCore, display, animating, sender, additionalActivationFlags);
                 CHLoadLateClass(UIPopoverController);
                 CHHook(1, UIPopoverController, _updateDimmingViewTransformForInterfaceOrientationOfHostingWindow);
             }

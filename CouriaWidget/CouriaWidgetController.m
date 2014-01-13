@@ -81,7 +81,7 @@ NSString *CouriaLocalizedString(NSString *string)
     };
 }
 
-- (float)viewHeight
+- (CGFloat)viewHeight
 {
 	return 37;
 }

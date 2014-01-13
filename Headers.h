@@ -20,13 +20,7 @@
 #define RequirePasscodeWhenLockedKey @"RequirePasscodeWhenLocked"
 #define RequirePasscodeWhenUnlockedKey @"RequirePasscodeWhenUnlocked"
 
-#define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
-#define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
-#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
-#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
-#define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
-
-#define iOS7() (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0"))
+#define iOS7() (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_7_0)
 
 #pragma mark - Couria
 
@@ -381,14 +375,15 @@ extern "C" {
 @end
 
 @interface SBApplicationController : NSObject
-+ (SBApplicationController *)sharedInstance;
++ (instancetype)sharedInstance;
 - (SBApplication *)applicationWithDisplayIdentifier:(NSString *)identifier;
 @end
 
 @interface SpringBoard : UIApplication
 + (SpringBoard *)sharedApplication;
 - (UIInterfaceOrientation)_frontMostAppOrientation;
-- (void)_openURLCore:(NSURL *)url display:(id)display animating:(BOOL)animating sender:(id)sender additionalActivationFlags:(id)flags;
+- (void)_openURLCore:(NSURL *)url display:(id)display animating:(BOOL)animating sender:(id)sender additionalActivationFlags:(id)flags activationHandler:(id)handler; // iOS 7
+- (void)_openURLCore:(NSURL *)url display:(id)display animating:(BOOL)animating sender:(id)sender additionalActivationFlags:(id)flags; // iOS 6
 @end
 
 @interface SBBulletinBannerItem : NSObject
@@ -421,14 +416,14 @@ extern "C" {
 @end
 
 @interface SBBulletinBannerController : NSObject <SBUIBannerSource>
-+ (SBBulletinBannerController *)sharedInstance;
++ (instancetype)sharedInstance;
 @end
 
-@interface SBNotificationCenterController : NSObject
+@interface SBNotificationCenterController : NSObject // iOS 7
 - (BOOL)handleActionForBulletin:(BBBulletin *)bulletin;
 @end
 
-@interface SBBulletinListController : UIViewController
+@interface SBBulletinListController : UIViewController // iOS 6
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 - (BBBulletin *)_bulletinAtIndexPath:(NSIndexPath *)indexPath;
 - (void)positionListViewAtY:(CGFloat)y;
@@ -477,7 +472,32 @@ extern "C" {
 - (SBAwayBulletinListController *)bulletinController;
 @end
 
-@interface SBAwayController : NSObject
+@interface SBLockScreenView : SBAlertView
+@end
+
+@interface SBLockScreenViewController : SBAlert
+- (void)setPasscodeLockVisible:(BOOL)visible animated:(BOOL)animated completion:(id)completion;
+- (void)lockScreenView:(SBLockScreenView *)view didEndScrollingOnPage:(NSInteger)page;
+@end
+
+@interface SBLockScreenManager : NSObject // iOS 7
+@property(readonly, assign, nonatomic) SBLockScreenViewController *lockScreenViewController;
++ (instancetype)sharedInstance;
+- (BOOL)isUILocked;
+- (void)unlockUIFromSource:(NSInteger)source withOptions:(id)options;
+- (void)_finishUIUnlockFromSource:(NSInteger)source withOptions:(id)options;
+@end
+
+@interface SBLockScreenManager (Couria)
+- (void)couria_unlockAndOpenApplication:(NSString *)applicationIdentifier;
+@end
+
+@interface SBBacklightController : NSObject // iOS 7
++ (instancetype)sharedInstance;
+- (void)resetLockScreenIdleTimer;
+@end
+
+@interface SBAwayController : NSObject // iOS 6
 + (SBAwayController *)sharedAwayController;
 - (SBAwayView *)awayView;
 - (BOOL)isLocked;
@@ -520,7 +540,7 @@ extern "C" {
 @end
 
 @interface BBServer (Couria)
-+ (BBServer *)sharedInstance;
++ (instancetype)sharedInstance;
 @end
 
 @interface SBIcon : NSObject
@@ -541,7 +561,7 @@ extern "C" {
 @interface SBIconController : NSObject {
     SBIconModel *_iconModel;
 }
-+ (SBIconController *)sharedInstance;
++ (instancetype)sharedInstance;
 @end
 
 #pragma mark - DoodleMessage
@@ -590,7 +610,7 @@ extern "C" {
 #pragma mark - IntelliScreenX
 
 @interface IntelliScreenX : NSObject
-+ (IntelliScreenX *)sharedInstance;
++ (instancetype)sharedInstance;
 - (void)openBulletin:(BBBulletin *)bulletin withOrigin:(NSInteger)origin canUnlock:(BOOL)unlock;
 - (void)removeBulletin:(BBBulletin *)bulletin;
 @end
@@ -621,7 +641,7 @@ extern "C" {
 
 @interface LIController : NSObject
 @property(retain, nonatomic) LIWidgetController *widgetController;
-+ (LIController *)sharedInstance;
++ (instancetype)sharedInstance;
 @end
 
 #pragma mark - Velox

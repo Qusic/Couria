@@ -193,6 +193,13 @@
 
 - (void)present
 {
+    if (iOS7()) {
+        SBLockScreenManager *lockscreenManager = (SBLockScreenManager *)[NSClassFromString(@"SBLockScreenManager")sharedInstance];
+        if (lockscreenManager.isUILocked) {
+            SBLockScreenViewController *lockscreenViewController = lockscreenManager.lockScreenViewController;
+            [lockscreenViewController setPasscodeLockVisible:NO animated:NO completion:NULL];
+        }
+    }
     [(SBOrientationLockManager *)[NSClassFromString(@"SBOrientationLockManager")sharedInstance]setLockOverrideEnabled:YES forReason:CouriaIdentifier];
     SBAlertManager *alertManager = [self.class sharedAlertManager];
     for (SBAlert *alert in alertManager.allAlerts) {
@@ -228,11 +235,13 @@
             }
         }
         _alert = nil;
-        SBAwayController *awayController = [NSClassFromString(@"SBAwayController")sharedAwayController];
-        if (awayController.isLocked) {
-            [awayController.awayView addSubview:awayController.awayViewFakeStatusBar];
+        if (!iOS7()) {
+            SBAwayController *awayController = [NSClassFromString(@"SBAwayController")sharedAwayController];
+            if (awayController.isLocked) {
+                [awayController.awayView addSubview:awayController.awayViewFakeStatusBar];
+            }
+            [[NSClassFromString(@"SBStatusBarDataManager")sharedDataManager]resetData];
         }
-        [[NSClassFromString(@"SBStatusBarDataManager")sharedDataManager]resetData];
     }];
 }
 
@@ -457,19 +466,8 @@
 {
     CGFloat mainHeight = _mainView.bounds.size.height;
     CGFloat maxViewHeight = mainHeight - _topbarView.bounds.size.height;
-    CGFloat viewHeight = 0;
-    if (iOS7()) {
-        //TODO: text not displaying properly. sometimes crash when moving the caret. need more test and investigation on real device
-        NSString *text = textView.text;
-        if ([text hasSuffix:@"\n"]) {
-            text = [text stringByAppendingString:@" "];
-        }
-        CGFloat textHeight = [text boundingRectWithSize:CGSizeMake(textView.bounds.size.width - 10, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: textView.font} context:nil].size.height;
-        viewHeight = MAX(40, MIN(textHeight + 21, maxViewHeight));
-    } else {
-        CGFloat textHeight = textView.contentSize.height;
-        viewHeight = MAX(40, MIN(textHeight + 4, maxViewHeight));
-    }
+    CGFloat textHeight = textView.contentSize.height;
+    CGFloat viewHeight = MAX(40, MIN(textHeight + 4, maxViewHeight));
 
     textView.scrollEnabled = (viewHeight == maxViewHeight);
     CGRect startFrame = _bottombarView.frame, endFrame = startFrame;
@@ -525,7 +523,6 @@
     message.media = media;
     message.outgoing = YES;
     CouriaSendMessage(_applicationIdentifier, _userIdentifier, message);
-    [CouriaSoundEffect playMessageSentSound];
     [self dismiss];
 }
 

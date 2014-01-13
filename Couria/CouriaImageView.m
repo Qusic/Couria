@@ -4,8 +4,7 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
-    //TODO: crash relating to resizing may not exist on ios7. if so, use UIImageView on ios7
-    self = [super initWithFrame:frame];
+    self = iOS7() ? (CouriaImageView *)[[UIImageView alloc]initWithFrame:frame] : [super initWithFrame:frame];
     if (self) {
         self.userInteractionEnabled = NO;
         self.contentMode = UIViewContentModeRedraw;

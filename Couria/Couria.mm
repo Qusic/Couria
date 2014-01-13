@@ -301,12 +301,20 @@ BOOL CouriaShouldDecreaseBadgeNumber(NSString *application)
 
 void CouriaOpenApp(NSString *application)
 {
-    //TODO: ios7. cant test with passcode on simulator
-    SBAwayController *awayController = [NSClassFromString(@"SBAwayController")sharedAwayController];
-    if (awayController.isLocked) {
-        [awayController couria_unlockAndOpenApplication:application];
+    if (iOS7()) {
+        SBLockScreenManager *lockscreenManager = (SBLockScreenManager *)[NSClassFromString(@"SBLockScreenManager") sharedInstance];
+        if (lockscreenManager.isUILocked) {
+            [lockscreenManager couria_unlockAndOpenApplication:application];
+        } else {
+            [[UIApplication sharedApplication]launchApplicationWithIdentifier:application suspended:NO];
+        }
     } else {
-        [[UIApplication sharedApplication]launchApplicationWithIdentifier:application suspended:NO];
+        SBAwayController *awayController = [NSClassFromString(@"SBAwayController")sharedAwayController];
+        if (awayController.isLocked) {
+            [awayController couria_unlockAndOpenApplication:application];
+        } else {
+            [[UIApplication sharedApplication]launchApplicationWithIdentifier:application suspended:NO];
+        }
     }
 }
 
