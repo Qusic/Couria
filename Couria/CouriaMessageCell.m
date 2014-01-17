@@ -61,7 +61,6 @@
             [self.contentView addSubview:_timestampLabel];
             _hasTimestamp = YES;
         }
-        _timestampLabel.text = nil;
         _timestampLabel.text = [NSDateFormatter localizedStringFromDate:timestamp dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterShortStyle];
     } else {
         if (_hasTimestamp) {

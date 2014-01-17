@@ -62,7 +62,7 @@
         _applicationIdentifier = applicationIdentifier;
         _userIdentifier = userIdentifier;
         _theme = [CouriaTheme themeWithIdentifier:CouriaGetUserDefaultForKey(applicationIdentifier, ThemeKey)];
-        if ([CouriaGetUserDefaultForKey(_applicationIdentifier, [NSClassFromString(@"SBAwayController")sharedAwayController].isLocked ? RequirePasscodeWhenLockedKey : RequirePasscodeWhenUnlockedKey)boolValue]) {
+        if ([CouriaGetUserDefaultForKey(_applicationIdentifier, (iOS7() ? ((SBLockScreenManager *)[NSClassFromString(@"SBLockScreenManager")sharedInstance]).isUILocked : [NSClassFromString(@"SBAwayController")sharedAwayController].isLocked) ? RequirePasscodeWhenLockedKey : RequirePasscodeWhenUnlockedKey)boolValue]) {
             _passcode = CouriaGetUserDefaultForKey(_applicationIdentifier, PasscodeKey);
         }
         _dismissHandler = dismissHandler;

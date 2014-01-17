@@ -1,4 +1,4 @@
-#import "CaptainHook/CaptainHook.h"
+#import <CaptainHook/CaptainHook.h>
 #import "CouriaController.h"
 #import "CouriaActivatorListener.h"
 

@@ -12,7 +12,7 @@
 @property(retain) UIImage *incomingBackgroundImage;
 
 @property(strong, nonatomic) CouriaImageView *imageView;
-@property(strong, nonatomic) UITextView *textView;
+@property(strong, nonatomic) UILabel *textView;
 
 @end
 
@@ -28,15 +28,11 @@
         _imageView = [[CouriaImageView alloc]initWithFrame:CGRectZero];
         _imageView.image = outgoing ? _outgoingBackgroundImage : _incomingBackgroundImage;
         _imageView.backgroundColor = [UIColor clearColor];
-        _textView = [[UITextView alloc]initWithFrame:CGRectZero];
+        _textView = [[UILabel alloc]initWithFrame:CGRectZero];
         _textView.backgroundColor = [UIColor clearColor];
         _textView.font = [UIFont systemFontOfSize:15];
         _textView.textColor = theme.messageColor;
-        _textView.dataDetectorTypes = UIDataDetectorTypeAll;
-        _textView.editable = NO;
-        _textView.scrollEnabled = NO;
-        _textView.contentInset = UIEdgeInsetsMake(-8,-8,0,0);
-        _textView.clipsToBounds = NO;
+        _textView.numberOfLines = 0;
         self.backgroundColor = [UIColor clearColor];
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:_imageView];
@@ -55,7 +51,6 @@
 - (void)setMessage:(NSString *)message
 {
     _message = message;
-    _textView.text = nil;
     _textView.text = message;
     [self setNeedsLayout];
 }
@@ -66,7 +61,7 @@
     CGSize textSize = [_message messageTextSizeWithWidth:215];
     CGSize backgroundSize = [_message messageBackgroundSizeWithWidth:215];
     CGRect backgroundFrame = {CGPointMake(_outgoing ? self.frame.size.width - backgroundSize.width : 0, 2), backgroundSize};
-    CGRect textFrame = CGRectMake(backgroundFrame.origin.x + backgroundImage.capInsets.left, 6, textSize.width + 16, textSize.height + (iOS7() ? 8 : 0));
+    CGRect textFrame = CGRectMake(backgroundFrame.origin.x + backgroundImage.capInsets.left, 4, textSize.width + 1, textSize.height + 1);
 
     _imageView.frame = backgroundFrame;
     _textView.frame = textFrame;

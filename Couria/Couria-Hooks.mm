@@ -1,4 +1,4 @@
-#import "CaptainHook/CaptainHook.h"
+#import <CaptainHook/CaptainHook.h>
 #import "CouriaController.h"
 
 #pragma mark - Native
@@ -68,10 +68,6 @@ CHOptimizedMethod(0, self, void, SBBulletinLockBar, unlock)
         SBAwayBulletinCell *bulletinCell = (SBAwayBulletinCell *)delegate;
         actionContext = bulletinCell.actionContext;
     }
-    /*else if ([delegate isKindOfClass:NSClassFromString(@"SBAwayView")]) {
-     SBAwayView *awayView = (SBAwayView *)delegate;
-     actionContext = awayView.bulletinController.visibleActionContext;
-     }*/
     if (actionContext != nil) {
         NSString *bulletinID = actionContext.bulletinID;
         SBAwayBulletinListController *bulletinController = [NSClassFromString(@"SBAwayController")sharedAwayController].awayView.bulletinController;
