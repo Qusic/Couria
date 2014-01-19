@@ -234,7 +234,11 @@ static void launchApp()
 
 static inline BOOL stringContainsString(NSString *string1, NSString *string2, BOOL caseSensitive)
 {
-    return [string1 rangeOfString:string2 options:caseSensitive ? 0 : NSCaseInsensitiveSearch].location != NSNotFound;
+    if (string1 && string2) {
+        return [string1 rangeOfString:string2 options:caseSensitive ? 0 : NSCaseInsensitiveSearch].location != NSNotFound;
+    } else {
+        return NO;
+    }
 }
 
 static inline NSString *uncanonicalizedPhoneNumber(NSString *phoneNumber)
