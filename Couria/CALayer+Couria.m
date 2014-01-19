@@ -26,7 +26,7 @@
     layer.masksToBounds = NO;
     layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:(CGRect){CGPointZero, size} cornerRadius:cornerRadius].CGPath;
     layer.shadowColor = [UIColor blackColor].CGColor;
-    layer.shadowOpacity = 1;
+    layer.shadowOpacity = iOS7() ? 0 : 1;
     layer.shadowRadius = 20;
     layer.shadowOffset = CGSizeMake(0, 1);
     return layer;

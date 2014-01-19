@@ -3,39 +3,39 @@
 <plist version="1.0">
 <dict>
 	<key>ThemeName</key>
-	<string>Default</string>
+	<string>Default7</string>
 	<key>TitleColor</key>
-	<string>FFFFFF</string>
+	<string>000000</string>
 	<key>TitleShadowColor</key>
-	<string>0000005A</string>
+	<string>00000000</string>
 	<key>ButtonTitleNormalColor</key>
-	<string>FFFFFF</string>
+	<string>007AFF</string>
 	<key>ButtonTitleHighlightedColor</key>
-	<string>FFFFFF</string>
+	<string>007AFF99</string>
 	<key>ButtonTitleShadowNormalColor</key>
-	<string>0000005A</string>
+	<string>00000000</string>
 	<key>ButtonTitleShadowHighlightedColor</key>
-	<string>0000005A</string>
+	<string>00000000</string>
 	<key>FieldBackgroundColor</key>
-	<string>FFFFFF</string>
+	<string>FAFAFA</string>
 	<key>FieldTextColor</key>
 	<string>000000</string>
 	<key>SendButtonTitleNormalColor</key>
-	<string>FFFFFF</string>
+	<string>007AFF</string>
 	<key>SendButtonTitleHighlightedColor</key>
-	<string>FFFFFF</string>
+	<string>007AFF99</string>
 	<key>SendButtonTitleShadowNormalColor</key>
-	<string>5376AC</string>
+	<string>00000000</string>
 	<key>SendButtonTitleShadowHighlightedColor</key>
-	<string>5376AC</string>
+	<string>00000000</string>
 	<key>OutgoingMessageColor</key>
-	<string>000000</string>
+	<string>FFFFFF</string>
 	<key>IncomingMessageColor</key>
 	<string>000000</string>
 	<key>TimestampColor</key>
-	<string>8892A5</string>
+	<string>8E8E93</string>
 	<key>TimestampShadowColor</key>
-	<string>FFFFFF</string>
+	<string>00000000</string>
 	<key>ContactNicknameColor</key>
 	<string>000000</string>
 	<key>ContactIdentifierColor</key>

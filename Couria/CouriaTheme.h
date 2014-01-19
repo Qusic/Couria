@@ -29,7 +29,8 @@
 - (UIColor *)sendButtonTitleShadowHighlightedColor;
 - (UIImage *)outgoingMessageBackgroundImage;
 - (UIImage *)incomingMessageBackgroundImage;
-- (UIColor *)messageColor;
+- (UIColor *)outgoingMessageColor;
+- (UIColor *)incomingMessageColor;
 - (UIColor *)timestampColor;
 - (UIColor *)timestampShadowColor;
 - (UIColor *)contactNicknameColor;

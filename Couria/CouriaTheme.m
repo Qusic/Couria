@@ -21,7 +21,7 @@
         cachedThemes = [NSMutableDictionary dictionary];
     }
     if (themeIdentifier == nil) {
-        themeIdentifier = @"me.qusic.couria.theme.default";
+        themeIdentifier = iOS7() ? @"me.qusic.couria.theme.default7" : @"me.qusic.couria.theme.default";
     }
     CouriaTheme *theme = cachedThemes[themeIdentifier];
     if (theme == nil) {
@@ -190,17 +190,22 @@
 
 - (UIImage *)outgoingMessageBackgroundImage
 {
-    return [self imageNamed:@"OutgoingMessage_Background.png" resizingCapInsets:UIEdgeInsetsMake(14, 15, 17, 22)];
+    return [self imageNamed:@"OutgoingMessage_Background.png" resizingCapInsets:UIEdgeInsetsMake(14, 18, 17, 24)];
 }
 
 - (UIImage *)incomingMessageBackgroundImage
 {
-    return [self imageNamed:@"IncomingMessage_Background.png" resizingCapInsets:UIEdgeInsetsMake(14, 22, 17, 15)];
+    return [self imageNamed:@"IncomingMessage_Background.png" resizingCapInsets:UIEdgeInsetsMake(14, 24, 17, 18)];
 }
 
-- (UIColor *)messageColor
+- (UIColor *)outgoingMessageColor
 {
-    return [self colorNamed:@"MessageColor"];
+    return [self colorNamed:@"OutgoingMessageColor"];
+}
+
+- (UIColor *)incomingMessageColor
+{
+    return [self colorNamed:@"IncomingMessageColor"];
 }
 
 - (UIColor *)timestampColor
