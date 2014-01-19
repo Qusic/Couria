@@ -451,60 +451,65 @@ static CFDataRef CouriaMessagesServiceCallback(CFMessagePortRef local, SInt32 me
             CouriaMessagesMessage *message = messageDictionary[MessageKey];
             NSString *text = message.text;
             id media = message.media;
-            NSMutableArray *compositions = [NSMutableArray array];
-            Class CompositionClass = NSClassFromString(iOS7() ? @"CKComposition" : @"CKMessageComposition");
-            if (text.length > 0) {
-                if (iOS7()) {
-                    CKComposition *composition = [[CompositionClass alloc]initWithText:[[NSAttributedString alloc]initWithString:text]subject:nil];
-                    [compositions addObject:composition];
-                } else {
-                    CKMessageComposition *composition = [CompositionClass newCompositionForText:text];
-                    [compositions addObject:composition];
-                }
-            }
-            if (media != nil) {
-                if (iOS7()) {
-                    CKMediaObject *mediaObject = nil;
-                    if ([media isKindOfClass:UIImage.class]) {
-                        mediaObject = [[CKMediaObjectManager sharedInstance]mediaObjectWithData:UIImagePNGRepresentation(media) UTIType:@"public.png" filename:nil transcoderUserInfo:nil];
-                    } else if ([media isKindOfClass:NSURL.class]) {
-                        mediaObject = [[CKMediaObjectManager sharedInstance]mediaObjectWithFileURL:media filename:nil transcoderUserInfo:nil];
-                    }
-                    if (mediaObject != nil) {
-                        CKMediaObjectMessagePart *part = [[CKMediaObjectMessagePart alloc]initWithMediaObject:mediaObject];
-                        CKComposition *composition = [CKComposition compositionForMessageParts:@[part]];
+            [[NSOperationQueue mainQueue]addOperationWithBlock:^{
+                NSMutableArray *compositions = [NSMutableArray array];
+                Class CompositionClass = NSClassFromString(iOS7() ? @"CKComposition" : @"CKMessageComposition");
+                if (text.length > 0) {
+                    if (iOS7()) {
+                        CKComposition *composition = [[CompositionClass alloc]initWithText:[[NSAttributedString alloc]initWithString:text]subject:nil];
                         [compositions addObject:composition];
-                    }
-                } else {
-                    CKMediaObject *mediaObject = nil;
-                    if ([media isKindOfClass:UIImage.class]) {
-                        mediaObject = [[CKMediaObjectManager sharedInstance]newMediaObjectForData:UIImagePNGRepresentation(media) mimeType:@"image/png" exportedFilename:nil];
-                    } else if ([media isKindOfClass:NSURL.class]) {
-                        mediaObject = [[CKMediaObjectManager sharedInstance]newMediaObjectForFilename:[media absoluteString] mimeType:@"video/quicktime" exportedFilename:nil composeOptions:nil];
-                    }
-                    if (mediaObject != nil) {
-                        NSString *transferGUID = mediaObject.transferGUID;
-                        CKMediaObjectMessagePart *part = [[CKMediaObjectMessagePart alloc]initWithMediaObject:mediaObject];
-                        CKMessageComposition *composition = [CompositionClass newComposition];
-                        composition.resources = @{transferGUID: part};
-                        composition.markupString = [NSString stringWithFormat:@"<img id=\"%@\" style=\"display:block;margin-left:-6px;padding-top:5px;padding-bottom:3px\" width=\"100px\" height=\"100px\" src=\"x-ckmsgpart:0/%@/0\">", transferGUID, transferGUID];
+                    } else {
+                        CKMessageComposition *composition = [CompositionClass newCompositionForText:text];
                         [compositions addObject:composition];
                     }
                 }
-            }
-            CKConversation *conversation = getConversation(userIdentifier, YES);
-            for (CKComposition *composition in compositions) {
-                CKIMMessage *message = [conversation newMessageWithComposition:composition];
-                [conversation sendMessage:message newComposition:YES];
-            }
+                if (media != nil) {
+                    if (iOS7()) {
+                        CKMediaObject *mediaObject = nil;
+                        if ([media isKindOfClass:UIImage.class]) {
+                            mediaObject = [[CKMediaObjectManager sharedInstance]mediaObjectWithData:UIImagePNGRepresentation(media) UTIType:@"public.png" filename:nil transcoderUserInfo:nil];
+                        } else if ([media isKindOfClass:NSURL.class]) {
+                            mediaObject = [[CKMediaObjectManager sharedInstance]mediaObjectWithFileURL:media filename:nil transcoderUserInfo:nil];
+                        }
+                        if (mediaObject != nil) {
+                            CKMediaObjectMessagePart *part = [[CKMediaObjectMessagePart alloc]initWithMediaObject:mediaObject];
+                            CKComposition *composition = [CKComposition compositionForMessageParts:@[part]];
+                            [compositions addObject:composition];
+                        }
+                    } else {
+                        CKMediaObject *mediaObject = nil;
+                        if ([media isKindOfClass:UIImage.class]) {
+                            mediaObject = [[CKMediaObjectManager sharedInstance]newMediaObjectForData:UIImagePNGRepresentation(media) mimeType:@"image/png" exportedFilename:nil];
+                        } else if ([media isKindOfClass:NSURL.class]) {
+                            mediaObject = [[CKMediaObjectManager sharedInstance]newMediaObjectForFilename:[media absoluteString] mimeType:@"video/quicktime" exportedFilename:nil composeOptions:nil];
+                        }
+                        if (mediaObject != nil) {
+                            NSString *transferGUID = mediaObject.transferGUID;
+                            CKMediaObjectMessagePart *part = [[CKMediaObjectMessagePart alloc]initWithMediaObject:mediaObject];
+                            CKMessageComposition *composition = [CompositionClass newComposition];
+                            composition.resources = @{transferGUID: part};
+                            composition.markupString = [NSString stringWithFormat:@"<img id=\"%@\" style=\"display:block;margin-left:-6px;padding-top:5px;padding-bottom:3px\" width=\"100px\" height=\"100px\" src=\"x-ckmsgpart:0/%@/0\">", transferGUID, transferGUID];
+                            [compositions addObject:composition];
+                        }
+                    }
+                }
+                CKConversation *conversation = getConversation(userIdentifier, YES);
+
+                for (CKComposition *composition in compositions) {
+                    CKIMMessage *message = [conversation newMessageWithComposition:composition];
+                    [conversation sendMessage:message newComposition:YES];
+                }
+            }];
             break;
         }
         case MarkRead: {
             NSString *userIdentifier = [[NSString alloc]initWithData:(__bridge NSData *)data encoding:NSUTF8StringEncoding];
-            CKConversation *conversation = getConversation(userIdentifier, NO);
-            if (conversation != nil) {
-                [conversation markAllMessagesAsRead];
-            }
+            [[NSOperationQueue mainQueue]addOperationWithBlock:^{
+                CKConversation *conversation = getConversation(userIdentifier, NO);
+                if (conversation != nil) {
+                    [conversation markAllMessagesAsRead];
+                }
+            }];
             break;
         }
     }
