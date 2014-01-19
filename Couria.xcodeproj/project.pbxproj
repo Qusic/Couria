@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		FE788D47188B9D38001F8380 /* DebianPackage */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = FE788D4A188B9D38001F8380 /* Build configuration list for PBXAggregateTarget "DebianPackage" */;
+			buildPhases = (
+				FE788D4B188B9D47001F8380 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = DebianPackage;
+			productName = DebianPackage;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		FE01E1B6179FF72A00ACC80E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE611B53175E1219004E5A8E /* Foundation.framework */; };
 		FE01E1B7179FF72A00ACC80E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE611B74175E267E004E5A8E /* UIKit.framework */; };
@@ -549,6 +563,7 @@
 				FEF5B3A9179450C10051BD2D /* CouriaPreferences */,
 				FE01E1B4179FF72A00ACC80E /* CouriaWidget */,
 				FEC91AFB1887F9CE00A4899A /* MessagesExtension */,
+				FE788D47188B9D38001F8380 /* DebianPackage */,
 			);
 		};
 /* End PBXProject section */
@@ -592,6 +607,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/opt/iOSOpenDev/bin/iosod sign $BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH\ncp -f $BUILT_PRODUCTS_DIR/$EXECUTABLE_PATH $PROJECT_DIR/Package/$INSTALL_PATH/$EXECUTABLE_PATH";
+		};
+		FE788D4B188B9D47001F8380 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=/opt/local/bin:/opt/local/sbin:$PATH\nxattr -rc $PROJECT_DIR/Package\nfind $PROJECT_DIR/Package -name \".DS_Store\" -type f -delete\nfind $PROJECT_DIR/Package -name \"._*\" -type f -delete\ndpkg-deb -b $PROJECT_DIR/Package $PROJECT_DIR/me.qusic.couria.deb";
 		};
 		FEC91AFA1887F9CE00A4899A /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -858,6 +886,20 @@
 			};
 			name = Release;
 		};
+		FE788D48188B9D38001F8380 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		FE788D49188B9D38001F8380 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		FEC91B0C1887F9CF00A4899A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1030,6 +1072,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		FE788D4A188B9D38001F8380 /* Build configuration list for PBXAggregateTarget "DebianPackage" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE788D48188B9D38001F8380 /* Debug */,
+				FE788D49188B9D38001F8380 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		FEC91B0E1887F9CF00A4899A /* Build configuration list for PBXNativeTarget "MessagesExtension" */ = {
 			isa = XCConfigurationList;

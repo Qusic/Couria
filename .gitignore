@@ -19,3 +19,4 @@ Package/Library/MobileSubstrate/DynamicLibraries/Couria.dylib
 Package/Library/MobileSubstrate/DynamicLibraries/MessagesExtension.dylib
 Package/Library/PreferenceBundles/Couria.bundle/Couria
 Package/Library/WeeLoader/Plugins/CouriaWidget.bundle/CouriaWidget
+*.deb
