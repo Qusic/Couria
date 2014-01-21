@@ -17,9 +17,12 @@ CHOptimizedMethod(1, self, void, SBBannerController, _handleBannerTapGesture, UI
 CHDeclareClass(SBAlertItemsController)
 CHOptimizedMethod(1, self, void, SBAlertItemsController, activateAlertItem, SBAlertItem *, alertItem)
 {
-    if ([alertItem isKindOfClass:NSClassFromString(@"SBBulletinModalAlert")]) {
+    if ([alertItem isKindOfClass:NSClassFromString(@"CKMessageAlertItem")] || [alertItem isKindOfClass:NSClassFromString(@"SBBulletinModalAlert")]) {
+        if (CouriaIsHandling()) {
+            return;
+        }
         BBBulletin *bulletin = CHIvar(alertItem, _bulletin, BBBulletin *);
-        if (!CouriaIsHandling() && CouriaCanHandleBulletin(bulletin)) {
+        if (CouriaCanHandleBulletin(bulletin)) {
             CouriaHandleBulletin(bulletin);
             return;
         }
