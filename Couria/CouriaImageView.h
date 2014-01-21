@@ -4,4 +4,6 @@
 
 @property(retain, nonatomic) UIImage *image;
 
++ (instancetype)imageViewWithFrame:(CGRect)frame;
+
 @end

@@ -16,13 +16,13 @@
 
 @implementation CouriaMessageView
 
-- (id)initWithFrame:(CGRect)frame outgoing:(BOOL)outgoing theme:(CouriaTheme *)theme
+- (instancetype)initWithFrame:(CGRect)frame outgoing:(BOOL)outgoing theme:(CouriaTheme *)theme
 {
     self = [self initWithFrame:frame];
     if (self) {
         _outgoing = outgoing;
         _theme = theme;
-        _imageView = [[CouriaImageView alloc]initWithFrame:CGRectZero];
+        _imageView = [CouriaImageView imageViewWithFrame:CGRectZero];
         _imageView.image = outgoing ? theme.outgoingMessageBackgroundImage : theme.incomingMessageBackgroundImage;
         _imageView.backgroundColor = [UIColor clearColor];
         _textView = [[UILabel alloc]initWithFrame:CGRectZero];

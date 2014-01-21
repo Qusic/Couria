@@ -5,7 +5,7 @@
 
 @interface CouriaContactsView : UITableView
 
-- (id)initWithFrame:(CGRect)frame delegate:(id<CouriaContactsViewDelegate>)delegate theme:(CouriaTheme *)theme;
+- (instancetype)initWithFrame:(CGRect)frame delegate:(id<CouriaContactsViewDelegate>)delegate theme:(CouriaTheme *)theme;
 - (void)setApplication:(NSString *)applicationIdentifier keyword:(NSString *)keyword;
 - (void)refreshData;
 - (void)scrollToTopAnimated:(BOOL)animated;

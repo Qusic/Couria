@@ -14,7 +14,7 @@
 
 @implementation CouriaTheme
 
-+ (id)themeWithIdentifier:(NSString *)themeIdentifier
++ (instancetype)themeWithIdentifier:(NSString *)themeIdentifier
 {
     static NSMutableDictionary *cachedThemes;
     if (cachedThemes == nil) {

@@ -7,7 +7,7 @@
 
 + (UIView *)mainViewWithFrame:(CGRect)frame cornerRadius:(CGFloat)cornerRadius theme:(CouriaTheme *)theme
 {
-    CouriaImageView *view = [[CouriaImageView alloc]initWithFrame:frame];
+    CouriaImageView *view = [CouriaImageView imageViewWithFrame:frame];
     view.image = theme.mainBackgroundImage;
     view.backgroundColor = [UIColor clearColor];
     view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -19,13 +19,13 @@
 
 + (UIView *)topbarViewViewWithFrame:(CGRect)frame theme:(CouriaTheme *)theme
 {
-    CouriaImageView *view = [[CouriaImageView alloc]initWithFrame:frame];
+    CouriaImageView *view = [CouriaImageView imageViewWithFrame:frame];
     view.image = theme.topbarBackgroundImage;
     view.backgroundColor = [UIColor clearColor];
     view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     view.userInteractionEnabled = YES;
     UIImage *shadowImage = theme.topbarShadowImage;
-    CouriaImageView *shadowView = [[CouriaImageView alloc]initWithFrame:CGRectMake(0, frame.size.height, frame.size.width, shadowImage.size.height)];
+    CouriaImageView *shadowView = [CouriaImageView imageViewWithFrame:CGRectMake(0, frame.size.height, frame.size.width, shadowImage.size.height)];
     shadowView.image = shadowImage;
     shadowView.backgroundColor = [UIColor clearColor];
     shadowView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
@@ -35,13 +35,13 @@
 
 + (UIView *)bottombarViewWithFrame:(CGRect)frame theme:(CouriaTheme *)theme
 {
-    CouriaImageView *view = [[CouriaImageView alloc]initWithFrame:frame];
+    CouriaImageView *view = [CouriaImageView imageViewWithFrame:frame];
     view.image = theme.bottombarBackgroundImage;
     view.backgroundColor = [UIColor clearColor];
     view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     view.userInteractionEnabled = YES;
     UIImage *shadowImage = theme.bottombarShadowImage;
-    CouriaImageView *shadowView = [[CouriaImageView alloc]initWithFrame:CGRectMake(0, -shadowImage.size.height, frame.size.width, shadowImage.size.height)];
+    CouriaImageView *shadowView = [CouriaImageView imageViewWithFrame:CGRectMake(0, -shadowImage.size.height, frame.size.width, shadowImage.size.height)];
     shadowView.image = shadowImage;
     shadowView.backgroundColor = [UIColor clearColor];
     shadowView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;

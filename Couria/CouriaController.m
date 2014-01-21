@@ -55,7 +55,7 @@
 
 @implementation CouriaController
 
-- (id)initWithApplication:(NSString *)applicationIdentifier user:(NSString *)userIdentifier dismissHandler:(void (^)(void))dismissHandler
+- (instancetype)initWithApplication:(NSString *)applicationIdentifier user:(NSString *)userIdentifier dismissHandler:(void (^)(void))dismissHandler
 {
     self = [self init];
     if (self) {

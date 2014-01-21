@@ -13,7 +13,7 @@
 
 @implementation CouriaFieldView
 
-- (id)initWithFrame:(CGRect)frame delegate:(id<UITextViewDelegate>)delegate theme:(CouriaTheme *)theme
+- (instancetype)initWithFrame:(CGRect)frame delegate:(id<UITextViewDelegate>)delegate theme:(CouriaTheme *)theme
 {
     self = [self initWithFrame:frame];
     if (self) {
@@ -31,7 +31,7 @@
             _textView.textContainerInset = UIEdgeInsetsMake(13, 4, 0, 4);
             _textView.text = nil;
         }
-        CouriaImageView *backgroundView = [[CouriaImageView alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
+        CouriaImageView *backgroundView = [CouriaImageView imageViewWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         backgroundView.image = theme.fieldBackgroundImage;
         backgroundView.backgroundColor = [UIColor clearColor];
         backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;

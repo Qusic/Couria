@@ -4,7 +4,7 @@
 
 @interface CouriaFieldView : UIView
 
-- (id)initWithFrame:(CGRect)frame delegate:(id<UITextViewDelegate>)delegate theme:(CouriaTheme *)theme;
+- (instancetype)initWithFrame:(CGRect)frame delegate:(id<UITextViewDelegate>)delegate theme:(CouriaTheme *)theme;
 - (UITextView *)textView;
 
 @end

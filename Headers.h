@@ -96,6 +96,27 @@ extern "C" {
 
 #pragma mark - SpringBoard
 
+@protocol _SBUIWidgetHost <NSObject>
+
+- (void)invalidatePreferredViewSize;
+- (void)requestLaunchOfURL:(NSURL *)url;
+- (void)requestPresentationOfViewController:(UIViewController *)viewController presentationStyle:(UIModalPresentationStyle)presentationStyle context:(void *)context completion:(void(^)(void))completion;
+
+@end
+
+@interface _SBUIWidgetViewController : UIViewController <_SBUIWidgetHost>
+
+@property(copy) NSString *widgetIdentifier;
+- (CGSize)preferredViewSize;
+- (void)invalidatePreferredViewSize;
+- (void)hostDidDismiss;
+- (void)hostDidPresent;
+- (void)hostWillDismiss;
+- (void)hostWillPresent;
+- (void)requestLaunchOfURL:(NSURL *)url;
+- (void)requestPresentationOfViewController:(UIViewController *)viewController presentationStyle:(UIModalPresentationStyle)presentationStyle context:(void *)context completion:(void(^)(void))completion;
+@end
+
 @protocol BBWeeAppController <NSObject>
 - (UIView *)view;
 @optional
@@ -437,6 +458,14 @@ extern "C" {
 }
 @end
 
+@interface CKAlertItem : SBAlertItem
+@end
+
+@interface CKMessageAlertItem : CKAlertItem {
+    BBBulletin *_bulletin;
+}
+@end
+
 @interface SBAlertItemsController : NSObject
 - (void)activateAlertItem:(SBAlertItem *)alertItem;
 @end
@@ -462,6 +491,11 @@ extern "C" {
 - (BBBulletin *)bulletinWithID:(NSString *)bulletinID;
 @end
 
+@interface SBUnlockActionContext : NSObject
+@property(retain, nonatomic) NSString *identifier;
+@property(assign, nonatomic) BOOL requiresUnlock;
+@end
+
 @interface SBAwayBulletinListController : NSObject
 - (SBAwayBulletinListItem *)_listItemContainingBulletinID:(NSString *)bulletinID;
 - (void)observer:(id)observer removeBulletin:(BBBulletin *)bulletin;
@@ -475,7 +509,13 @@ extern "C" {
 @interface SBLockScreenView : SBAlertView
 @end
 
+@interface SBLockScreenNotificationListController : NSObject
+- (void)unlockUIWithActionContext:(SBUnlockActionContext *)actionContext;
+- (SBAwayBulletinListItem *)_listItemContainingBulletinID:(NSString *)bulletinID;
+@end
+
 @interface SBLockScreenViewController : SBAlert
+- (SBLockScreenNotificationListController *)_notificationController;
 - (void)setPasscodeLockVisible:(BOOL)visible animated:(BOOL)animated completion:(id)completion;
 - (void)lockScreenView:(SBLockScreenView *)view didEndScrollingOnPage:(NSInteger)page;
 @end
@@ -512,15 +552,6 @@ extern "C" {
 
 @interface SBAwayController (Couria)
 - (void)couria_unlockAndOpenApplication:(NSString *)applicationIdentifier;
-@end
-
-@interface SBUnlockActionContext : NSObject
-@property(retain, nonatomic) NSString *identifier;
-@end
-
-@interface SBLockScreenNotificationListController : NSObject
-- (void)unlockUIWithActionContext:(SBUnlockActionContext *)actionContext;
-- (SBAwayBulletinListItem *)_listItemContainingBulletinID:(NSString *)bulletinID;
 @end
 
 @interface SBUIController : NSObject

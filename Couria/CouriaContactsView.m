@@ -18,7 +18,7 @@
 
 @implementation CouriaContactsView
 
-- (id)initWithFrame:(CGRect)frame delegate:(id<CouriaContactsViewDelegate>)delegate theme:(CouriaTheme *)theme
+- (instancetype)initWithFrame:(CGRect)frame delegate:(id<CouriaContactsViewDelegate>)delegate theme:(CouriaTheme *)theme
 {
     self = [self initWithFrame:frame];
     if (self) {

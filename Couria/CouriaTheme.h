@@ -2,7 +2,7 @@
 
 @interface CouriaTheme : NSObject
 
-+ (id)themeWithIdentifier:(NSString *)themeIdentifier;
++ (instancetype)themeWithIdentifier:(NSString *)themeIdentifier;
 
 - (UIImage *)mainBackgroundImage;
 - (UIImage *)topbarBackgroundImage;

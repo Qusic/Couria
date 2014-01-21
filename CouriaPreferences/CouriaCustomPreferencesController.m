@@ -10,7 +10,7 @@
     return _specifiers;
 }
 
-- (id)bundle
+- (NSBundle *)bundle
 {
     return [NSBundle bundleWithPath:[_specifier.userInfo stringByDeletingLastPathComponent]];
 }

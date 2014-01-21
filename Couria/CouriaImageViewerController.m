@@ -17,7 +17,7 @@
 
 @implementation CouriaImageViewerController
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self) {
@@ -68,7 +68,7 @@
 
 @implementation CouriaImageViewerView
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self)

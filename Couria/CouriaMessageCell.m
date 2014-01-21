@@ -12,7 +12,7 @@
 
 @implementation CouriaMessageCell
 
-- (id)initWithReuseIdentifier:(NSString *)reuseIdentifier outgoing:(BOOL)outgoing theme:(CouriaTheme *)theme
+- (instancetype)initWithReuseIdentifier:(NSString *)reuseIdentifier outgoing:(BOOL)outgoing theme:(CouriaTheme *)theme
 {
     self = [self initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     if (self) {

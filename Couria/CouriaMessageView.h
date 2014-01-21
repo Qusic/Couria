@@ -4,7 +4,7 @@
 
 @interface CouriaMessageView : UIView
 
-- (id)initWithFrame:(CGRect)frame outgoing:(BOOL)outgoing theme:(CouriaTheme *)theme;
+- (instancetype)initWithFrame:(CGRect)frame outgoing:(BOOL)outgoing theme:(CouriaTheme *)theme;
 - (void)setOutgoing:(BOOL)outgoing;
 - (void)setMessage:(NSString *)message;
 

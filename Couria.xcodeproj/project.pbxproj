@@ -34,6 +34,7 @@
 		FE611B6F175E13FA004E5A8E /* Couria-Localization.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE611B6E175E13FA004E5A8E /* Couria-Localization.mm */; };
 		FE611B73175E1530004E5A8E /* Couria.mm in Sources */ = {isa = PBXBuildFile; fileRef = FE611B71175E1530004E5A8E /* Couria.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		FE611B75175E267E004E5A8E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE611B74175E267E004E5A8E /* UIKit.framework */; };
+		FE788D4D188BE467001F8380 /* SpringBoardUIServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE788D4C188BE467001F8380 /* SpringBoardUIServices.framework */; };
 		FE9BA28A17AFD77400E8245F /* CouriaImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9BA28917AFD77300E8245F /* CouriaImageView.m */; };
 		FE9BA28D17AFF0F600E8245F /* CouriaSoundEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9BA28C17AFF0F600E8245F /* CouriaSoundEffect.m */; };
 		FE9BA28F17AFF2D600E8245F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE9BA28E17AFF2D500E8245F /* AudioToolbox.framework */; };
@@ -83,7 +84,6 @@
 		FE01E1C1179FF72A00ACC80E /* CouriaWidgetController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CouriaWidgetController.m; sourceTree = "<group>"; };
 		FE0BC7EC17BCDA4F001D0F5C /* UIScreen+Couria.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScreen+Couria.h"; sourceTree = "<group>"; };
 		FE0BC7ED17BCDA4F001D0F5C /* UIScreen+Couria.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScreen+Couria.m"; sourceTree = "<group>"; };
-		FE38B62B18882D94006121B3 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		FE458276179148C600D94E0F /* CouriaFieldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaFieldView.h; sourceTree = "<group>"; };
 		FE458277179148C600D94E0F /* CouriaFieldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaFieldView.m; sourceTree = "<group>"; };
 		FE611B50175E1219004E5A8E /* Couria.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = Couria.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,6 +94,7 @@
 		FE611B6E175E13FA004E5A8E /* Couria-Localization.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "Couria-Localization.mm"; sourceTree = "<group>"; };
 		FE611B71175E1530004E5A8E /* Couria.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Couria.mm; sourceTree = "<group>"; };
 		FE611B74175E267E004E5A8E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		FE788D4C188BE467001F8380 /* SpringBoardUIServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpringBoardUIServices.framework; path = System/Library/PrivateFrameworks/SpringBoardUIServices.framework; sourceTree = SDKROOT; };
 		FE9AB38C17B739C80097B078 /* Package */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Package; sourceTree = "<group>"; };
 		FE9BA28817AFD77200E8245F /* CouriaImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CouriaImageView.h; sourceTree = "<group>"; };
 		FE9BA28917AFD77300E8245F /* CouriaImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CouriaImageView.m; sourceTree = "<group>"; };
@@ -169,6 +170,7 @@
 				FE01E1B7179FF72A00ACC80E /* UIKit.framework in Frameworks */,
 				FE01E1D617A021FC00ACC80E /* AppSupport.framework in Frameworks */,
 				FE01E1D717A0308000ACC80E /* CoreGraphics.framework in Frameworks */,
+				FE788D4D188BE467001F8380 /* SpringBoardUIServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,9 +263,8 @@
 		FE611B52175E1219004E5A8E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FEC82D2F18896184009E7B5D /* libsubstrate.dylib */,
-				FE38B62B18882D94006121B3 /* AddressBook.framework */,
 				FE611B6D175E13A4004E5A8E /* Headers.h */,
+				FE788D4C188BE467001F8380 /* SpringBoardUIServices.framework */,
 				FEDCBF281801A05800500D1A /* ChatKit.framework */,
 				FEDCBF25180180F600500D1A /* IMCore.framework */,
 				FE9BA28E17AFF2D500E8245F /* AudioToolbox.framework */,
@@ -276,6 +277,7 @@
 				FEE5C8C01792E9AC0007C13F /* MediaPlayer.framework */,
 				FEF5B3D31795140C0051BD2D /* Preferences.framework */,
 				FEF5B3EB1795B6090051BD2D /* Social.framework */,
+				FEC82D2F18896184009E7B5D /* libsubstrate.dylib */,
 				FEDCBF2A1802DACD00500D1A /* libsqlite3.dylib */,
 			);
 			name = Frameworks;
@@ -709,7 +711,7 @@
 				EXECUTABLE_NAME = CouriaWidget;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+					"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CouriaWidget/CouriaWidget-Prefix.pch";
@@ -742,7 +744,7 @@
 				EXECUTABLE_NAME = CouriaWidget;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+					"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CouriaWidget/CouriaWidget-Prefix.pch";
@@ -1080,6 +1082,7 @@
 				FE788D49188B9D38001F8380 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		FEC91B0E1887F9CF00A4899A /* Build configuration list for PBXNativeTarget "MessagesExtension" */ = {
 			isa = XCConfigurationList;

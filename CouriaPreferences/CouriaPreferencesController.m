@@ -12,7 +12,7 @@
 
 @implementation CouriaPreferencesController
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
 	if (self) {
@@ -82,7 +82,7 @@
                                                                    edit:Nil]];
         }
         PSSpecifier *about = [PSSpecifier groupSpecifierWithName:CouriaLocalizedString(@"ABOUT")];
-        [about setProperty:@"\nCouria © 2013 Qusic" forKey:@"footerText"];
+        [about setProperty:@"\nCouria © 2014 Qusic" forKey:@"footerText"];
         [about setProperty:@(YES) forKey:@"isStaticText"];
         PSSpecifier *twitter = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"TWITTER")
                                                               target:self set:NULL get:NULL
@@ -155,6 +155,7 @@
              @"Español": @"MXNMike",
              @"Italiano": @"Bruno Di Marco",
              @"Nederlands": @"Alphyraz",
+             @"Русский": @"Victor Ryabov",
              @"繁體中文": @"Hiraku",
              @"日本語": @"wakinchan",
              @"العربية": @"Mohamed El Fawal"};
