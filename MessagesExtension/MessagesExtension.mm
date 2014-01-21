@@ -52,6 +52,7 @@ typedef NS_ENUM(SInt32, CouriaMessagesExtensionMessageID) {
 @end
 
 @interface CKEntity : NSObject
+@property(nonatomic,readonly) NSString *rawAddress;
 @property(nonatomic,readonly) NSString *name;
 @property(nonatomic,readonly) UIImage *transcriptContactImage;
 + (instancetype)copyEntityForAddressString:(NSString *)string;
@@ -100,6 +101,7 @@ typedef NS_ENUM(SInt32, CouriaMessagesExtensionMessageID) {
 @end
 
 @interface CKConversation : NSObject
+@property(nonatomic, readonly) NSString *name;
 @property(retain, nonatomic) NSArray *recipients;
 - (BOOL)canSendToRecipients:(NSArray *)ckimEntitys withAttachments:(NSArray *)messageParts alertIfUnable:(BOOL)alert;
 - (BOOL)canSendMessageComposition:(CKComposition *)composition error:(NSError **)error;
@@ -121,44 +123,6 @@ typedef NS_ENUM(SInt32, CouriaMessagesExtensionMessageID) {
 @end
 
 #pragma mark - Functions
-
-static CKEntity *getEntity(NSString *userIdentifier)
-{
-    CKEntity *entity = nil;
-    if (userIdentifier.length > 0) {
-        entity = [CKEntity copyEntityForAddressString:userIdentifier];
-    }
-    return entity;
-}
-
-static CKConversation *getConversation(NSString *userIdentifier, BOOL create)
-{
-    static CKConversationList *conversationList;
-    if (conversationList == nil) {
-        conversationList = [CKConversationList sharedConversationList];
-    }
-    CKConversation *conversation = [conversationList conversationForExistingChatWithGroupID:userIdentifier];
-    if (conversation == nil) {
-        conversation = [conversationList conversationForRecipients:@[getEntity(userIdentifier)] create:create];
-    }
-    return conversation;
-}
-
-static IMService *getService(NSString *userIdentifier)
-{
-    static CKPreferredServiceManager *serviceManager;
-    static IMService *imessageService;
-    if (serviceManager == nil) {
-        serviceManager = [CKPreferredServiceManager sharedPreferredServiceManager];
-        imessageService = [IMService iMessageService];
-    }
-    while ([serviceManager availabilityForAddress:userIdentifier onService:imessageService checkWithServer:NO] == -1) {
-        [serviceManager availabilityForAddress:userIdentifier onService:imessageService checkWithServer:YES];
-        [[NSRunLoop currentRunLoop]runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
-    }
-    IMService *service = [serviceManager preferredServiceForAddressString:userIdentifier newComposition:YES checkWithServer:NO error:nil];
-    return service;
-}
 
 static NSArray *querySMSDB(NSString *sqlString)
 {
@@ -207,6 +171,57 @@ static NSArray *querySMSDB(NSString *sqlString)
     return result;
 }
 
+static NSArray *getRecipients(NSString *userIdentifier)
+{
+    NSArray *dbRecipients = querySMSDB([NSString stringWithFormat:@"SELECT handle.id FROM handle INNER JOIN chat_handle_join ON handle.ROWID = chat_handle_join.handle_id INNER JOIN chat ON chat.ROWID = chat_handle_join.chat_id WHERE chat.chat_identifier = '%@' ORDER BY handle.ROWID;", userIdentifier]);
+    NSMutableArray *recipients = [NSMutableArray array];
+    for (NSDictionary *dbRecipient in dbRecipients) {
+        NSString *dbRecipientString = dbRecipient[@"id"];
+        if (![recipients containsObject:dbRecipientString]) {
+            [recipients addObject:dbRecipientString];
+        }
+    }
+    return recipients;
+}
+
+static CKEntity *getEntity(NSString *userIdentifier)
+{
+    CKEntity *entity = nil;
+    if (userIdentifier.length > 0) {
+        entity = [CKEntity copyEntityForAddressString:userIdentifier];
+    }
+    return entity;
+}
+
+static CKConversation *getConversation(NSString *userIdentifier, BOOL create)
+{
+    static CKConversationList *conversationList;
+    if (conversationList == nil) {
+        conversationList = [CKConversationList sharedConversationList];
+    }
+    CKConversation *conversation = [conversationList conversationForExistingChatWithGroupID:userIdentifier];
+    if (conversation == nil) {
+        conversation = [conversationList conversationForRecipients:@[getEntity(userIdentifier)] create:create];
+    }
+    return conversation;
+}
+
+static IMService *getService(NSString *userIdentifier)
+{
+    static CKPreferredServiceManager *serviceManager;
+    static IMService *imessageService;
+    if (serviceManager == nil) {
+        serviceManager = [CKPreferredServiceManager sharedPreferredServiceManager];
+        imessageService = [IMService iMessageService];
+    }
+    while ([serviceManager availabilityForAddress:userIdentifier onService:imessageService checkWithServer:NO] == -1) {
+        [serviceManager availabilityForAddress:userIdentifier onService:imessageService checkWithServer:YES];
+        [[NSRunLoop currentRunLoop]runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
+    }
+    IMService *service = [serviceManager preferredServiceForAddressString:userIdentifier newComposition:YES checkWithServer:NO error:nil];
+    return service;
+}
+
 static CFMessagePortRef remotePort()
 {
     static CFMessagePortRef port;
@@ -241,9 +256,9 @@ static inline BOOL stringContainsString(NSString *string1, NSString *string2, BO
     }
 }
 
-static inline NSString *uncanonicalizedPhoneNumber(NSString *phoneNumber)
+static inline NSString *standardizedAddress(NSString *address)
 {
-    return stringContainsString(phoneNumber, @"@", NO) ? phoneNumber : [phoneNumber stringByReplacingOccurrencesOfString:@"[- ()]" withString:@"" options:NSRegularExpressionSearch range:NSMakeRange(0, phoneNumber.length)];
+    return [CKEntity copyEntityForAddressString:address].rawAddress;
 }
 
 #pragma mark - Implementations
@@ -281,13 +296,25 @@ static inline NSString *uncanonicalizedPhoneNumber(NSString *phoneNumber)
 
 - (NSString *)getUserIdentifier:(BBBulletin *)bulletin
 {
-    return bulletin.context[@"contactInfo"];
+    return standardizedAddress(bulletin.context[@"contactInfo"]);
 }
 
 - (NSString *)getNickname:(NSString *)userIdentifier
 {
-    CKEntity *entity = getEntity(userIdentifier);
-    return entity ? entity.name : userIdentifier;
+    NSArray *recipients = getRecipients(userIdentifier);
+    NSUInteger count = recipients.count;
+    NSMutableString *nickname = [NSMutableString string];
+    if (count == 0) {
+        [nickname appendString:userIdentifier];
+    } else {
+        [recipients enumerateObjectsUsingBlock:^(NSString *recipient, NSUInteger index, BOOL *stop) {
+            if (nickname.length > 0) {
+                [nickname appendString:(index == count - 1) ? @" & " : @", "];
+            }
+            [nickname appendString:getEntity(recipient).name];
+        }];
+    }
+    return nickname;
 }
 
 - (UIImage *)getAvatar:(NSString *)userIdentifier
@@ -298,10 +325,12 @@ static inline NSString *uncanonicalizedPhoneNumber(NSString *phoneNumber)
 
 - (NSArray *)getMessages:(NSString *)userIdentifier
 {
+    BOOL groupMessages = getRecipients(userIdentifier).count > 1;
     NSMutableArray *messages = [NSMutableArray array];
-    NSArray *dbMessages = querySMSDB([NSString stringWithFormat:@"SELECT ROWID, text, is_from_me, date, cache_has_attachments FROM message WHERE handle_id IN (SELECT ROWID FROM handle WHERE id = '%@') ORDER BY ROWID DESC LIMIT 20;", userIdentifier]);
+    NSArray *dbMessages = querySMSDB([NSString stringWithFormat:@"SELECT handle.id, message.text, message.is_from_me, message.date, message.cache_has_attachments FROM message INNER JOIN chat_message_join ON message.ROWID = chat_message_join.message_id INNER JOIN chat ON chat.ROWID = chat_message_join.chat_id LEFT JOIN handle ON handle.ROWID = message.handle_id WHERE chat.chat_identifier = '%@' ORDER BY message.ROWID DESC LIMIT 20;", userIdentifier]);
     NSTimeInterval lastDate = 0;
     for (NSDictionary *dbMessage in dbMessages.reverseObjectEnumerator) {
+        id handleId = dbMessage[@"id"];
         NSString *text = [dbMessage[@"text"]stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         BOOL outgoing = [dbMessage[@"is_from_me"]boolValue];
         BOOL hasAttachments = [dbMessage[@"cache_has_attachments"]boolValue];
@@ -310,6 +339,9 @@ static inline NSString *uncanonicalizedPhoneNumber(NSString *phoneNumber)
             CouriaMessagesMessage *message = [[CouriaMessagesMessage alloc]init];
             message.text = text;
             message.outgoing = outgoing;
+            if (groupMessages && !outgoing && [handleId isKindOfClass:NSString.class]) {
+                message.text = [NSString stringWithFormat:@"%@: %@", getEntity(handleId).name, text];
+            }
             if (round(date - lastDate) >= 60) {
                 message.timestamp = [NSDate dateWithTimeIntervalSinceReferenceDate:date];
                 lastDate = date;
@@ -317,7 +349,7 @@ static inline NSString *uncanonicalizedPhoneNumber(NSString *phoneNumber)
             [messages addObject:message];
         }
         if (hasAttachments) {
-            NSArray *dbAttachments = querySMSDB([NSString stringWithFormat:@"SELECT filename, mime_type FROM attachment WHERE ROWID IN (SELECT attachment_id FROM message_attachment_join WHERE message_id = '%@');", dbMessage[@"ROWID"]]);
+            NSArray *dbAttachments = querySMSDB([NSString stringWithFormat:@"SELECT attachment.filename, attachment.mime_type FROM attachment INNER JOIN message_attachment_join ON attachment.ROWID = message_attachment_join.attachment_id WHERE message_id = '%@';", dbMessage[@"ROWID"]]);
             for (NSDictionary *dbAttachment in dbAttachments) {
                 NSString *filename = [dbAttachment[@"filename"]stringByExpandingTildeInPath];
                 NSString *mimeType = dbAttachment[@"mime_type"];
@@ -346,9 +378,9 @@ static inline NSString *uncanonicalizedPhoneNumber(NSString *phoneNumber)
     if (keyword.length == 0) {
         if (lastRefreshRecent == nil || [[NSDate date]timeIntervalSinceDate:lastRefreshRecent] > 10) {
             recentContacts = [NSMutableArray array];
-            NSArray *dbRecentContacts = querySMSDB(@"SELECT handle.id, MAX(message.ROWID) FROM handle, message WHERE handle.ROWID = message.handle_id GROUP BY handle.id ORDER BY message.ROWID DESC");
+            NSArray *dbRecentContacts = querySMSDB(@"SELECT chat.chat_identifier, MAX(chat_message_join.message_id) FROM chat, chat_message_join WHERE chat.ROWID = chat_message_join.chat_id GROUP BY chat.ROWID ORDER BY chat_message_join.message_id DESC");
             for (NSDictionary *dbRecentContact in dbRecentContacts) {
-                [recentContacts addObject:dbRecentContact[@"id"]];
+                [recentContacts addObject:dbRecentContact[@"chat_identifier"]];
             }
             lastRefreshRecent = [NSDate date];
         }
@@ -362,27 +394,28 @@ static inline NSString *uncanonicalizedPhoneNumber(NSString *phoneNumber)
         for (IMPerson *person in allPersons) {
             if (stringContainsString(person.fullName, keyword, NO) || stringContainsString(person.companyName, keyword, NO)) {
                 for (NSString *phoneNumber in person.phoneNumbers) {
-                    [resultingContacts addObject:uncanonicalizedPhoneNumber(phoneNumber)];
+                    [resultingContacts addObject:standardizedAddress(phoneNumber)];
                 }
                 for (IMHandle *handle in [IMHandle imHandlesForIMPerson:person]) {
-                    [resultingContacts addObject:handle.ID];
+                    [resultingContacts addObject:standardizedAddress(handle.ID)];
                 }
             } else {
                 for (NSString *phoneNumber in person.phoneNumbers) {
-                    NSString *filteredPhoneNumber = uncanonicalizedPhoneNumber(phoneNumber);
-                    if (stringContainsString(filteredPhoneNumber, keyword, NO)) {
-                        [resultingContacts addObject:filteredPhoneNumber];
+                    NSString *standardizedPhoneNumber = standardizedAddress(phoneNumber);
+                    if (stringContainsString(standardizedPhoneNumber, keyword, NO)) {
+                        [resultingContacts addObject:standardizedPhoneNumber];
                     }
                 }
                 for (NSString *email in person.emails) {
-                    if (stringContainsString(email, keyword, NO)) {
-                        [resultingContacts addObject:email];
+                    NSString *standardizedEmail = standardizedAddress(email);
+                    if (stringContainsString(standardizedEmail, keyword, NO)) {
+                        [resultingContacts addObject:standardizedEmail];
                     }
                 }
             }
         }
         if (resultingContacts.count == 0) {
-            [resultingContacts addObject:uncanonicalizedPhoneNumber(keyword)];
+            [resultingContacts addObject:standardizedAddress(keyword)];
         }
         return resultingContacts.allObjects;
     }
@@ -538,7 +571,6 @@ __attribute__((constructor))
 static void Constructor()
 {
     @autoreleasepool {
-        _CFEnableZombies();
         NSString *application = [NSBundle mainBundle].bundleIdentifier;
         if ([application isEqualToString:@"com.apple.springboard"]) {
             [[NSClassFromString(@"Couria")sharedInstance]registerDataSource:[CouriaMessagesDataSource new] delegate:[CouriaMessagesDelegate new] forApplication:MessagesIdentifier];
