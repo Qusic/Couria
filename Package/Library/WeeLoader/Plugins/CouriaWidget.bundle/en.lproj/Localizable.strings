@@ -1,2 +1,10 @@
-"TAP_TO_COMPOSE" = "Tap to Compose";
-"NO_AVAILABLE_APPLICATIONS" = "No Available Applications";
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NO_AVAILABLE_APPLICATIONS</key>
+	<string>No Available Applications</string>
+	<key>TAP_TO_COMPOSE</key>
+	<string>Tap to Compose</string>
+</dict>
+</plist>

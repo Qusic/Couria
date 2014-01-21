@@ -1,14 +1,34 @@
-"ABOUT" = "Über";
-"DONATE" = "Spenden";
-"ENABLED" = "Aktiviert";
-"EXTENSIONS" = "Erweiterungen";
-"NO_INSTALLED_ITEMS" = "Keine installierten Gegenstände";
-"OTHER_PREFERENCES" = "Erweiterte Einstellungen";
-"PASSCODE" = "Passwort";
-"REQUIRE_WHEN_LOCKED" = "Benötigt wenn gesperrt";
-"REQUIRE_WHEN_UNLOCKED" = "Benötigt wenn entsperrt";
-"SHARE_TEXT" = "Ich liebe #Couria, welches ein aufgeräumtes und veränderbares schnell-Antworten und schnell-Verfassen System zu iOS hinzufügt.";
-"THEME" = "Theme";
-"THEMES" = "Themes";
-"TRANSLATION_CREDITS" = "Übersetzer";
-"TWITTER" = "@QusicS auf Twitter";
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ABOUT</key>
+	<string>Über</string>
+	<key>DONATE</key>
+	<string>Spenden</string>
+	<key>ENABLED</key>
+	<string>Aktiviert</string>
+	<key>EXTENSIONS</key>
+	<string>Erweiterungen</string>
+	<key>NO_INSTALLED_ITEMS</key>
+	<string>Keine installierten Gegenstände</string>
+	<key>OTHER_PREFERENCES</key>
+	<string>Erweiterte Einstellungen</string>
+	<key>PASSCODE</key>
+	<string>Passwort</string>
+	<key>REQUIRE_WHEN_LOCKED</key>
+	<string>Benötigt wenn gesperrt</string>
+	<key>REQUIRE_WHEN_UNLOCKED</key>
+	<string>Benötigt wenn entsperrt</string>
+	<key>SHARE_TEXT</key>
+	<string>Ich liebe #Couria, welches ein aufgeräumtes und veränderbares schnell-Antworten und schnell-Verfassen System zu iOS hinzufügt.</string>
+	<key>THEME</key>
+	<string>Theme</string>
+	<key>THEMES</key>
+	<string>Themes</string>
+	<key>TRANSLATION_CREDITS</key>
+	<string>Übersetzer</string>
+	<key>TWITTER</key>
+	<string>@QusicS auf Twitter</string>
+</dict>
+</plist>

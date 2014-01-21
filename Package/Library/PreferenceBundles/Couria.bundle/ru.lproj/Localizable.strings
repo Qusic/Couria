@@ -3,32 +3,32 @@
 <plist version="1.0">
 <dict>
 	<key>ABOUT</key>
-	<string>詳細</string>
+	<string>О дополнении</string>
 	<key>DONATE</key>
-	<string>寄付</string>
+	<string>Пожертвовать</string>
 	<key>ENABLED</key>
-	<string>有効</string>
+	<string>Включено</string>
 	<key>EXTENSIONS</key>
-	<string>エクステンション</string>
+	<string>Расширения</string>
 	<key>NO_INSTALLED_ITEMS</key>
-	<string>アイテムがインストールされていません.</string>
+	<string>Нет установленных расширений</string>
 	<key>OTHER_PREFERENCES</key>
-	<string>その他の設定</string>
+	<string>Другие настройки</string>
 	<key>PASSCODE</key>
-	<string>パスコード</string>
+	<string>Пароль</string>
 	<key>REQUIRE_WHEN_LOCKED</key>
-	<string>ロック時に要求</string>
+	<string>Запрашивать при заблок.экр.</string>
 	<key>REQUIRE_WHEN_UNLOCKED</key>
-	<string>ロック解除時に要求</string>
+	<string>Запрашивать при разблок.экр.</string>
 	<key>SHARE_TEXT</key>
 	<string>I'm Loving #Couria, which brings a Centralized and Customizable Quick Reply and Quick Compose System to iOS.</string>
 	<key>THEME</key>
-	<string>テーマ</string>
+	<string>Тема</string>
 	<key>THEMES</key>
-	<string>テーマ</string>
+	<string>Темы</string>
 	<key>TRANSLATION_CREDITS</key>
-	<string>翻訳者</string>
+	<string>Переводчики</string>
 	<key>TWITTER</key>
-	<string>@QusicS on Twitter</string>
+	<string>@QusicS на Twitter</string>
 </dict>
 </plist>

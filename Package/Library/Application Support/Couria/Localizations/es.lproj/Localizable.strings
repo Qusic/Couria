@@ -1,25 +1,46 @@
-"CLOSE" = "Cerrar";
-"SEND" = "Enviar";
-"REPLY" = "Responder";
-"READ" = "Leer";
-"OPEN" = "Abrir";
-"PASSCODE" = "Contraseña";
-
-"PHOTO" = "Foto";
-"MOVIE" = "Video";
-"TAP_TO_VIEW" = "Pulse Para Ver";
-
-"CAMERA" = "Cámara";
-"LIBRARY" = "Librería";
-"DOODLE" = "Doodle";
-"VIEW" = "Ver";
-"REMOVE" = "Remover";
-
-"OK" = "Aceptar";
-"CANCEL" = "Cancelar";
-
-"CAMERA_NOT_AVAILABLE" = "Cámara no disponible.";
-"LIBRARY_NOT_AVAILABLE" = "Librería no disponible.";
-"DOODLE_NOT_AVAILABLE" = "Doodle no esta disponible. Por favor intente de nuevo después de instalar Doodle Message de Cydia.";
-
-"ACTIVATOR_LISTENER_DESCRIPTION" = "Abrir el redactor de mensajes Couria";
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ACTIVATOR_LISTENER_DESCRIPTION</key>
+	<string>Abrir el redactor de mensajes Couria</string>
+	<key>CAMERA</key>
+	<string>Cámara</string>
+	<key>CAMERA_NOT_AVAILABLE</key>
+	<string>Cámara no disponible.</string>
+	<key>CANCEL</key>
+	<string>Cancelar</string>
+	<key>CLOSE</key>
+	<string>Cerrar</string>
+	<key>DOODLE</key>
+	<string>Doodle</string>
+	<key>DOODLE_NOT_AVAILABLE</key>
+	<string>Doodle no esta disponible. Por favor intente de nuevo después de instalar Doodle Message de Cydia.</string>
+	<key>LIBRARY</key>
+	<string>Librería</string>
+	<key>LIBRARY_NOT_AVAILABLE</key>
+	<string>Librería no disponible.</string>
+	<key>MOVIE</key>
+	<string>Video</string>
+	<key>OK</key>
+	<string>Aceptar</string>
+	<key>OPEN</key>
+	<string>Abrir</string>
+	<key>PASSCODE</key>
+	<string>Contraseña</string>
+	<key>PHOTO</key>
+	<string>Foto</string>
+	<key>READ</key>
+	<string>Leer</string>
+	<key>REMOVE</key>
+	<string>Remover</string>
+	<key>REPLY</key>
+	<string>Responder</string>
+	<key>SEND</key>
+	<string>Enviar</string>
+	<key>TAP_TO_VIEW</key>
+	<string>Pulse Para Ver</string>
+	<key>VIEW</key>
+	<string>Ver</string>
+</dict>
+</plist>

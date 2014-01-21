@@ -35,5 +35,10 @@
 		<integer>1</integer>
 		<integer>2</integer>
 	</array>
+	<key>SBUIWidgetViewControllers</key>
+	<dict>
+		<key>SBUIWidgetIdiomNotificationCenterToday</key>
+		<string>CouriaWidgetController_iOS7</string>
+	</dict>
 </dict>
 </plist>

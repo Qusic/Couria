@@ -1,16 +1,34 @@
-"EXTENSIONS" = "插件";
-"THEMES" = "主题";
-"NO_INSTALLED_ITEMS" = "没有已安装的项目";
-
-"ABOUT" = "关于";
-"TWITTER" = "关注推特 @QusicS";
-"DONATE" = "捐赠";
-"TRANSLATION_CREDITS" = "翻译致谢名单";
-"SHARE_TEXT" = "我很喜欢 #Couria# 。它为 iOS 带来了一个集中的可定制的消息快捷回复和快捷编写的平台。";
-
-"ENABLED" = "启用";
-"THEME" = "主题";
-"PASSCODE" = "密码";
-"REQUIRE_WHEN_LOCKED" = "锁定时启用";
-"REQUIRE_WHEN_UNLOCKED" = "解锁时启用";
-"OTHER_PREFERENCES" = "其它设置";
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ABOUT</key>
+	<string>关于</string>
+	<key>DONATE</key>
+	<string>捐赠</string>
+	<key>ENABLED</key>
+	<string>启用</string>
+	<key>EXTENSIONS</key>
+	<string>插件</string>
+	<key>NO_INSTALLED_ITEMS</key>
+	<string>没有已安装的项目</string>
+	<key>OTHER_PREFERENCES</key>
+	<string>其它设置</string>
+	<key>PASSCODE</key>
+	<string>密码</string>
+	<key>REQUIRE_WHEN_LOCKED</key>
+	<string>锁定时启用</string>
+	<key>REQUIRE_WHEN_UNLOCKED</key>
+	<string>解锁时启用</string>
+	<key>SHARE_TEXT</key>
+	<string>我很喜欢 #Couria# 。它为 iOS 带来了一个集中的可定制的消息快捷回复和快捷编写的平台。</string>
+	<key>THEME</key>
+	<string>主题</string>
+	<key>THEMES</key>
+	<string>主题</string>
+	<key>TRANSLATION_CREDITS</key>
+	<string>翻译致谢名单</string>
+	<key>TWITTER</key>
+	<string>关注推特 @QusicS</string>
+</dict>
+</plist>

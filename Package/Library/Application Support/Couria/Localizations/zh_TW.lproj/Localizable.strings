@@ -1,25 +1,46 @@
-"CLOSE" = "關閉";
-"SEND" = "傳送";
-"REPLY" = "回覆";
-"READ" = "已讀";
-"OPEN" = "開啟";
-"PASSCODE" = "密碼";
-
-"PHOTO" = "照片";
-"MOVIE" = "錄影";
-"TAP_TO_VIEW" = "點一下來瀏覽";
-
-"CAMERA" = "相機";
-"LIBRARY" = "相簿";
-"DOODLE" = "塗鴉";
-"VIEW" = "瀏覽";
-"REMOVE" = "移除";
-
-"OK" = "確定";
-"CANCEL" = "取消";
-
-"CAMERA_NOT_AVAILABLE" = "目前無法使用相機。";
-"LIBRARY_NOT_AVAILABLE" = "目前無法使用相簿。";
-"DOODLE_NOT_AVAILABLE" = "無法使用塗鴉功能，請在 Cydia 安裝 Doodle Message。";
-
-"ACTIVATOR_LISTENER_DESCRIPTION" = "啟動 Couria 以編寫訊息";
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ACTIVATOR_LISTENER_DESCRIPTION</key>
+	<string>啟動 Couria 以編寫訊息</string>
+	<key>CAMERA</key>
+	<string>相機</string>
+	<key>CAMERA_NOT_AVAILABLE</key>
+	<string>目前無法使用相機。</string>
+	<key>CANCEL</key>
+	<string>取消</string>
+	<key>CLOSE</key>
+	<string>關閉</string>
+	<key>DOODLE</key>
+	<string>塗鴉</string>
+	<key>DOODLE_NOT_AVAILABLE</key>
+	<string>無法使用塗鴉功能，請在 Cydia 安裝 Doodle Message。</string>
+	<key>LIBRARY</key>
+	<string>相簿</string>
+	<key>LIBRARY_NOT_AVAILABLE</key>
+	<string>目前無法使用相簿。</string>
+	<key>MOVIE</key>
+	<string>錄影</string>
+	<key>OK</key>
+	<string>確定</string>
+	<key>OPEN</key>
+	<string>開啟</string>
+	<key>PASSCODE</key>
+	<string>密碼</string>
+	<key>PHOTO</key>
+	<string>照片</string>
+	<key>READ</key>
+	<string>已讀</string>
+	<key>REMOVE</key>
+	<string>移除</string>
+	<key>REPLY</key>
+	<string>回覆</string>
+	<key>SEND</key>
+	<string>傳送</string>
+	<key>TAP_TO_VIEW</key>
+	<string>點一下來瀏覽</string>
+	<key>VIEW</key>
+	<string>瀏覽</string>
+</dict>
+</plist>
