@@ -152,6 +152,19 @@ CHOptimizedMethod(1, self, void, SBLockScreenNotificationListController, unlockU
     }
 }
 
+CHDeclareClass(SBUnlockActionContext)
+CHOptimizedMethod(0, self, BOOL, SBUnlockActionContext, requiresUnlock)
+{
+    SBLockScreenNotificationListController *notificationController = ((SBLockScreenManager *)[NSClassFromString(@"SBLockScreenManager")sharedInstance]).lockScreenViewController._notificationController;
+    NSString *bulletinID = self.identifier;
+    BBBulletin *bulletin = [[notificationController _listItemContainingBulletinID:bulletinID]bulletinWithID:bulletinID];
+    if (CouriaCanHandleBulletin(bulletin)) {
+        return NO;
+    } else {
+        return CHSuper(0, SBUnlockActionContext, requiresUnlock);
+    }
+}
+
 static BBServer *BulletinBoardServer;
 CHDeclareClass(BBServer)
 CHClassMethod(0, BBServer *, BBServer, sharedInstance)
@@ -381,6 +394,8 @@ CHConstructor
                 CHHook(2, SBLockScreenViewController, lockScreenView, didEndScrollingOnPage);
                 CHLoadLateClass(SBLockScreenNotificationListController);
                 CHHook(1, SBLockScreenNotificationListController, unlockUIWithActionContext);
+                CHLoadLateClass(SBUnlockActionContext);
+                CHHook(0, SBUnlockActionContext, requiresUnlock);
             } else {
                 CHLoadLateClass(SBBulletinListController);
                 CHHook(2, SBBulletinListController, tableView, didSelectRowAtIndexPath);
