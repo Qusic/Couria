@@ -305,7 +305,7 @@ static inline NSString *standardizedAddress(NSString *address)
     NSUInteger count = recipients.count;
     NSMutableString *nickname = [NSMutableString string];
     if (count == 0) {
-        [nickname appendString:userIdentifier];
+        [nickname appendString:getEntity(userIdentifier).name];
     } else {
         [recipients enumerateObjectsUsingBlock:^(NSString *recipient, NSUInteger index, BOOL *stop) {
             if (nickname.length > 0) {
