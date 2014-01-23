@@ -383,6 +383,9 @@ extern "C" {
 + (UIImage *)_applicationIconImageForBundleIdentifier:(NSString *)bundleIdentifier format:(int)format scale:(CGFloat)scale;
 @end
 
+@interface MPKnockoutButton : UIButton
+@end
+
 @interface UINavigationButton : UIButton
 @property(assign, nonatomic) UIBarButtonItemStyle style;
 @end

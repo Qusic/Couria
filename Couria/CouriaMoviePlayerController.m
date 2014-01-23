@@ -18,12 +18,24 @@
         self.view.frame = endFrame;
     } completion:^(BOOL finished) {
         NSArray *buttons = [self.view findViewsUsingBlock:^BOOL(UIView *view) {
-            return [view isKindOfClass:UINavigationButton.class];
+            return [view isKindOfClass:iOS7() ? NSClassFromString(@"MPKnockoutButton") : UINavigationButton.class];
         }];
-        for (UINavigationButton *button in buttons) {
-            if (button.style == UIBarButtonItemStyleDone) {
-                [button addTarget:self action:@selector(doneAction:) forControlEvents:UIControlEventTouchUpInside];
-                break;
+        if (iOS7()) {
+            for (MPKnockoutButton *button in buttons) {
+                NSArray *actions = [button actionsForTarget:button.allTargets.anyObject forControlEvent:UIControlEventTouchUpInside];
+                for (NSString *action in actions) {
+                    if (NSSelectorFromString(action) == @selector(_doneButtonTapped:)) {
+                        [button addTarget:self action:@selector(doneAction:) forControlEvents:UIControlEventTouchUpInside];
+                        return;
+                    }
+                }
+            }
+        } else {
+            for (UINavigationButton *button in buttons) {
+                if (button.style == UIBarButtonItemStyleDone) {
+                    [button addTarget:self action:@selector(doneAction:) forControlEvents:UIControlEventTouchUpInside];
+                    return;
+                }
             }
         }
     }];
