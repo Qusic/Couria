@@ -513,6 +513,7 @@
 
 - (void)sendButtonAction:(UIButton *)button
 {
+    [self.view endEditing:YES];
     NSString *text = _fieldView.textView.text;
     id media = _mediaMessageContent;
     if (text.length == 0 && media == nil) {
