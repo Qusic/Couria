@@ -153,6 +153,7 @@
 {
     return @{@"Deutsch": @"Tim Klute",
              @"Español": @"MXNMike",
+             @"Français": @"Léo",
              @"Italiano": @"Bruno Di Marco",
              @"Nederlands": @"Alphyraz",
              @"Русский": @"Victor Ryabov",
