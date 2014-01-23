@@ -136,16 +136,6 @@
         _photoButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
         [_photoButton addTarget:self action:@selector(photoButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [_bottombarView addSubview:_photoButton];
-        _photoPicker = [[UIImagePickerController alloc]init];
-        _photoPicker.delegate = self;
-        NSMutableArray *mediaTypes = [NSMutableArray array];
-        if (CouriaCanSendPhoto(_applicationIdentifier)) { [mediaTypes addObject:(NSString *)kUTTypeImage]; }
-        if (CouriaCanSendMovie(_applicationIdentifier)) { [mediaTypes addObject:(NSString *)kUTTypeMovie]; }
-        _photoPicker.mediaTypes = mediaTypes;
-        _photoPicker.allowsEditing = NO;
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            _photoPickerPopover = [[UIPopoverController alloc]initWithContentViewController:_photoPicker];
-        }
     }
 
     if (CouriaGetContacts(_applicationIdentifier, nil) != nil) {
@@ -546,6 +536,16 @@
     }
     _photoActionSheet.cancelButtonIndex = [_photoActionSheet addButtonWithTitle:CouriaLocalizedString(@"CANCEL")];
     [_photoActionSheet showFromRect:[button convertRect:button.bounds toView:self.view] inView:self.view animated:YES];
+    _photoPicker = [[UIImagePickerController alloc]init];
+    _photoPicker.delegate = self;
+    NSMutableArray *mediaTypes = [NSMutableArray array];
+    if (CouriaCanSendPhoto(_applicationIdentifier)) { [mediaTypes addObject:(NSString *)kUTTypeImage]; }
+    if (CouriaCanSendMovie(_applicationIdentifier)) { [mediaTypes addObject:(NSString *)kUTTypeMovie]; }
+    _photoPicker.mediaTypes = mediaTypes;
+    _photoPicker.allowsEditing = NO;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        _photoPickerPopover = [[UIPopoverController alloc]initWithContentViewController:_photoPicker];
+    }
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
