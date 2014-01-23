@@ -195,7 +195,7 @@ CHOptimizedMethod(1, self, void, UIWindow, sendEvent, UIEvent *, event)
         SBLockScreenManager *lockscreenManager = (SBLockScreenManager *)[NSClassFromString(@"SBLockScreenManager")sharedInstance];
         if (lockscreenManager.isUILocked) {
             SBBacklightController *backlightController = (SBBacklightController *)[NSClassFromString(@"SBBacklightController")sharedInstance];
-            [backlightController resetLockScreenIdleTimer];
+            [backlightController resetLockScreenIdleTimerWithDuration:60];
         }
     } else {
         SBAwayController *awayController = [NSClassFromString(@"SBAwayController")sharedAwayController];

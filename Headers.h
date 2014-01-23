@@ -535,6 +535,7 @@ extern "C" {
 @interface SBBacklightController : NSObject // iOS 7
 + (instancetype)sharedInstance;
 - (void)resetLockScreenIdleTimer;
+- (void)resetLockScreenIdleTimerWithDuration:(double)duration;
 @end
 
 @interface SBAwayController : NSObject // iOS 6
