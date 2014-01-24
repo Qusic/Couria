@@ -219,6 +219,15 @@ CHOptimizedMethod(0, self, BOOL, SBUIController, clickedMenuButton)
     }
 }
 
+CHDeclareClass(SBAlertManager)
+CHOptimizedMethod(1, self, void, SBAlertManager, activate, SBAlert *, alert)
+{
+    if (![alert isKindOfClass:NSClassFromString(@"CouriaAlert")]) {
+        [CouriaCurrentController() dismiss];
+    }
+    CHSuper(1, SBAlertManager, activate, alert);
+}
+
 CHDeclareClass(SpringBoard);
 CHOptimizedMethod(6, self, void, SpringBoard, _openURLCore, NSURL *, url, display, id, display, animating, BOOL, animating, sender, id, sender, additionalActivationFlags, id, flags, activationHandler, id, handler)
 {
@@ -415,6 +424,8 @@ CHConstructor
             CHHook(1, UIWindow, sendEvent);
             CHLoadLateClass(SBUIController);
             CHHook(0, SBUIController, clickedMenuButton);
+            CHLoadLateClass(SBAlertManager);
+            CHHook(1, SBAlertManager, activate);
             CHLoadLateClass(SpringBoard);
             if (iOS7()) {
                 CHHook(6, SpringBoard, _openURLCore, display, animating, sender, additionalActivationFlags, activationHandler);
