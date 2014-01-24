@@ -388,7 +388,7 @@
     }
     CGFloat xMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? 10 : 100;
     CGFloat yMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? 10 : 50;
-    CGFloat topMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && UIInterfaceOrientationIsLandscape(orientation)) ? 0 : 20;
+    CGFloat topMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && UIInterfaceOrientationIsLandscape(orientation)) ? 0 : 10;
     CGSize viewSize = [UIScreen mainScreen].viewFrame.size;
     CGSize keyboardSize = [notification.userInfo[UIKeyboardFrameEndUserInfoKey]CGRectValue].size;
     CGFloat keyboardHeight = [notification.name isEqualToString:UIKeyboardWillHideNotification] ? 0 : (UIInterfaceOrientationIsPortrait(orientation) ? keyboardSize.height : keyboardSize.width);
