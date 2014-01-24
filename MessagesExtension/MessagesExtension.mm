@@ -296,7 +296,31 @@ static inline NSString *standardizedAddress(NSString *address)
 
 - (NSString *)getUserIdentifier:(BBBulletin *)bulletin
 {
-    return standardizedAddress(bulletin.context[@"contactInfo"]);
+    NSArray *recipientsArray = bulletin.context[@"AssistantContext"][@"msgRecipients"];
+    if (recipientsArray.count > 1) {
+        NSMutableArray *recipients = [NSMutableArray array];
+        for (NSDictionary *recipientDictionary in bulletin.context[@"AssistantContext"][@"msgRecipients"]) {
+            [recipients addObject:recipientDictionary[@"data"]];
+        }
+        NSMutableString *string1 = [NSMutableString string];
+        NSMutableString *string2 = [NSMutableString string];
+        __block NSUInteger integer = 0;
+        [recipients enumerateObjectsUsingBlock:^(NSString *recipient, NSUInteger index, BOOL *stop) {
+            if (index > 0) {
+                [string1 appendString:@","];
+                [string2 appendString:@" AND "];
+                integer += 1;
+            }
+            [string1 appendFormat:@"'%@'", recipient];
+            [string2 appendFormat:@"GROUP_CONCAT(handle.id) LIKE '%%%@%%'", recipient];
+            integer += recipient.length;
+        }];
+        NSString *sql = [NSString stringWithFormat:@"SELECT chat.chat_identifier FROM chat_handle_join INNER JOIN chat ON chat.rowid = chat_handle_join.chat_id INNER JOIN handle ON handle.rowid = chat_handle_join.handle_id WHERE handle.id IN (%@) GROUP BY chat.chat_identifier HAVING %@ AND LENGTH(GROUP_CONCAT(handle.id)) = %lu;", string1, string2, (unsigned long)integer];
+        NSArray *dbChatIdentifiers = querySMSDB(sql);
+        return dbChatIdentifiers.firstObject[@"chat_identifier"];
+    } else {
+        return standardizedAddress(bulletin.context[@"contactInfo"]);
+    }
 }
 
 - (NSString *)getNickname:(NSString *)userIdentifier
