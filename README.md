@@ -2,13 +2,14 @@
 Centralized and Customizable Quick Reply and Quick Compose System for iOS
 
 ## How to make extensions
-- https://github.com/Qusic/Couria/blob/master/Couria.h
-- https://github.com/Qusic/WhatsAppForCouria
-- https://github.com/Qusic/TweetbotForCouria
+- [Couria.h](https://github.com/Qusic/Couria/blob/master/Couria.h)
+- [WhatsApp Extension](https://github.com/Qusic/WhatsAppForCouria)
+- [Tweetbot Extension](https://github.com/Qusic/TweetbotForCouria)
 
 ## How to make themes
-- https://github.com/Qusic/Couria/blob/master/Couria/CouriaTheme.m
-- https://github.com/Qusic/Couria/tree/master/Package/Library/Application%20Support/Couria/Themes/me.qusic.couria.theme.default
+- [CouriaTheme.m](https://github.com/Qusic/Couria/blob/master/src/CouriaTheme.m)
+- [Default Theme](https://github.com/Qusic/Couria/tree/master/layout/Library/Application%20Support/Couria/Themes/me.qusic.couria.theme.default)
+- [Default7 Theme](https://github.com/Qusic/Couria/tree/master/layout/Library/Application%20Support/Couria/Themes/me.qusic.couria.theme.default7)
 
 ## How to contribute
 - Send pull requests for open issues
