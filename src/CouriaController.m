@@ -225,10 +225,17 @@
             }
         }
         _alert = nil;
-        if (!iOS7()) {
         [(SBOrientationLockManager *)[NSClassFromString(@"SBOrientationLockManager")sharedInstance]setLockOverrideEnabled:NO forReason:CouriaIdentifier];
+        if (iOS7()) {
+            SBLockScreenManager *lockscreenManager = (SBLockScreenManager *)[NSClassFromString(@"SBLockScreenManager")sharedInstance];
+            if (lockscreenManager.isUILocked) {
+                SBBacklightController *backlightController = (SBBacklightController *)[NSClassFromString(@"SBBacklightController")sharedInstance];
+                [backlightController resetLockScreenIdleTimerWithDuration:0.4];
+            }
+        } else {
             SBAwayController *awayController = [NSClassFromString(@"SBAwayController")sharedAwayController];
             if (awayController.isLocked) {
+                [awayController restartDimTimer:0.4];
                 [awayController.awayView addSubview:awayController.awayViewFakeStatusBar];
             }
             [[NSClassFromString(@"SBStatusBarDataManager")sharedDataManager]resetData];
