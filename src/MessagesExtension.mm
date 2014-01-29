@@ -325,7 +325,7 @@ static inline NSString *standardizedAddress(NSString *address)
 {
     BOOL groupMessages = getRecipients(userIdentifier).count > 1;
     NSMutableArray *messages = [NSMutableArray array];
-    NSArray *dbMessages = querySMSDB([NSString stringWithFormat:@"SELECT handle.id, message.text, message.is_from_me, message.date, message.cache_has_attachments FROM message INNER JOIN chat_message_join ON message.ROWID = chat_message_join.message_id INNER JOIN chat ON chat.ROWID = chat_message_join.chat_id LEFT JOIN handle ON handle.ROWID = message.handle_id WHERE chat.chat_identifier = '%@' ORDER BY message.ROWID DESC LIMIT 20;", userIdentifier]);
+    NSArray *dbMessages = querySMSDB([NSString stringWithFormat:@"SELECT handle.id, message.ROWID, message.text, message.is_from_me, message.date, message.cache_has_attachments FROM message INNER JOIN chat_message_join ON message.ROWID = chat_message_join.message_id INNER JOIN chat ON chat.ROWID = chat_message_join.chat_id LEFT JOIN handle ON handle.ROWID = message.handle_id WHERE chat.chat_identifier = '%@' ORDER BY message.ROWID DESC LIMIT 20;", userIdentifier]);
     NSTimeInterval lastDate = 0;
     for (NSDictionary *dbMessage in dbMessages.reverseObjectEnumerator) {
         id handleId = dbMessage[@"id"];
