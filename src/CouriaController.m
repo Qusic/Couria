@@ -209,7 +209,6 @@
 
 - (void)dismiss
 {
-    [(SBOrientationLockManager *)[NSClassFromString(@"SBOrientationLockManager")sharedInstance]setLockOverrideEnabled:NO forReason:CouriaIdentifier];
     [UIView animateWithDuration:0.25 animations:^{
         self.view.alpha = 0;
     } completion:^(BOOL finished) {
@@ -227,6 +226,7 @@
         }
         _alert = nil;
         if (!iOS7()) {
+        [(SBOrientationLockManager *)[NSClassFromString(@"SBOrientationLockManager")sharedInstance]setLockOverrideEnabled:NO forReason:CouriaIdentifier];
             SBAwayController *awayController = [NSClassFromString(@"SBAwayController")sharedAwayController];
             if (awayController.isLocked) {
                 [awayController.awayView addSubview:awayController.awayViewFakeStatusBar];
