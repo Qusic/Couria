@@ -171,6 +171,9 @@ static NSArray *getRecipients(NSString *userIdentifier)
             [recipients addObject:dbRecipientString];
         }
     }
+    if (recipients.count == 0) {
+        [recipients addObject:userIdentifier];
+    }
     return recipients;
 }
 
@@ -302,8 +305,8 @@ static inline NSString *standardizedAddress(NSString *address)
     NSArray *recipients = getRecipients(userIdentifier);
     NSUInteger count = recipients.count;
     NSMutableString *nickname = [NSMutableString string];
-    if (count == 0) {
-        [nickname appendString:getEntity(userIdentifier).name];
+    if (count == 1) {
+        [nickname appendString:getEntity(recipients.firstObject).name];
     } else {
         [recipients enumerateObjectsUsingBlock:^(NSString *recipient, NSUInteger index, BOOL *stop) {
             if (nickname.length > 0) {
@@ -317,8 +320,30 @@ static inline NSString *standardizedAddress(NSString *address)
 
 - (UIImage *)getAvatar:(NSString *)userIdentifier
 {
-    CKEntity *entity = getEntity(userIdentifier);
-    return entity.transcriptContactImage;
+    NSArray *recipients = getRecipients(userIdentifier);
+    NSUInteger count = recipients.count;
+    UIImage *avatar = nil;
+    if (count == 1) {
+        avatar = getEntity(recipients.firstObject).transcriptContactImage;
+    } else {
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(27, 27), NO, 0.0);
+        if (count == 2) {
+            [getEntity(recipients[0]).transcriptContactImage drawInRect:CGRectMake( 0,  0, 15, 15)];
+            [getEntity(recipients[1]).transcriptContactImage drawInRect:CGRectMake(12, 12, 15, 15)];
+        } else if (count == 3) {
+            [getEntity(recipients[0]).transcriptContactImage drawInRect:CGRectMake( 7,  1, 13, 13)];
+            [getEntity(recipients[1]).transcriptContactImage drawInRect:CGRectMake( 0, 13, 13, 13)];
+            [getEntity(recipients[2]).transcriptContactImage drawInRect:CGRectMake(14, 13, 13, 13)];
+        } else {
+            [getEntity(recipients[0]).transcriptContactImage drawInRect:CGRectMake( 0,  0, 13, 13)];
+            [getEntity(recipients[1]).transcriptContactImage drawInRect:CGRectMake(14,  0, 13, 13)];
+            [getEntity(recipients[2]).transcriptContactImage drawInRect:CGRectMake( 0, 14, 13, 13)];
+            [getEntity(recipients[3]).transcriptContactImage drawInRect:CGRectMake(14, 14, 13, 13)];
+        }
+        avatar = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+   }
+    return avatar;
 }
 
 - (NSArray *)getMessages:(NSString *)userIdentifier
