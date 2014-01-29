@@ -1,15 +1,16 @@
 #import "Headers.h"
-#import "CouriaActivatorListener.h"
+#import "CouriaExtras.h"
 #import "CouriaController.h"
 
 static LAActivator *activator;
+static FSSwitchPanel *flipswitch;
 
-static inline NSString *getApplicationIdentifier(NSString *listenerName)
+static inline NSString *getApplicationIdentifier(NSString *externalIdentifier)
 {
-    return [listenerName substringFromIndex:16];
+    return [externalIdentifier substringFromIndex:16];
 }
 
-static inline NSString *getListenerName(NSString *applicationIdentifier)
+static inline NSString *getExternalIdentifier(NSString *applicationIdentifier)
 {
     return [NSString stringWithFormat:@"%@.%@", CouriaIdentifier, applicationIdentifier];
 }
@@ -24,29 +25,38 @@ static NSString *getApplicationName(NSString *applicationIdentifier)
     return application.displayName;
 }
 
-@implementation CouriaActivatorListener
+@implementation CouriaExtras
 
-+ (CouriaActivatorListener *)sharedInstance
++ (CouriaExtras *)sharedInstance
 {
-    static CouriaActivatorListener *sharedInstance;
+    static CouriaExtras *sharedInstance;
     if (sharedInstance == nil) {
-        sharedInstance = [[CouriaActivatorListener alloc]init];
+        sharedInstance = [[CouriaExtras alloc]init];
         activator = (LAActivator *)[NSClassFromString(@"LAActivator") sharedInstance];
+        flipswitch = (FSSwitchPanel *)[NSClassFromString(@"FSSwitchPanel") sharedPanel];
     }
     return sharedInstance;
 }
 
-- (void)registerListenerForApplication:(NSString *)applicationIdentifier
+- (void)registerExtrasForApplication:(NSString *)applicationIdentifier
 {
+    NSString *externalIdentifier = getExternalIdentifier(applicationIdentifier);
     if (activator != nil) {
-        [activator registerListener:[self.class sharedInstance] forName:getListenerName(applicationIdentifier)];
+        [activator registerListener:[self.class sharedInstance] forName:externalIdentifier];
+    }
+    if (flipswitch != nil) {
+        [flipswitch registerDataSource:self forSwitchIdentifier:externalIdentifier];
     }
 }
 
-- (void)unregisterListenerForApplication:(NSString *)applicationIdentifier
+- (void)unregisterExtrasForApplication:(NSString *)applicationIdentifier
 {
+    NSString *externalIdentifier = getExternalIdentifier(applicationIdentifier);
     if (activator != nil) {
-        [activator unregisterListenerWithName:getListenerName(applicationIdentifier)];
+        [activator unregisterListenerWithName:externalIdentifier];
+    }
+    if (flipswitch != nil) {
+        [flipswitch unregisterSwitchIdentifier:externalIdentifier];
     }
 }
 
@@ -100,6 +110,33 @@ static NSString *getApplicationName(NSString *applicationIdentifier)
 - (UIImage *)activator:(LAActivator *)activator requiresSmallIconForListenerName:(NSString *)listenerName scale:(CGFloat)scale
 {
     return [UIImage _applicationIconImageForBundleIdentifier:getApplicationIdentifier(listenerName) format:0 scale:[UIScreen mainScreen].scale];
+}
+
+- (FSSwitchState)stateForSwitchIdentifier:(NSString *)switchIdentifier
+{
+    return FSSwitchStateIndeterminate;
+}
+
+- (void)applyActionForSwitchIdentifier:(NSString *)switchIdentifier
+{
+    if (CouriaCurrentController() == nil) {
+        [[Couria sharedInstance]presentControllerForApplication:getApplicationIdentifier(switchIdentifier) user:nil];
+    }
+}
+
+- (BOOL)hasAlternateActionForSwitchIdentifier:(NSString *)switchIdentifier
+{
+    return NO;
+}
+
+- (NSString *)titleForSwitchIdentifier:(NSString *)switchIdentifier
+{
+    return [NSString stringWithFormat:@"Couria/%@", getApplicationName(getApplicationIdentifier(switchIdentifier))];
+}
+
+- (NSBundle *)bundleForSwitchIdentifier:(NSString *)switchIdentifier
+{
+    return [NSBundle bundleWithPath:[NSString stringWithFormat:@"%@/%@", ExtensionsDirectoryPath, getApplicationIdentifier(switchIdentifier)]];
 }
 
 @end

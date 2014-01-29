@@ -9,7 +9,6 @@
 #define PreferenceBundlePath @"/Library/PreferenceBundles/CouriaPreferences.bundle"
 #define UserDefaultsPlistPath @"/var/mobile/Library/Preferences/me.qusic.couria.plist"
 #define RegisteredApplicationsMessage @"RegisteredApplications"
-#define WidgetApplicationsMessage @"WidgetApplications"
 #define UserDefaultsChangedNotification "me.qusic.couria.UserDefaultsChanged"
 #define NewBulletinPublishedNotification "me.qusic.couria.NewBulletinPublished"
 #define ApplicationsKey @"Applications"

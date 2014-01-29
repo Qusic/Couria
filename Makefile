@@ -1,7 +1,7 @@
 TWEAK_NAME = Couria MessagesExtension
 BUNDLE_NAME = CouriaPreferences
 
-Couria_FILES = src/Couria.mm src/Couria-Hooks.mm src/Couria-Localization.mm src/CouriaController.m src/CouriaMessagesView.m src/CouriaMessageView.m src/CouriaMessageCell.m src/CouriaContactsView.m src/CouriaFieldView.m src/CouriaImageView.m src/CouriaImageViewerController.m src/CouriaMoviePlayerController.m src/CouriaMessage.m src/CouriaTheme.m src/CouriaSoundEffect.m src/CouriaActivatorListener.m src/NSString+Couria.m src/UIScreen+Couria.m src/UIView+Couria.m src/UIImage+Couria.m src/UIColor+Couria.m src/CALayer+Couria.m external/JTSTextView/JTSTextView.m
+Couria_FILES = src/Couria.mm src/Couria-Hooks.mm src/Couria-Localization.mm src/CouriaController.m src/CouriaMessagesView.m src/CouriaMessageView.m src/CouriaMessageCell.m src/CouriaContactsView.m src/CouriaFieldView.m src/CouriaImageView.m src/CouriaImageViewerController.m src/CouriaMoviePlayerController.m src/CouriaMessage.m src/CouriaTheme.m src/CouriaSoundEffect.m src/CouriaExtras.m src/NSString+Couria.m src/UIScreen+Couria.m src/UIView+Couria.m src/UIImage+Couria.m src/UIColor+Couria.m src/CALayer+Couria.m external/JTSTextView/JTSTextView.m
 Couria_FRAMEWORKS = UIKit CoreGraphics QuartzCore MobileCoreServices MediaPlayer AudioToolbox
 Couria_PRIVATE_FRAMEWORKS = AppSupport
 Couria_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries

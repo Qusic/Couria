@@ -1,7 +1,7 @@
 #import "Headers.h"
 #import <CaptainHook.h>
 #import "CouriaController.h"
-#import "CouriaActivatorListener.h"
+#import "CouriaExtras.h"
 
 static NSMutableDictionary *DataSources;
 static NSMutableDictionary *Delegates;
@@ -52,7 +52,7 @@ static void userDefaultsChangedCallback(CFNotificationCenterRef center, void *ob
         if (dataSource != nil && delegate != nil && applicationIdentifier != nil) {
             [DataSources setObject:dataSource forKey:applicationIdentifier];
             [Delegates setObject:delegate forKey:applicationIdentifier];
-            [[CouriaActivatorListener sharedInstance]registerListenerForApplication:applicationIdentifier];
+            [[CouriaExtras sharedInstance]registerExtrasForApplication:applicationIdentifier];
         }
     }
 }
@@ -63,7 +63,7 @@ static void userDefaultsChangedCallback(CFNotificationCenterRef center, void *ob
         if (applicationIdentifier != nil) {
             [DataSources removeObjectForKey:applicationIdentifier];
             [Delegates removeObjectForKey:applicationIdentifier];
-            [[CouriaActivatorListener sharedInstance]unregisterListenerForApplication:applicationIdentifier];
+            [[CouriaExtras sharedInstance]unregisterExtrasForApplication:applicationIdentifier];
         }
     }
 }
@@ -74,14 +74,6 @@ static void userDefaultsChangedCallback(CFNotificationCenterRef center, void *ob
         NSDictionary *response = nil;
         if ([message isEqualToString:RegisteredApplicationsMessage]) {
             response = @{ApplicationsKey : DataSources.allKeys};
-        } else if ([message isEqualToString:WidgetApplicationsMessage]) {
-            NSMutableArray *applications = [NSMutableArray array];
-            for (NSString *applicationIdentifier in DataSources.allKeys) {
-                if (CouriaCanHandle(applicationIdentifier) && CouriaGetContacts(applicationIdentifier, nil) != nil) {
-                    [applications addObject:applicationIdentifier];
-                }
-            }
-            response = @{ApplicationsKey : applications};
         }
         return response;
     } else {

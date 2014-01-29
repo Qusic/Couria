@@ -4,7 +4,7 @@ Version: 0.6~beta3
 Description: Centralized Quick Reply System
 Section: Tweaks
 Installed-Size: 0
-Depends: firmware (>= 6.0), mobilesubstrate, preferenceloader, com.chpwn.weeloader
+Depends: firmware (>= 6.0), mobilesubstrate, preferenceloader
 Priority: optional
 Architecture: iphoneos-arm
 Author: Qusic <QusicS@Me.com>
