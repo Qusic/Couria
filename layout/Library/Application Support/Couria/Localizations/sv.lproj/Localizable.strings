@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ACTIVATOR_LISTENER_DESCRIPTION</key>
+	<string>Starta Couria meddelandeskapare</string>
+	<key>CAMERA</key>
+	<string>Kamera</string>
+	<key>CAMERA_NOT_AVAILABLE</key>
+	<string>Kamera ej tillgänglig.</string>
+	<key>CANCEL</key>
+	<string>Avbryt</string>
+	<key>CLOSE</key>
+	<string>Stäng</string>
+	<key>DOODLE</key>
+	<string>Klotter</string>
+	<key>DOODLE_NOT_AVAILABLE</key>
+	<string>Klotter ej tillgängligt. Försök igen efter att ha installerat "Doodle Message" från Cydia.</string>
+	<key>LIBRARY</key>
+	<string>Bibliotek</string>
+	<key>LIBRARY_NOT_AVAILABLE</key>
+	<string>Bibliotek ej tillgängligt.</string>
+	<key>MOVIE</key>
+	<string>Film</string>
+	<key>OK</key>
+	<string>Ok</string>
+	<key>OPEN</key>
+	<string>Öppna</string>
+	<key>PASSCODE</key>
+	<string>Lösenkod</string>
+	<key>PHOTO</key>
+	<string>Foto</string>
+	<key>READ</key>
+	<string>Läs</string>
+	<key>REMOVE</key>
+	<string>Ta bort</string>
+	<key>REPLY</key>
+	<string>Svara</string>
+	<key>SEND</key>
+	<string>Skicka</string>
+	<key>TAP_TO_VIEW</key>
+	<string>Knacka för att visa</string>
+	<key>VIEW</key>
+	<string>Visa</string>
+</dict>
+</plist>
