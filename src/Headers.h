@@ -6,7 +6,7 @@
 #define ExtensionsDirectoryPath @"/Library/Application Support/Couria/Extensions"
 #define ThemesDirectoryPath @"/Library/Application Support/Couria/Themes"
 #define LocalizationsDirectoryPath @"/Library/Application Support/Couria/Localizations"
-#define PreferenceBundlePath @"/Library/PreferenceBundles/Couria.bundle"
+#define PreferenceBundlePath @"/Library/PreferenceBundles/CouriaPreferences.bundle"
 #define UserDefaultsPlistPath @"/var/mobile/Library/Preferences/me.qusic.couria.plist"
 #define RegisteredApplicationsMessage @"RegisteredApplications"
 #define WidgetApplicationsMessage @"WidgetApplications"

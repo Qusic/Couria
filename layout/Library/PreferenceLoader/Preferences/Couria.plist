@@ -5,7 +5,7 @@
 	<key>entry</key>
 	<dict>
 		<key>bundle</key>
-		<string>Couria</string>
+		<string>CouriaPreferences</string>
 		<key>label</key>
 		<string>Couria</string>
 		<key>icon</key>
