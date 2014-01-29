@@ -188,16 +188,16 @@ CHDeclareClass(UIWindow)
 CHOptimizedMethod(1, self, void, UIWindow, sendEvent, UIEvent *, event)
 {
     CHSuper(1, UIWindow, sendEvent, event);
-    if (iOS7()) {
-        SBLockScreenManager *lockscreenManager = (SBLockScreenManager *)[NSClassFromString(@"SBLockScreenManager")sharedInstance];
-        if (lockscreenManager.isUILocked) {
-            SBBacklightController *backlightController = (SBBacklightController *)[NSClassFromString(@"SBBacklightController")sharedInstance];
-            [backlightController resetLockScreenIdleTimerWithDuration:60];
-        }
-    } else {
-        SBAwayController *awayController = [NSClassFromString(@"SBAwayController")sharedAwayController];
-        if (awayController.isLocked) {
-            if (CouriaIsHandling()) {
+    if (CouriaIsHandling()) {
+        if (iOS7()) {
+            SBLockScreenManager *lockscreenManager = (SBLockScreenManager *)[NSClassFromString(@"SBLockScreenManager")sharedInstance];
+            if (lockscreenManager.isUILocked) {
+                SBBacklightController *backlightController = (SBBacklightController *)[NSClassFromString(@"SBBacklightController")sharedInstance];
+                [backlightController resetLockScreenIdleTimerWithDuration:60];
+            }
+        } else {
+            SBAwayController *awayController = [NSClassFromString(@"SBAwayController")sharedAwayController];
+            if (awayController.isLocked) {
                 [awayController restartDimTimer:60];
             }
         }
