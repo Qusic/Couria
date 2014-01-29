@@ -33,6 +33,7 @@ typedef NS_ENUM(SInt32, CouriaMessagesExtensionMessageID) {
 
 @interface IMPerson : NSObject
 @property(readonly, nonatomic) NSString *name;
+@property(readonly, nonatomic) NSString *abbreviatedName;
 @property(readonly, nonatomic) NSString *fullName;
 @property(readonly, nonatomic) NSString *companyName;
 @property(nonatomic) NSArray *phoneNumbers;
@@ -290,7 +291,7 @@ static inline NSString *standardizedAddress(NSString *address)
         }];
         NSString *sql = [NSString stringWithFormat:@"SELECT chat.chat_identifier FROM chat_handle_join INNER JOIN chat ON chat.rowid = chat_handle_join.chat_id INNER JOIN handle ON handle.rowid = chat_handle_join.handle_id WHERE handle.id IN (%@) GROUP BY chat.chat_identifier HAVING %@ AND LENGTH(GROUP_CONCAT(handle.id)) = %lu;", string1, string2, (unsigned long)integer];
         NSArray *dbChatIdentifiers = querySMSDB(sql);
-        return dbChatIdentifiers.firstObject[@"chat_identifier"];
+        return dbChatIdentifiers.lastObject[@"chat_identifier"];
     } else {
         return standardizedAddress(bulletin.context[@"contactInfo"]);
     }
@@ -370,7 +371,7 @@ static inline NSString *standardizedAddress(NSString *address)
 {
     static NSMutableArray *recentContacts;
     static NSDate *lastRefreshRecent;
-    static NSArray *allPersons;
+    static NSMutableDictionary *allContacts;
     static NSDate *lastRefreshAll;
     if (keyword.length == 0) {
         if (lastRefreshRecent == nil || [[NSDate date]timeIntervalSinceDate:lastRefreshRecent] > 10) {
@@ -384,33 +385,35 @@ static inline NSString *standardizedAddress(NSString *address)
         return recentContacts;
     } else {
         if (lastRefreshAll == nil || [[NSDate date]timeIntervalSinceDate:lastRefreshAll] > 600) {
-            allPersons = [IMPerson allPeople];
+            allContacts = [NSMutableDictionary dictionary];
+            for (IMPerson *person in [IMPerson allPeople]) {
+                NSMutableString *keywords = [NSMutableString string];
+                NSMutableArray *contacts = [NSMutableArray array];
+                if (person.fullName.length > 0) {
+                    [keywords appendFormat:@"%@\n", person.fullName];
+                }
+                if (person.abbreviatedName.length > 0) {
+                    [keywords appendFormat:@"%@\n", person.abbreviatedName];
+                }
+                if (person.companyName.length > 0) {
+                    [keywords appendFormat:@"%@\n", person.companyName];
+                }
+                for (NSString *phoneNumber in person.phoneNumbers) {
+                    [contacts addObject:standardizedAddress(phoneNumber)];
+                }
+                for (NSString *email in person.emails) {
+                    [contacts addObject:standardizedAddress(email)];
+                }
+                allContacts[keywords] = contacts;
+            }
             lastRefreshAll = [NSDate date];
         }
         NSMutableSet *resultingContacts = [NSMutableSet set];
-        for (IMPerson *person in allPersons) {
-            if (stringContainsString(person.fullName, keyword, NO) || stringContainsString(person.companyName, keyword, NO)) {
-                for (NSString *phoneNumber in person.phoneNumbers) {
-                    [resultingContacts addObject:standardizedAddress(phoneNumber)];
-                }
-                for (IMHandle *handle in [IMHandle imHandlesForIMPerson:person]) {
-                    [resultingContacts addObject:standardizedAddress(handle.ID)];
-                }
-            } else {
-                for (NSString *phoneNumber in person.phoneNumbers) {
-                    NSString *standardizedPhoneNumber = standardizedAddress(phoneNumber);
-                    if (stringContainsString(standardizedPhoneNumber, keyword, NO)) {
-                        [resultingContacts addObject:standardizedPhoneNumber];
-                    }
-                }
-                for (NSString *email in person.emails) {
-                    NSString *standardizedEmail = standardizedAddress(email);
-                    if (stringContainsString(standardizedEmail, keyword, NO)) {
-                        [resultingContacts addObject:standardizedEmail];
-                    }
-                }
+        [allContacts enumerateKeysAndObjectsUsingBlock:^(NSString *keywordString, NSArray *contacts, BOOL *stop) {
+            if (stringContainsString(keywordString, keyword, NO)) {
+                [resultingContacts addObjectsFromArray:contacts];
             }
-        }
+        }];
         if (resultingContacts.count == 0) {
             [resultingContacts addObject:standardizedAddress(keyword)];
         }
