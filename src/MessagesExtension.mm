@@ -1,6 +1,7 @@
 #import "Headers.h"
 #import <sqlite3.h>
 #import <sys/sysctl.h>
+#import <libkern/OSAtomic.h>
 
 #pragma mark - Constants
 
@@ -116,7 +117,9 @@ typedef NS_ENUM(SInt32, CouriaMessagesExtensionMessageID) {
 
 static NSArray *querySMSDB(NSString *sqlString)
 {
+    static volatile OSSpinLock lock;
     static sqlite3 *database;
+    OSSpinLockLock(&lock);
     if (database == NULL) {
         sqlite3 *tmpDatabase;
         if (sqlite3_open(@"/private/var/mobile/Library/SMS/sms.db".UTF8String, &tmpDatabase) == SQLITE_OK) {
@@ -158,6 +161,7 @@ static NSArray *querySMSDB(NSString *sqlString)
         }
         [result addObject:row];
     }
+    OSSpinLockUnlock(&lock);
     return result;
 }
 
