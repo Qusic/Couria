@@ -1,5 +1,5 @@
 TWEAK_NAME = Couria MessagesExtension
-BUNDLE_NAME = CouriaPreferences CouriaWidget
+BUNDLE_NAME = CouriaPreferences
 
 Couria_FILES = src/Couria.mm src/Couria-Hooks.mm src/Couria-Localization.mm src/CouriaController.m src/CouriaMessagesView.m src/CouriaMessageView.m src/CouriaMessageCell.m src/CouriaContactsView.m src/CouriaFieldView.m src/CouriaImageView.m src/CouriaImageViewerController.m src/CouriaMoviePlayerController.m src/CouriaMessage.m src/CouriaTheme.m src/CouriaSoundEffect.m src/CouriaActivatorListener.m src/NSString+Couria.m src/UIScreen+Couria.m src/UIView+Couria.m src/UIImage+Couria.m src/UIColor+Couria.m src/CALayer+Couria.m external/JTSTextView/JTSTextView.m
 Couria_FRAMEWORKS = UIKit CoreGraphics QuartzCore MobileCoreServices MediaPlayer AudioToolbox
@@ -16,11 +16,6 @@ CouriaPreferences_FILES = src/CouriaPreferences.mm src/CouriaPreferences-Localiz
 CouriaPreferences_FRAMEWORKS = UIKit Social
 CouriaPreferences_PRIVATE_FRAMEWORKS = Preferences AppSupport
 CouriaPreferences_INSTALL_PATH = /Library/PreferenceBundles
-
-CouriaWidget_FILES = src/CouriaWidgetController.m
-CouriaWidget_FRAMEWORKS = UIKit CoreGraphics
-CouriaWidget_PRIVATE_FRAMEWORKS = SpringBoardUIServices
-CouriaWidget_INSTALL_PATH = /Library/WeeLoader/Plugins
 
 export TARGET=iphone:clang
 export ARCHS = armv7 armv7s arm64
