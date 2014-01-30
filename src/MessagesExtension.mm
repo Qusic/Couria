@@ -427,13 +427,15 @@ static inline NSString *standardizedAddress(NSString *address)
                 if (person.companyName.length > 0) {
                     [keywords appendFormat:@"%@\n", person.companyName];
                 }
-                for (NSString *phoneNumber in person.phoneNumbers) {
-                    [contacts addObject:standardizedAddress(phoneNumber)];
+                if (keywords.length > 0) {
+                    for (NSString *phoneNumber in person.phoneNumbers) {
+                        [contacts addObject:standardizedAddress(phoneNumber)];
+                    }
+                    for (NSString *email in person.emails) {
+                        [contacts addObject:standardizedAddress(email)];
+                    }
+                    allContacts[keywords] = contacts;
                 }
-                for (NSString *email in person.emails) {
-                    [contacts addObject:standardizedAddress(email)];
-                }
-                allContacts[keywords] = contacts;
             }
             lastRefreshAll = [NSDate date];
         }
