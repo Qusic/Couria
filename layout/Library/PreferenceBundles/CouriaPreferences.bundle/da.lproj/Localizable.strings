@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ABOUT</key>
+	<string>Om</string>
+	<key>DONATE</key>
+	<string>Donér</string>
+	<key>ENABLED</key>
+	<string>Aktiveret</string>
+	<key>EXTENSIONS</key>
+	<string>Udvidelser</string>
+	<key>NO_INSTALLED_ITEMS</key>
+	<string>Ingen installerede artikler</string>
+	<key>OTHER_PREFERENCES</key>
+	<string>Andre indstillinger</string>
+	<key>PASSCODE</key>
+	<string>Kodeord</string>
+	<key>REQUIRE_WHEN_LOCKED</key>
+	<string>Kræv når låst</string>
+	<key>REQUIRE_WHEN_UNLOCKED</key>
+	<string>Kræv når låst op</string>
+	<key>SHARE_TEXT</key>
+	<string>Jeg elsker #Couria, som tilføjer et centralt og hurtigt besked system til iOS, til kan tilpasses med udvidelser.</string>
+	<key>THEME</key>
+	<string>Tema</string>
+	<key>THEMES</key>
+	<string>Temaer</string>
+	<key>TRANSLATION_CREDITS</key>
+	<string>Oversættelser</string>
+	<key>TWITTER</key>
+	<string>@QusicS på Twitter</string>
+</dict>
+</plist>
