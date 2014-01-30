@@ -230,12 +230,12 @@
             SBLockScreenManager *lockscreenManager = (SBLockScreenManager *)[NSClassFromString(@"SBLockScreenManager")sharedInstance];
             if (lockscreenManager.isUILocked) {
                 SBBacklightController *backlightController = (SBBacklightController *)[NSClassFromString(@"SBBacklightController")sharedInstance];
-                [backlightController resetLockScreenIdleTimerWithDuration:0.4];
+                [backlightController resetLockScreenIdleTimerWithDuration:10];
             }
         } else {
             SBAwayController *awayController = [NSClassFromString(@"SBAwayController")sharedAwayController];
             if (awayController.isLocked) {
-                [awayController restartDimTimer:0.4];
+                [awayController restartDimTimer:10];
                 [awayController.awayView addSubview:awayController.awayViewFakeStatusBar];
             }
             [[NSClassFromString(@"SBStatusBarDataManager")sharedDataManager]resetData];
