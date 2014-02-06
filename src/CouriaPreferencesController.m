@@ -152,7 +152,8 @@
 
 + (NSDictionary *)translationCreditsData
 {
-    return @{@"Deutsch": @"Tim Klute",
+    return @{@"Dansk": @"Felix E. Drud",
+             @"Deutsch": @"Tim Klute",
              @"Español": @"MXNMike",
              @"Français": @"Léo",
              @"Italiano": @"Bruno Di Marco",
