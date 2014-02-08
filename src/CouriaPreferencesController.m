@@ -152,7 +152,8 @@
 
 + (NSDictionary *)translationCreditsData
 {
-    return @{@"Dansk": @"Felix E. Drud",
+    return @{@"Türkçe": @"aybo101 AppleTurk",
+    	     @"Dansk": @"Felix E. Drud",
              @"Deutsch": @"Tim Klute",
              @"Español": @"MXNMike",
              @"Français": @"Léo",
