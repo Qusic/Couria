@@ -248,6 +248,17 @@
     }];
 }
 
+- (void)saveDraft
+{
+    CouriaSetUserDataForKey([NSString stringWithFormat:@"Draft-%@-%@", _applicationIdentifier, _userIdentifier], _fieldView.textView.text);
+}
+
+- (void)loadDraft
+{
+    _fieldView.textView.text = CouriaGetUserDataForKey([NSString stringWithFormat:@"Draft-%@-%@", _applicationIdentifier, _userIdentifier]);
+    [self textViewDidChange:_fieldView.textView];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -290,13 +301,12 @@
         } completion:^(BOOL finished) {
             [_fieldView.textView becomeFirstResponder];
         }];
-        [_messagesView refreshData];
-        CouriaMarkRead(_applicationIdentifier, _userIdentifier);
     } else {
         [_fieldView.textView becomeFirstResponder];
-        [_messagesView refreshData];
-        CouriaMarkRead(_applicationIdentifier, _userIdentifier);
     }
+    [_messagesView refreshData];
+    [self loadDraft];
+    CouriaMarkRead(_applicationIdentifier, _userIdentifier);
 }
 
 - (void)showContactsView:(BOOL)animated
@@ -497,6 +507,7 @@
 
 - (void)closeButtonAction:(UIButton *)button
 {
+    [self saveDraft];
     [self dismiss];
 }
 
@@ -670,6 +681,7 @@
 
 - (void)contactsView:(CouriaContactsView *)contactsView didSelectContact:(NSString *)userIdentifier
 {
+    [self saveDraft];
     _userIdentifier = userIdentifier;
     [_titleLabel setText:CouriaGetNickname(_applicationIdentifier, userIdentifier)];
     [_messagesView setApplication:_applicationIdentifier user:userIdentifier];

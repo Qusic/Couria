@@ -324,3 +324,17 @@ id CouriaGetUserDefaultForKey(NSString *application, NSString *key)
 {
     return UserDefaults[application][key];
 }
+
+id CouriaGetUserDataForKey(NSString *key)
+{
+    NSDictionary *dictionary = [NSDictionary dictionaryWithContentsOfFile:UserDataPlistPath];
+    return dictionary[key];
+}
+
+void CouriaSetUserDataForKey(NSString *key, id data)
+{
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    [dictionary addEntriesFromDictionary:[NSDictionary dictionaryWithContentsOfFile:UserDataPlistPath]];
+    dictionary[key] = data;
+    [dictionary writeToFile:UserDataPlistPath atomically:YES];
+}

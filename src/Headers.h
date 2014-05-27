@@ -8,6 +8,7 @@
 #define LocalizationsDirectoryPath @"/Library/Application Support/Couria/Localizations"
 #define PreferenceBundlePath @"/Library/PreferenceBundles/CouriaPreferences.bundle"
 #define UserDefaultsPlistPath @"/var/mobile/Library/Preferences/me.qusic.couria.plist"
+#define UserDataPlistPath @"/var/mobile/Library/Preferences/me.qusic.couria.data.plist"
 #define RegisteredApplicationsMessage @"RegisteredApplications"
 #define UserDefaultsChangedNotification "me.qusic.couria.UserDefaultsChanged"
 #define NewBulletinPublishedNotification "me.qusic.couria.NewBulletinPublished"
@@ -56,6 +57,8 @@ extern "C" {
     BOOL CouriaShouldDecreaseBadgeNumber(NSString *application);
     void CouriaOpenApp(NSString *application);
     id CouriaGetUserDefaultForKey(NSString *application, NSString *key);
+    id CouriaGetUserDataForKey(NSString *key);
+    void CouriaSetUserDataForKey(NSString *key, id data);
 #ifdef __cplusplus
 }
 #endif
