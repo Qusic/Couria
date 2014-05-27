@@ -7,7 +7,7 @@
 	<key>CAMERA</key>
 	<string>カメラ</string>
 	<key>CAMERA_NOT_AVAILABLE</key>
-	<string>カメラが利用できません.</string>
+	<string>カメラが利用できません</string>
 	<key>CANCEL</key>
 	<string>キャンセル</string>
 	<key>CLOSE</key>
@@ -15,15 +15,15 @@
 	<key>DOODLE</key>
 	<string>Doodle</string>
 	<key>DOODLE_NOT_AVAILABLE</key>
-	<string>Doodleが利用できません. CydiaからDoodle Messageをインストールしてから再度試してください.</string>
+	<string>Doodleが利用できません。CydiaからDoodle Messageをインストールし、再度試してください。</string>
 	<key>LIBRARY</key>
 	<string>ライブラリ</string>
 	<key>LIBRARY_NOT_AVAILABLE</key>
-	<string>ライブラリが利用できません.</string>
+	<string>ライブラリが利用できません</string>
 	<key>MOVIE</key>
-	<string>ムービー</string>
+	<string>動画</string>
 	<key>OK</key>
-	<string>OK</string>
+	<string>了解</string>
 	<key>OPEN</key>
 	<string>開く</string>
 	<key>PASSCODE</key>
@@ -37,10 +37,10 @@
 	<key>REPLY</key>
 	<string>返信</string>
 	<key>SEND</key>
-	<string>送る</string>
+	<string>送信</string>
 	<key>TAP_TO_VIEW</key>
-	<string>Tap to View</string>
+	<string> タップして表示する</string>
 	<key>VIEW</key>
-	<string>ビュー</string>
+	<string>表示</string>
 </dict>
 </plist>

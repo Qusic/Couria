@@ -4,24 +4,28 @@
 <dict>
 	<key>ABOUT</key>
 	<string>詳細</string>
+	<key>DISABLE_ON_LOCK_SCREEN</key>
+	<string>ロック画面でのアクセス</string>
 	<key>DONATE</key>
 	<string>寄付</string>
 	<key>ENABLED</key>
 	<string>有効</string>
 	<key>EXTENSIONS</key>
-	<string>エクステンション</string>
+	<string>拡張機能</string>
 	<key>NO_INSTALLED_ITEMS</key>
-	<string>アイテムがインストールされていません.</string>
+	<string>アイテムがインストールされていません</string>
 	<key>OTHER_PREFERENCES</key>
 	<string>その他の設定</string>
 	<key>PASSCODE</key>
 	<string>パスコード</string>
 	<key>REQUIRE_WHEN_LOCKED</key>
-	<string>ロック時に要求</string>
+	<string>ロック画面で要求</string>
 	<key>REQUIRE_WHEN_UNLOCKED</key>
-	<string>ロック解除時に要求</string>
+	<string>ホーム画面、App内で要求</string>
 	<key>SHARE_TEXT</key>
 	<string>I'm Loving #Couria, which brings a Centralized and Customizable Quick Reply and Quick Compose System to iOS.</string>
+	<key>TEXT_SIZE</key>
+	<string>文字サイズを変更</string>
 	<key>THEME</key>
 	<string>テーマ</string>
 	<key>THEMES</key>
@@ -29,6 +33,6 @@
 	<key>TRANSLATION_CREDITS</key>
 	<string>翻訳者</string>
 	<key>TWITTER</key>
-	<string>@QusicS on Twitter</string>
+	<string>Twitter: @QusicS</string>
 </dict>
 </plist>
