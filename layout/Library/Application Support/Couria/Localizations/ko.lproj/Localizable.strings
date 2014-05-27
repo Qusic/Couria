@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ACTIVATOR_LISTENER_DESCRIPTION</key>
+	<string>Launch Couria message composer</string>
+	<key>CAMERA</key>
+	<string>카메라</string>
+	<key>CAMERA_NOT_AVAILABLE</key>
+	<string>카메라를 사용할 수 없음.</string>
+	<key>CANCEL</key>
+	<string>취소</string>
+	<key>CLOSE</key>
+	<string>닫기</string>
+	<key>DOODLE</key>
+	<string>Doodle</string>
+	<key>DOODLE_NOT_AVAILABLE</key>
+	<string>Doodle을 사용할 수 없음. 시디아에서 Doodle message를 설치 한 후 다시 시도해 주시기 바랍니다.</string>
+	<key>LIBRARY</key>
+	<string>보관함</string>
+	<key>LIBRARY_NOT_AVAILABLE</key>
+	<string>보관함을 사용할 수 없음.</string>
+	<key>MOVIE</key>
+	<string>동영상</string>
+	<key>OK</key>
+	<string>확인</string>
+	<key>OPEN</key>
+	<string>열기</string>
+	<key>PASSCODE</key>
+	<string>암호 입력</string>
+	<key>PHOTO</key>
+	<string>사진</string>
+	<key>READ</key>
+	<string>읽음</string>
+	<key>REMOVE</key>
+	<string>제거</string>
+	<key>REPLY</key>
+	<string>답장</string>
+	<key>SEND</key>
+	<string>전송</string>
+	<key>TAP_TO_VIEW</key>
+	<string>눌러서 보기</string>
+	<key>VIEW</key>
+	<string>보기</string>
+</dict>
+</plist>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ABOUT</key>
+	<string>About</string>
+	<key>DONATE</key>
+	<string>기부</string>
+	<key>ENABLED</key>
+	<string>활성화</string>
+	<key>EXTENSIONS</key>
+	<string>확장</string>
+	<key>NO_INSTALLED_ITEMS</key>
+	<string>설치된 항목 없음</string>
+	<key>OTHER_PREFERENCES</key>
+	<string>Other Preferences</string>
+	<key>PASSCODE</key>
+	<string>암호</string>
+	<key>REQUIRE_WHEN_LOCKED</key>
+	<string>잠금 시 사용</string>
+	<key>REQUIRE_WHEN_UNLOCKED</key>
+	<string>잠금해제 시 사용</string>
+	<key>SHARE_TEXT</key>
+	<string>I'm Loving #Couria, which brings a Centralized and Customizable Quick Reply and Quick Compose System to iOS.</string>
+	<key>THEME</key>
+	<string>테마</string>
+	<key>THEMES</key>
+	<string>테마</string>
+	<key>TRANSLATION_CREDITS</key>
+	<string>번역</string>
+	<key>TWITTER</key>
+	<string>@QusicS on Twitter</string>
+</dict>
+</plist>

@@ -163,6 +163,7 @@
              @"Türkçe": @"aybo101 AppleTurk",
              @"繁體中文": @"Hiraku",
              @"日本語": @"wakinchan",
+             @"한국어": @"Jeong Woo Yoon",
              @"العربية": @"Mohamed El Fawal"};
 }
 
