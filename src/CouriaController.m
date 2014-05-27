@@ -210,6 +210,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardFrameChanged:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(newBulletinPublished:) name:@NewBulletinPublishedNotification object:nil];
     [_alert.display addSubview:self.view];
+    [self performSelector:@selector(keyboardFrameChanged:) withObject:nil afterDelay:0.1];
 }
 
 - (void)dismiss
@@ -401,6 +402,7 @@
 
 - (void)keyboardFrameChanged:(NSNotification *)notification
 {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(keyboardFrameChanged:) object:nil];    
     UIInterfaceOrientation orientation = [UIScreen mainScreen].frontMostAppOrientation;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && UIInterfaceOrientationIsLandscape(orientation)) {
         self.view.transform = CGAffineTransformMakeRotation(orientation == UIInterfaceOrientationLandscapeLeft ? -M_PI_2 : M_PI_2);
@@ -413,7 +415,7 @@
     CGFloat yMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? 10 : 50;
     CGFloat topMargin = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && UIInterfaceOrientationIsLandscape(orientation)) ? 0 : 10;
     CGSize viewSize = [UIScreen mainScreen].viewFrame.size;
-    CGSize keyboardSize = [notification.userInfo[UIKeyboardFrameEndUserInfoKey]CGRectValue].size;
+    CGSize keyboardSize = notification ? [notification.userInfo[UIKeyboardFrameEndUserInfoKey]CGRectValue].size : CGSizeZero;
     CGFloat keyboardHeight = [notification.name isEqualToString:UIKeyboardWillHideNotification] ? 0 : (UIInterfaceOrientationIsPortrait(orientation) ? keyboardSize.height : keyboardSize.width);
     CGFloat width = viewSize.width - xMargin * 2;
     CGFloat height = viewSize.height - yMargin * 2 - topMargin - keyboardHeight;
