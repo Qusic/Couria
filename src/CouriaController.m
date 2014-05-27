@@ -108,6 +108,8 @@
     _titleLabel = [UIView titleLabelWithTheme:_theme title:CouriaGetNickname(_applicationIdentifier, _userIdentifier)];
     _titleLabel.frame = CGRectMake(74, 7, 152, 30);
     _titleLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
+    _titleLabel.adjustsFontSizeToFitWidth = YES;
+    _titleLabel.minimumScaleFactor = 0.6;
     _closeButton = [UIView buttonWithTheme:_theme title:CouriaLocalizedString(@"CLOSE")];
     _closeButton.frame = CGRectMake(233, 7, 60, 30);
     _closeButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
