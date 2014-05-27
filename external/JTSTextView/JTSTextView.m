@@ -382,9 +382,12 @@
     [self.textView setAutocapitalizationType:autocapitalizationType];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-property-ivar"
 - (UITextAutocorrectionType)autocorrectionType {
     return self.textView.autocorrectionType;
 }
+#pragma clang diagnostic pop
 
 - (UITextSpellCheckingType)spellCheckingType {
     return self.textView.spellCheckingType;

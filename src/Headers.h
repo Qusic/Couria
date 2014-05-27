@@ -22,6 +22,9 @@
 #define RequirePasscodeWhenLockedKey @"RequirePasscodeWhenLocked"
 #define RequirePasscodeWhenUnlockedKey @"RequirePasscodeWhenUnlocked"
 
+#ifndef kCFCoreFoundationVersionNumber_iOS_7_0
+#define kCFCoreFoundationVersionNumber_iOS_7_0 847.20
+#endif
 #define iOS7() (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_7_0)
 
 #pragma mark - Couria
