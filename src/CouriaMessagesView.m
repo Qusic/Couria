@@ -8,6 +8,7 @@
 
 @property(retain) id<CouriaMessagesViewDelegate> messagesViewDelegate;
 @property(retain) CouriaTheme *theme;
+@property(assign) CGFloat textSize;
 
 @property(retain) NSString *applicationIdentifier;
 @property(retain) NSString *userIdentifier;
@@ -21,12 +22,13 @@
 
 @implementation CouriaMessagesView
 
-- (instancetype)initWithFrame:(CGRect)frame delegate:(id<CouriaMessagesViewDelegate>)delegate theme:(CouriaTheme *)theme
+- (instancetype)initWithFrame:(CGRect)frame delegate:(id<CouriaMessagesViewDelegate>)delegate theme:(CouriaTheme *)theme textSize:(CGFloat)textSize
 {
     self = [self initWithFrame:frame];
     if (self) {
         _messagesViewDelegate = delegate;
         _theme = theme;
+        _textSize = textSize;
         _operationQueue = [[NSOperationQueue alloc]init];
         _operationQueue.maxConcurrentOperationCount = 1;
         _activityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
@@ -85,24 +87,21 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    id<CouriaMessage> message = _messages[indexPath.row];
+    id<CouriaMessage> message = (NSUInteger)indexPath.row < _messages.count ? _messages[indexPath.row] : nil;
     NSString *cellReuseIdentifier = [NSString stringWithFormat:@"CouriaMessageCell-%d", message.outgoing];
     CouriaMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:cellReuseIdentifier];
     if (cell == nil) {
-        cell = [[CouriaMessageCell alloc]initWithReuseIdentifier:cellReuseIdentifier outgoing:message.outgoing theme:_theme];
-        [cell setOutgoing:message.outgoing];
+        cell = [[CouriaMessageCell alloc]initWithReuseIdentifier:cellReuseIdentifier outgoing:message.outgoing theme:_theme textSize:_textSize];
     }
     [cell setMessage:[self displayedContentForMessage:message]];
-    if ([message respondsToSelector:@selector(timestamp)]) {
-        [cell setTimestamp:message.timestamp];
-    }
+    [cell setTimestamp:[message respondsToSelector:@selector(timestamp)] ? message.timestamp : nil];
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     id<CouriaMessage> message = _messages[indexPath.row];
-    CGFloat height = [[self displayedContentForMessage:message]messageCellHeightWithWidth:215];
+    CGFloat height = [[self displayedContentForMessage:message]messageCellHeightWithWidth:215 fontSize:_textSize];
     if ([message respondsToSelector:@selector(timestamp)] && message.timestamp != nil) {
         height += 12;
     }
@@ -118,15 +117,15 @@
 {
     [_operationQueue cancelAllOperations];
     [_operationQueue addOperationWithBlock:^{
-        [[NSOperationQueue mainQueue]addOperationWithBlock:^{
+        dispatch_sync(dispatch_get_main_queue(), ^{
             [_activityIndicator startAnimating];
-        }];
+        });
         _messages = CouriaGetMessages(_applicationIdentifier, _userIdentifier);
-        [[NSOperationQueue mainQueue]addOperationWithBlock:^{
+        dispatch_sync(dispatch_get_main_queue(), ^{
             [_activityIndicator stopAnimating];
             [self reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
             [self performSelector:@selector(scrollToBottomAnimated:) withObject:@(YES) afterDelay:0.1];
-        }];
+        });
     }];
 }
 

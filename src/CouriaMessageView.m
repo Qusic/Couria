@@ -16,7 +16,7 @@
 
 @implementation CouriaMessageView
 
-- (instancetype)initWithFrame:(CGRect)frame outgoing:(BOOL)outgoing theme:(CouriaTheme *)theme
+- (instancetype)initWithFrame:(CGRect)frame outgoing:(BOOL)outgoing theme:(CouriaTheme *)theme textSize:(CGFloat)textSize
 {
     self = [self initWithFrame:frame];
     if (self) {
@@ -27,7 +27,7 @@
         _imageView.backgroundColor = [UIColor clearColor];
         _textView = [[UILabel alloc]initWithFrame:CGRectZero];
         _textView.backgroundColor = [UIColor clearColor];
-        _textView.font = [UIFont systemFontOfSize:15];
+        _textView.font = [UIFont systemFontOfSize:textSize];
         _textView.textColor = outgoing ? theme.outgoingMessageColor : theme.incomingMessageColor;
         _textView.numberOfLines = 0;
         self.backgroundColor = [UIColor clearColor];
@@ -56,8 +56,9 @@
 - (void)layoutSubviews
 {
     UIImage *backgroundImage = _outgoing ? _theme.outgoingMessageBackgroundImage : _theme.incomingMessageBackgroundImage;
-    CGSize textSize = [_message messageTextSizeWithWidth:215];
-    CGSize backgroundSize = [_message messageBackgroundSizeWithWidth:215];
+    CGFloat fontSize = _textView.font.pointSize;
+    CGSize textSize = [_message messageTextSizeWithWidth:215 fontSize:fontSize];
+    CGSize backgroundSize = [_message messageBackgroundSizeWithWidth:215 fontSize:fontSize];
     CGRect backgroundFrame = {CGPointMake(_outgoing ? self.frame.size.width - backgroundSize.width : 0, 2), backgroundSize};
     CGRect textFrame = CGRectMake(backgroundFrame.origin.x + backgroundImage.capInsets.left - 4, 4, textSize.width + 1, textSize.height + 1);
 

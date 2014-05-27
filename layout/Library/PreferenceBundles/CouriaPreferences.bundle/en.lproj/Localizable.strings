@@ -22,6 +22,8 @@
 	<string>Require When Unlocked</string>
 	<key>SHARE_TEXT</key>
 	<string>I'm Loving #Couria, which brings a Centralized and Customizable Quick Reply and Quick Compose System to iOS.</string>
+	<key>TEXT_SIZE</key>
+	<string>Text Size</string>
 	<key>THEME</key>
 	<string>Theme</string>
 	<key>THEMES</key>

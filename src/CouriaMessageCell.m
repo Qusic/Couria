@@ -12,11 +12,11 @@
 
 @implementation CouriaMessageCell
 
-- (instancetype)initWithReuseIdentifier:(NSString *)reuseIdentifier outgoing:(BOOL)outgoing theme:(CouriaTheme *)theme
+- (instancetype)initWithReuseIdentifier:(NSString *)reuseIdentifier outgoing:(BOOL)outgoing theme:(CouriaTheme *)theme textSize:(CGFloat)textSize
 {
     self = [self initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     if (self) {
-        _messageView = [[CouriaMessageView alloc]initWithFrame:self.contentView.bounds outgoing:outgoing theme:theme];
+        _messageView = [[CouriaMessageView alloc]initWithFrame:self.contentView.bounds outgoing:outgoing theme:theme textSize:textSize];
         _timestampLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.contentView.bounds.size.width, 14)];
         _timestampLabel.backgroundColor = [UIColor clearColor];
         _timestampLabel.autoresizingMask =  UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;

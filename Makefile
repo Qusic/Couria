@@ -20,7 +20,7 @@ CouriaPreferences_INSTALL_PATH = /Library/PreferenceBundles
 export TARGET=iphone:clang
 export ARCHS = armv7 armv7s arm64
 export TARGET_IPHONEOS_DEPLOYMENT_VERSION = 6.0
-export ADDITIONAL_OBJCFLAGS = -fobjc-arc
+export ADDITIONAL_OBJCFLAGS = -fobjc-arc -fvisibility=hidden
 
 include theos/makefiles/common.mk
 include $(THEOS_MAKE_PATH)/tweak.mk

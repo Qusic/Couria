@@ -19,6 +19,7 @@
 @property(retain) NSString *applicationIdentifier;
 @property(retain) NSString *userIdentifier;
 @property(retain) CouriaTheme *theme;
+@property(assign) CGFloat textSize;
 @property(retain) NSString *passcode;
 @property(copy) void (^dismissHandler)(void);
 
@@ -63,6 +64,8 @@
         _applicationIdentifier = applicationIdentifier;
         _userIdentifier = userIdentifier;
         _theme = [CouriaTheme themeWithIdentifier:CouriaGetUserDefaultForKey(applicationIdentifier, ThemeKey)];
+        _textSize = [CouriaGetUserDefaultForKey(applicationIdentifier, TextSizeKey)floatValue];
+        _textSize = _textSize >= 14 ? _textSize : 14;
         if ([CouriaGetUserDefaultForKey(_applicationIdentifier, (iOS7() ? ((SBLockScreenManager *)[NSClassFromString(@"SBLockScreenManager")sharedInstance]).isUILocked : [NSClassFromString(@"SBAwayController")sharedAwayController].isLocked) ? RequirePasscodeWhenLockedKey : RequirePasscodeWhenUnlockedKey)boolValue]) {
             _passcode = CouriaGetUserDefaultForKey(_applicationIdentifier, PasscodeKey);
         }
@@ -95,7 +98,7 @@
     _mainView = [UIView mainViewWithFrame:CGRectMake(0, 0, 300, 250) cornerRadius:4 theme:_theme];
     _topbarView = [UIView topbarViewViewWithFrame:CGRectMake(0, 0, 300, 44) theme:_theme];
     _bottombarView = [UIView bottombarViewWithFrame:CGRectMake(0, 210, 300, 40) theme:_theme];
-    _messagesView = [[CouriaMessagesView alloc]initWithFrame:CGRectMake(0, 44, 300, 166) delegate:self theme:_theme];
+    _messagesView = [[CouriaMessagesView alloc]initWithFrame:CGRectMake(0, 44, 300, 166) delegate:self theme:_theme textSize:_textSize];
     [_messagesView setApplication:_applicationIdentifier user:_userIdentifier];
 
     _applicationButton = [UIView buttonWithApplicationIcon:_applicationIdentifier];

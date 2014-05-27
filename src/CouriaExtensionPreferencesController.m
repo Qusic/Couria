@@ -30,6 +30,15 @@
             [themeNames addObject:CouriaPreferencesGetThemeDisplayName(themeIdentifier)];
         }
         [theme setValues:themeIdentifiers titles:themeNames shortTitles:themeNames];
+        PSSpecifier *textSize = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"TEXT_SIZE")
+                                                               target:self
+                                                                  set:@selector(setValue:forSpecifier:)
+                                                                  get:@selector(getValueForSpecifier:)
+                                                               detail:PSListItemsController.class
+                                                                 cell:PSLinkListCell
+                                                                 edit:Nil];
+        [textSize setIdentifier:TextSizeKey];
+        [textSize setValues:@[@(14), @(16), @(18), @(20), @(22), @(24)] titles:@[@"14 pt", @"16 pt", @"18 pt", @"20 pt", @"22 pt", @"24 pt"] shortTitles:@[@"14 pt", @"16 pt", @"18 pt", @"20 pt", @"22 pt", @"24 pt"]];
         PSSpecifier *passcode = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"PASSCODE")
                                                                target:self
                                                                   set:@selector(setValue:forSpecifier:)
@@ -57,7 +66,9 @@
                                                                              edit:Nil];
         [passcodeWhenUnlocked setIdentifier:RequirePasscodeWhenUnlockedKey];
         [passcodeWhenUnlocked setProperty:@(YES) forKey:@"enabled"];
-        [specifiers addObjectsFromArray:@[[PSSpecifier emptyGroupSpecifier], enabled, [PSSpecifier emptyGroupSpecifier], theme, [PSSpecifier emptyGroupSpecifier], passcode, passcodeWhenLocked, passcodeWhenUnlocked]];
+        [specifiers addObjectsFromArray:@[[PSSpecifier emptyGroupSpecifier], enabled, disableOnLockScreen,
+                                          [PSSpecifier emptyGroupSpecifier], theme, textSize,
+                                          [PSSpecifier emptyGroupSpecifier], passcode, passcodeWhenLocked, passcodeWhenUnlocked]];
         NSString *plistPath = [NSString stringWithFormat:@"%@/%@/%@", ExtensionsDirectoryPath, self.specifier.identifier, @"Extension.plist"];
         if ([[NSFileManager defaultManager]fileExistsAtPath:plistPath]) {
             PSSpecifier *custom = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"OTHER_PREFERENCES")

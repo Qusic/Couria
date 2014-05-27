@@ -15,6 +15,7 @@
 #define BulletinKey @"Bulletin"
 #define EnabledKey @"Enabled"
 #define ThemeKey @"Theme"
+#define TextSizeKey @"TextSize"
 #define PasscodeKey @"Passcode"
 #define RequirePasscodeWhenLockedKey @"RequirePasscodeWhenLocked"
 #define RequirePasscodeWhenUnlockedKey @"RequirePasscodeWhenUnlocked"

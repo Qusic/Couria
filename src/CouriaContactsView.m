@@ -60,7 +60,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *contact = _contacts[indexPath.row];
+    NSString *contact = (NSUInteger)indexPath.row < _contacts.count ? _contacts[indexPath.row] : nil;
     NSString *cellReuseIdentifier = @"CouriaContactCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellReuseIdentifier];
     if (cell == nil) {
@@ -85,15 +85,15 @@
 {
     [_operationQueue cancelAllOperations];
     [_operationQueue addOperationWithBlock:^{
-        [[NSOperationQueue mainQueue]addOperationWithBlock:^{
+        dispatch_sync(dispatch_get_main_queue(), ^{
             [_activityIndicator startAnimating];
-        }];
+        });
         _contacts = CouriaGetContacts(_applicationIdentifier, _keyword);
-        [[NSOperationQueue mainQueue]addOperationWithBlock:^{
+        dispatch_sync(dispatch_get_main_queue(), ^{
             [_activityIndicator stopAnimating];
             [self reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
             [self performSelector:@selector(scrollToTopAnimated:) withObject:@(YES) afterDelay:0.1];
-        }];
+        });
     }];
 }
 

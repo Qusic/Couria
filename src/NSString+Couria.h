@@ -3,8 +3,8 @@
 
 @interface NSString (Couria)
 
-- (CGSize)messageTextSizeWithWidth:(CGFloat)width;
-- (CGSize)messageBackgroundSizeWithWidth:(CGFloat)width;
-- (CGFloat)messageCellHeightWithWidth:(CGFloat)width;
+- (CGSize)messageTextSizeWithWidth:(CGFloat)width fontSize:(CGFloat)fontSize;
+- (CGSize)messageBackgroundSizeWithWidth:(CGFloat)width fontSize:(CGFloat)fontSize;
+- (CGFloat)messageCellHeightWithWidth:(CGFloat)width fontSize:(CGFloat)fontSize;
 
 @end

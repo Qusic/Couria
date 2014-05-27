@@ -6,7 +6,7 @@
 
 @interface CouriaMessagesView : UITableView
 
-- (instancetype)initWithFrame:(CGRect)frame delegate:(id<CouriaMessagesViewDelegate>)delegate theme:(CouriaTheme *)theme;
+- (instancetype)initWithFrame:(CGRect)frame delegate:(id<CouriaMessagesViewDelegate>)delegate theme:(CouriaTheme *)theme textSize:(CGFloat)textSize;
 - (void)setApplication:(NSString *)applicationIdentifier user:(NSString *)userIdentifier;
 - (void)refreshData;
 - (void)scrollToBottomAnimated:(BOOL)animated;
