@@ -477,6 +477,11 @@ extern "C" {
 - (void)activateAlertItem:(SBAlertItem *)alertItem;
 @end
 
+@interface SBBulletinSoundController : NSObject
++ (instancetype)sharedInstance;
+- (BOOL)playSoundForBulletin:(BBBulletin *)bulletin;
+@end
+
 @interface TPBottomLockBar : UIView
 - (void)unlock;
 - (void)relock;

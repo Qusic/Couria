@@ -24,6 +24,7 @@ CHOptimizedMethod(1, self, void, SBAlertItemsController, activateAlertItem, SBAl
         }
         BBBulletin * const bulletin = CHIvar(alertItem, _bulletin, BBBulletin * const);
         if (CouriaCanHandleBulletin(bulletin)) {
+            [(SBBulletinSoundController *)[NSClassFromString(@"SBBulletinSoundController")sharedInstance]playSoundForBulletin:bulletin];
             CouriaHandleBulletin(bulletin);
             return;
         }
