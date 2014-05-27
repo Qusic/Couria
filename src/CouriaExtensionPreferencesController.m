@@ -16,6 +16,15 @@
                                                                 edit:Nil];
         [enabled setIdentifier:EnabledKey];
         [enabled setProperty:@(YES) forKey:@"enabled"];
+        PSSpecifier *disableOnLockScreen = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"DISABLE_ON_LOCK_SCREEN")
+                                                              target:self
+                                                                 set:@selector(setValue:forSpecifier:)
+                                                                 get:@selector(getValueForSpecifier:)
+                                                              detail:Nil
+                                                                cell:PSSwitchCell
+                                                                edit:Nil];
+        [disableOnLockScreen setIdentifier:DisableOnLockScreenKey];
+        [disableOnLockScreen setProperty:@(YES) forKey:@"enabled"];
         PSSpecifier *theme = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"THEME")
                                                             target:self
                                                                set:@selector(setValue:forSpecifier:)

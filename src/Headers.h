@@ -14,6 +14,7 @@
 #define ApplicationsKey @"Applications"
 #define BulletinKey @"Bulletin"
 #define EnabledKey @"Enabled"
+#define DisableOnLockScreenKey @"DisableOnLockScreen"
 #define ThemeKey @"Theme"
 #define TextSizeKey @"TextSize"
 #define PasscodeKey @"Passcode"

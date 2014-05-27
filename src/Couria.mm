@@ -102,7 +102,18 @@ BOOL CouriaIsHandling(void)
 
 BOOL CouriaCanHandle(NSString *application)
 {
-    return CouriaIsApplicationRegistered(application) && [CouriaGetUserDefaultForKey(application, EnabledKey)boolValue];
+    if (CouriaIsApplicationRegistered(application)) {
+        if ([CouriaGetUserDefaultForKey(application, EnabledKey)boolValue]) {
+            if (iOS7()) {
+                SBLockScreenManager *lockscreenManager = (SBLockScreenManager *)[NSClassFromString(@"SBLockScreenManager") sharedInstance];
+                return !lockscreenManager.isUILocked || ![CouriaGetUserDefaultForKey(application, DisableOnLockScreenKey)boolValue];
+            } else {
+                SBAwayController *awayController = [NSClassFromString(@"SBAwayController")sharedAwayController];
+                return !awayController.isLocked || ![CouriaGetUserDefaultForKey(application, DisableOnLockScreenKey)boolValue];
+            }
+        }
+    }
+    return NO;
 }
 
 BOOL CouriaCanHandleBulletin(BBBulletin *bulletin)
