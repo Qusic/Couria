@@ -88,6 +88,13 @@ static void userDefaultsChangedCallback(CFNotificationCenterRef center, void *ob
     }
 }
 
+- (void)handleBulletin:(BBBulletin *)bulletin
+{
+    if ([[NSBundle mainBundle].bundleIdentifier isEqualToString:@"com.apple.springboard"]) {
+        CouriaHandleBulletin(bulletin);
+    }
+}
+
 @end
 
 BOOL CouriaIsApplicationRegistered(NSString *application)
