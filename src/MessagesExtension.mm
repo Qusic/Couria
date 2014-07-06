@@ -1,18 +1,19 @@
 #import "Headers.h"
+#import <CaptainHook.h>
 #import <sqlite3.h>
 #import <sys/sysctl.h>
-#import <libkern/OSAtomic.h>
 
 #pragma mark - Constants
 
 static CFStringRef const MessagesExtensionIdentifier = CFSTR("me.qusic.couria.messagesextension");
+static NSString * const SpringBoardIdentifier = @"com.apple.springboard";
 static NSString * const MessagesIdentifier = @"com.apple.MobileSMS";
 static NSString * const UserIDKey = @"UserID";
 static NSString * const MessageKey = @"Message";
 
 typedef NS_ENUM(SInt32, CouriaMessagesExtensionMessageID) {
     SendMessage,
-    MarkRead
+        MarkRead
 };
 
 #pragma mark - Interfaces
@@ -31,22 +32,6 @@ typedef NS_ENUM(SInt32, CouriaMessagesExtensionMessageID) {
 @end
 
 #pragma mark - Private APIs
-
-@interface IMPerson : NSObject
-@property(readonly, nonatomic) NSString *name;
-@property(readonly, nonatomic) NSString *abbreviatedName;
-@property(readonly, nonatomic) NSString *fullName;
-@property(readonly, nonatomic) NSString *companyName;
-@property(nonatomic) NSArray *phoneNumbers;
-@property(copy, nonatomic) NSArray *emails;
-+ (NSArray *)allPeople;
-@end
-
-@interface IMHandle : NSObject
-@property(readonly, nonatomic) NSString *ID;
-+ (NSArray *)imHandlesForIMPerson:(IMPerson *)persons;
-@end
-
 
 @interface CKEntity : NSObject
 @property(nonatomic,readonly) NSString *rawAddress;
@@ -113,23 +98,14 @@ typedef NS_ENUM(SInt32, CouriaMessagesExtensionMessageID) {
 - (CKConversation *)conversationForExistingChatWithGroupID:(NSString *)groupID;
 @end
 
+extern "C" NSString *IMStripFormattingFromAddress(NSString *formattedAddress);
+
 #pragma mark - Functions
 
-static NSArray *querySMSDB(NSString *sqlString)
+static NSArray *queryDB(sqlite3 *database, NSString *sqlString)
 {
-    static volatile OSSpinLock lock;
-    static sqlite3 *database;
-    OSSpinLockLock(&lock);
-    if (database == NULL) {
-        sqlite3 *tmpDatabase;
-        if (sqlite3_open(@"/private/var/mobile/Library/SMS/sms.db".UTF8String, &tmpDatabase) == SQLITE_OK) {
-            database = tmpDatabase;
-        } else {
-            return nil;
-        }
-    }
     sqlite3_stmt *statement;
-	const char *query = sqlString.UTF8String;
+    const char *query = sqlString.UTF8String;
     if (sqlite3_prepare_v2(database, query, -1, &statement, NULL) != SQLITE_OK) {
         return nil;
     }
@@ -161,13 +137,40 @@ static NSArray *querySMSDB(NSString *sqlString)
         }
         [result addObject:row];
     }
-    OSSpinLockUnlock(&lock);
     return result;
+}
+
+static NSArray *querySMSDB(NSString *sqlString)
+{
+    static sqlite3 *database;
+    if (database == NULL) {
+        sqlite3 *tmpDatabase;
+        if (sqlite3_open(@"/private/var/mobile/Library/SMS/sms.db".UTF8String, &tmpDatabase) == SQLITE_OK) {
+            database = tmpDatabase;
+        } else {
+            return nil;
+        }
+    }
+    return queryDB(database, sqlString);
+}
+
+static NSArray *queryAddressBookDB(NSString *sqlString)
+{
+    static sqlite3 *database;
+    if (database == NULL) {
+        sqlite3 *tmpDatabase;
+        if (sqlite3_open(@"/private/var/mobile/Library/AddressBook/AddressBook.sqlitedb".UTF8String, &tmpDatabase) == SQLITE_OK) {
+            database = tmpDatabase;
+        } else {
+            return nil;
+        }
+    }
+    return queryDB(database, sqlString);
 }
 
 static NSArray *getRecipients(NSString *userIdentifier)
 {
-    NSArray *dbRecipients = querySMSDB([NSString stringWithFormat:@"SELECT handle.id FROM handle INNER JOIN chat_handle_join ON handle.ROWID = chat_handle_join.handle_id INNER JOIN chat ON chat.ROWID = chat_handle_join.chat_id WHERE chat.chat_identifier = '%@' ORDER BY handle.ROWID;", userIdentifier]);
+    NSArray *dbRecipients = querySMSDB([NSString stringWithFormat:@"SELECT handle.id FROM handle INNER JOIN chat_handle_join ON handle.ROWID = chat_handle_join.handle_id INNER JOIN chat ON chat.ROWID = chat_handle_join.chat_id WHERE chat.chat_identifier = '%@' ORDER BY handle.ROWID", userIdentifier]);
     NSMutableArray *recipients = [NSMutableArray array];
     for (NSDictionary *dbRecipient in dbRecipients) {
         NSString *dbRecipientString = dbRecipient[@"id"];
@@ -222,24 +225,15 @@ static void launchApp()
 {
     while (appIsRunning() == NO) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [[UIApplication sharedApplication]launchApplicationWithIdentifier:MessagesIdentifier suspended:YES];
-        });
+                [[UIApplication sharedApplication]launchApplicationWithIdentifier:MessagesIdentifier suspended:YES];
+                });
         [[NSRunLoop currentRunLoop]runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
-    }
-}
-
-static inline BOOL stringContainsString(NSString *string1, NSString *string2, BOOL caseSensitive)
-{
-    if (string1 && string2) {
-        return [string1 rangeOfString:string2 options:caseSensitive ? 0 : NSCaseInsensitiveSearch].location != NSNotFound;
-    } else {
-        return NO;
     }
 }
 
 static inline NSString *standardizedAddress(NSString *address)
 {
-    return [CKEntity copyEntityForAddressString:address].rawAddress;
+    return IMStripFormattingFromAddress(address);
 }
 
 #pragma mark - Implementations
@@ -296,7 +290,7 @@ static inline NSString *standardizedAddress(NSString *address)
             [string2 appendFormat:@"GROUP_CONCAT(handle.id) LIKE '%%%@%%'", recipient];
             integer += recipient.length;
         }];
-        NSString *sql = [NSString stringWithFormat:@"SELECT chat.chat_identifier FROM chat_handle_join INNER JOIN chat ON chat.rowid = chat_handle_join.chat_id INNER JOIN handle ON handle.rowid = chat_handle_join.handle_id WHERE handle.id IN (%@) GROUP BY chat.chat_identifier HAVING %@ AND LENGTH(GROUP_CONCAT(handle.id)) = %lu;", string1, string2, (unsigned long)integer];
+        NSString *sql = [NSString stringWithFormat:@"SELECT chat.chat_identifier FROM chat_handle_join INNER JOIN chat ON chat.rowid = chat_handle_join.chat_id INNER JOIN handle ON handle.rowid = chat_handle_join.handle_id WHERE handle.id IN (%@) GROUP BY chat.chat_identifier HAVING %@ AND LENGTH(GROUP_CONCAT(handle.id)) = %lu", string1, string2, (unsigned long)integer];
         NSArray *dbChatIdentifiers = querySMSDB(sql);
         return dbChatIdentifiers.lastObject[@"chat_identifier"];
     } else {
@@ -346,7 +340,7 @@ static inline NSString *standardizedAddress(NSString *address)
         }
         avatar = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
-   }
+    }
     return avatar;
 }
 
@@ -354,7 +348,7 @@ static inline NSString *standardizedAddress(NSString *address)
 {
     BOOL groupMessages = getRecipients(userIdentifier).count > 1;
     NSMutableArray *messages = [NSMutableArray array];
-    NSArray *dbMessages = querySMSDB([NSString stringWithFormat:@"SELECT handle.id, message.ROWID, message.text, message.is_from_me, message.date, message.cache_has_attachments FROM message INNER JOIN chat_message_join ON message.ROWID = chat_message_join.message_id INNER JOIN chat ON chat.ROWID = chat_message_join.chat_id LEFT JOIN handle ON handle.ROWID = message.handle_id WHERE chat.chat_identifier = '%@' ORDER BY message.ROWID DESC LIMIT 20;", userIdentifier]);
+    NSArray *dbMessages = querySMSDB([NSString stringWithFormat:@"SELECT handle.id, message.ROWID, message.text, message.is_from_me, message.date, message.cache_has_attachments FROM message INNER JOIN chat_message_join ON message.ROWID = chat_message_join.message_id INNER JOIN chat ON chat.ROWID = chat_message_join.chat_id LEFT JOIN handle ON handle.ROWID = message.handle_id WHERE chat.chat_identifier = '%@' ORDER BY message.ROWID DESC LIMIT 20", userIdentifier]);
     NSTimeInterval lastDate = 0;
     for (NSDictionary *dbMessage in dbMessages.reverseObjectEnumerator) {
         id handleId = dbMessage[@"id"];
@@ -376,7 +370,7 @@ static inline NSString *standardizedAddress(NSString *address)
             [messages addObject:message];
         }
         if (hasAttachments) {
-            NSArray *dbAttachments = querySMSDB([NSString stringWithFormat:@"SELECT attachment.filename, attachment.mime_type FROM attachment INNER JOIN message_attachment_join ON attachment.ROWID = message_attachment_join.attachment_id WHERE message_id = '%@';", dbMessage[@"ROWID"]]);
+            NSArray *dbAttachments = querySMSDB([NSString stringWithFormat:@"SELECT attachment.filename, attachment.mime_type FROM attachment INNER JOIN message_attachment_join ON attachment.ROWID = message_attachment_join.attachment_id WHERE message_id = '%@'", dbMessage[@"ROWID"]]);
             for (NSDictionary *dbAttachment in dbAttachments) {
                 NSString *filename = [dbAttachment[@"filename"]stringByExpandingTildeInPath];
                 NSString *mimeType = dbAttachment[@"mime_type"];
@@ -398,11 +392,9 @@ static inline NSString *standardizedAddress(NSString *address)
 
 - (NSArray *)getContacts:(NSString *)keyword
 {
-    static NSMutableArray *recentContacts;
-    static NSDate *lastRefreshRecent;
-    static NSMutableDictionary *allContacts;
-    static NSDate *lastRefreshAll;
     if (keyword.length == 0) {
+        static NSMutableArray *recentContacts;
+        static NSDate *lastRefreshRecent;
         if (lastRefreshRecent == nil || [[NSDate date]timeIntervalSinceDate:lastRefreshRecent] > 10) {
             recentContacts = [NSMutableArray array];
             NSArray *dbRecentContacts = querySMSDB(@"SELECT chat.chat_identifier, MAX(chat_message_join.message_id) FROM chat, chat_message_join WHERE chat.ROWID = chat_message_join.chat_id GROUP BY chat.ROWID ORDER BY chat_message_join.message_id DESC");
@@ -413,42 +405,27 @@ static inline NSString *standardizedAddress(NSString *address)
         }
         return recentContacts;
     } else {
-        if (lastRefreshAll == nil || [[NSDate date]timeIntervalSinceDate:lastRefreshAll] > 600) {
-            allContacts = [NSMutableDictionary dictionary];
-            for (IMPerson *person in [IMPerson allPeople]) {
-                NSMutableString *keywords = [NSMutableString string];
-                NSMutableArray *contacts = [NSMutableArray array];
-                if (person.fullName.length > 0) {
-                    [keywords appendFormat:@"%@\n", person.fullName];
-                }
-                if (person.abbreviatedName.length > 0) {
-                    [keywords appendFormat:@"%@\n", person.abbreviatedName];
-                }
-                if (person.companyName.length > 0) {
-                    [keywords appendFormat:@"%@\n", person.companyName];
-                }
-                if (keywords.length > 0) {
-                    for (NSString *phoneNumber in person.phoneNumbers) {
-                        [contacts addObject:standardizedAddress(phoneNumber)];
-                    }
-                    for (NSString *email in person.emails) {
-                        [contacts addObject:standardizedAddress(email)];
-                    }
-                    allContacts[keywords] = contacts;
+        static SPSearchAgent *searchAgent;
+        if (searchAgent == nil) {
+            searchAgent = [[SPSearchAgent alloc]init];
+            searchAgent.searchDomains = @[@(2)];
+        }
+        searchAgent.queryString = keyword;
+        while (!searchAgent.queryComplete) {
+            [[NSRunLoop currentRunLoop]runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+        }
+        NSMutableSet *resultContacts = [NSMutableSet set];
+        if (searchAgent.resultCount > 0 && [[searchAgent sectionAtIndex:0].displayIdentifier isEqualToString:@"com.apple.mobilephone"]) {
+            for (SPSearchResult *agentResult in [searchAgent sectionAtIndex:0].results) {
+                NSArray *dbResults = queryAddressBookDB([NSString stringWithFormat:@"SELECT value FROM ABMultiValue WHERE record_id = %lu AND (property = 3 or property = 4)", (unsigned long)agentResult.identifier]);
+                for (NSDictionary *dbResult in dbResults) {
+                    [resultContacts addObject:standardizedAddress(dbResult[@"value"])];
                 }
             }
-            lastRefreshAll = [NSDate date];
+        } else {
+            [resultContacts addObject:standardizedAddress(keyword)];
         }
-        NSMutableSet *resultingContacts = [NSMutableSet set];
-        [allContacts enumerateKeysAndObjectsUsingBlock:^(NSString *keywordString, NSArray *contacts, BOOL *stop) {
-            if (stringContainsString(keywordString, keyword, NO)) {
-                [resultingContacts addObjectsFromArray:contacts];
-            }
-        }];
-        if (resultingContacts.count == 0) {
-            [resultingContacts addObject:standardizedAddress(keyword)];
-        }
-        return resultingContacts.allObjects;
+        return resultContacts.allObjects;
     }
     return nil;
 }
@@ -575,7 +552,7 @@ static CFDataRef CouriaMessagesServiceCallback(CFMessagePortRef local, SInt32 me
                 }
             }];
             break;
-        }
+       }
     }
     return returnData;
 }
@@ -596,17 +573,55 @@ static CFDataRef CouriaMessagesServiceCallback(CFMessagePortRef local, SInt32 me
 
 @end
 
+#pragma mark - Hooks
+
+CHDeclareClass(SpringBoard);
+
+CHInline static BOOL handleURL(NSURL *url) {
+    if ([url.scheme isEqualToString:@"sms"]) {
+        NSString *address = standardizedAddress(url.resourceSpecifier.stringByRemovingPercentEncoding);
+        [[NSClassFromString(@"Couria")sharedInstance]presentControllerForApplication:MessagesIdentifier user:address];
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+CHOptimizedMethod(6, self, void, SpringBoard, _openURLCore, NSURL *, url, display, id, display, animating, BOOL, animating, sender, id, sender, activationContext, id, context, activationHandler, id, handler)
+{
+    if (!handleURL(url)) {
+        CHSuper(6, SpringBoard, _openURLCore, url, display, display, animating, animating, sender, sender, activationContext, context, activationHandler, handler);
+    }
+}
+
+CHOptimizedMethod(6, self, void, SpringBoard, _openURLCore, NSURL *, url, display, id, display, animating, BOOL, animating, sender, id, sender, additionalActivationFlags, id, flags, activationHandler, id, handler)
+{
+    if (!handleURL(url)) {
+        CHSuper(6, SpringBoard, _openURLCore, url, display, display, animating, animating, sender, sender, additionalActivationFlags, flags, activationHandler, handler);
+    }
+}
+
+CHOptimizedMethod(5, self, void, SpringBoard, _openURLCore, NSURL *, url, display, id, display, animating, BOOL, animating, sender, id, sender, additionalActivationFlags, id, flags)
+{
+    if (!handleURL(url)) {
+        CHSuper(5, SpringBoard, _openURLCore, url, display, display, animating, animating, sender, sender, additionalActivationFlags, flags);
+    }
+}
+
 #pragma mark - Constructor
 
-__attribute__((constructor))
-static void Constructor()
+CHConstructor
 {
     @autoreleasepool {
         NSString *application = [NSBundle mainBundle].bundleIdentifier;
-        if ([application isEqualToString:@"com.apple.springboard"]) {
+        if ([application isEqualToString:SpringBoardIdentifier]) {
             [[NSClassFromString(@"Couria")sharedInstance]registerDataSource:[CouriaMessagesDataSource new] delegate:[CouriaMessagesDelegate new] forApplication:MessagesIdentifier];
-        } else if ([application isEqualToString:@"com.apple.MobileSMS"]) {
+        } else if ([application isEqualToString:MessagesIdentifier]) {
             [[[CouriaMessagesService alloc]init]start];
         }
+        CHLoadLateClass(SpringBoard);
+        CHHook(6, SpringBoard, _openURLCore, display, animating, sender, activationContext, activationHandler);
+        CHHook(6, SpringBoard, _openURLCore, display, animating, sender, additionalActivationFlags, activationHandler);
+        CHHook(5, SpringBoard, _openURLCore, display, animating, sender, additionalActivationFlags);
     }
 }

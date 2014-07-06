@@ -8,7 +8,7 @@ Couria_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 
 MessagesExtension_FILES = src/MessagesExtension.mm
 MessagesExtension_FRAMEWORKS = UIKit
-MessagesExtension_PRIVATE_FRAMEWORKS = ChatKit IMCore
+MessagesExtension_PRIVATE_FRAMEWORKS = ChatKit IMCore Search
 MessagesExtension_LIBRARIES = sqlite3
 MessagesExtension_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 

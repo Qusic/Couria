@@ -360,6 +360,26 @@ extern "C" {
 - (void)lock;
 @end
 
+@interface SPSearchResult : NSObject
+@property(nonatomic) NSUInteger identifier;
+@property(retain, nonatomic) NSString *title;
+@end
+
+@interface SPSearchResultSection : NSObject
+@property(retain, nonatomic) NSString *displayIdentifier;
+@property(retain, nonatomic) NSMutableArray *results;
+- (SPSearchResult *)resultsAtIndex:(NSUInteger)index;
+@end
+
+@interface SPSearchAgent : NSObject
+@property(retain, nonatomic) NSArray *searchDomains;
+@property(readonly, nonatomic) BOOL queryComplete;
+@property(readonly, nonatomic) NSUInteger resultCount;
+- (SPSearchResultSection *)sectionAtIndex:(NSUInteger)index;
+- (NSString *)queryString;
+- (BOOL)setQueryString:(NSString *)queryString;
+@end
+
 @interface UIApplication (Private)
 - (BOOL)launchApplicationWithIdentifier:(NSString *)identifier suspended:(BOOL)suspended;
 @end
