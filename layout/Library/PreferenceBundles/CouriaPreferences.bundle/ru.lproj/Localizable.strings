@@ -4,6 +4,8 @@
 <dict>
 	<key>ABOUT</key>
 	<string>О дополнении</string>
+	<key>DISABLE_ON_LOCK_SCREEN</key>
+	<string>Откл. при заблок. экране</string>
 	<key>DONATE</key>
 	<string>Пожертвовать</string>
 	<key>ENABLED</key>
@@ -17,11 +19,13 @@
 	<key>PASSCODE</key>
 	<string>Пароль</string>
 	<key>REQUIRE_WHEN_LOCKED</key>
-	<string>Запрашивать при заблок.экр.</string>
+	<string>При заблок. экране</string>
 	<key>REQUIRE_WHEN_UNLOCKED</key>
-	<string>Запрашивать при разблок.экр.</string>
+	<string>При разблок. экране</string>
 	<key>SHARE_TEXT</key>
-	<string>I'm Loving #Couria, which brings a Centralized and Customizable Quick Reply and Quick Compose System to iOS.</string>
+	<string>Я использую #Couria, централизованную систему быстрого ответа и отправки сообщений для iOS.</string>
+	<key>TEXT_SIZE</key>
+	<string>Размер текста</string>
 	<key>THEME</key>
 	<string>Тема</string>
 	<key>THEMES</key>
