@@ -271,31 +271,10 @@ static inline NSString *standardizedAddress(NSString *address)
 
 - (NSString *)getUserIdentifier:(BBBulletin *)bulletin
 {
-    NSArray *recipientsArray = bulletin.context[@"AssistantContext"][@"msgRecipients"];
-    if (recipientsArray.count > 1) {
-        NSMutableArray *recipients = [NSMutableArray array];
-        for (NSDictionary *recipientDictionary in bulletin.context[@"AssistantContext"][@"msgRecipients"]) {
-            [recipients addObject:recipientDictionary[@"data"]];
-        }
-        NSMutableString *string1 = [NSMutableString string];
-        NSMutableString *string2 = [NSMutableString string];
-        __block NSUInteger integer = 0;
-        [recipients enumerateObjectsUsingBlock:^(NSString *recipient, NSUInteger index, BOOL *stop) {
-            if (index > 0) {
-                [string1 appendString:@","];
-                [string2 appendString:@" AND "];
-                integer += 1;
-            }
-            [string1 appendFormat:@"'%@'", recipient];
-            [string2 appendFormat:@"GROUP_CONCAT(handle.id) LIKE '%%%@%%'", recipient];
-            integer += recipient.length;
-        }];
-        NSString *sql = [NSString stringWithFormat:@"SELECT chat.chat_identifier FROM chat_handle_join INNER JOIN chat ON chat.rowid = chat_handle_join.chat_id INNER JOIN handle ON handle.rowid = chat_handle_join.handle_id WHERE handle.id IN (%@) GROUP BY chat.chat_identifier HAVING %@ AND LENGTH(GROUP_CONCAT(handle.id)) = %lu", string1, string2, (unsigned long)integer];
-        NSArray *dbChatIdentifiers = querySMSDB(sql);
-        return dbChatIdentifiers.lastObject[@"chat_identifier"];
-    } else {
-        return standardizedAddress(bulletin.context[@"contactInfo"]);
-    }
+    NSString *messageId = bulletin.context[@"AssistantContext"][@"identifier"];
+    messageId = [messageId stringByReplacingOccurrencesOfString:@"x-apple-sms:guid=(\\d+)" withString:@"$1" options:NSRegularExpressionSearch range:NSMakeRange(0, messageId.length)];
+    NSString *chatId = querySMSDB([NSString stringWithFormat:@"SELECT chat.chat_identifier FROM chat INNER JOIN chat_message_join ON chat.ROWID = chat_message_join.chat_id INNER JOIN message ON message.ROWID = chat_message_join.message_id WHERE message.ROWID = %@", messageId]).firstObject[@"chat_identifier"];
+    return chatId;
 }
 
 - (NSString *)getNickname:(NSString *)userIdentifier
