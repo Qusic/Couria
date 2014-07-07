@@ -331,11 +331,13 @@ static inline NSString *standardizedAddress(NSString *address)
     NSTimeInterval lastDate = 0;
     for (NSDictionary *dbMessage in dbMessages.reverseObjectEnumerator) {
         id handleId = dbMessage[@"id"];
-        NSString *text = [dbMessage[@"text"]stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        NSString *text = dbMessage[@"text"];
+        text = [text stringByReplacingOccurrencesOfString:@"\ufffc" withString:@""];
+        text = [text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         BOOL outgoing = [dbMessage[@"is_from_me"]boolValue];
         BOOL hasAttachments = [dbMessage[@"cache_has_attachments"]boolValue];
         NSTimeInterval date = [dbMessage[@"date"]doubleValue];
-        if (text.length > 0 && ((signed char)[text cStringUsingEncoding:NSUTF8StringEncoding][0]) != -17) {
+        if (text.length > 0) {
             CouriaMessagesMessage *message = [[CouriaMessagesMessage alloc]init];
             message.text = text;
             message.outgoing = outgoing;
@@ -349,7 +351,7 @@ static inline NSString *standardizedAddress(NSString *address)
             [messages addObject:message];
         }
         if (hasAttachments) {
-            NSArray *dbAttachments = querySMSDB([NSString stringWithFormat:@"SELECT attachment.filename, attachment.mime_type FROM attachment INNER JOIN message_attachment_join ON attachment.ROWID = message_attachment_join.attachment_id WHERE message_id = '%@'", dbMessage[@"ROWID"]]);
+            NSArray *dbAttachments = querySMSDB([NSString stringWithFormat:@"SELECT attachment.filename, attachment.mime_type FROM attachment INNER JOIN message_attachment_join ON attachment.ROWID = message_attachment_join.attachment_id WHERE message_id = %@", dbMessage[@"ROWID"]]);
             for (NSDictionary *dbAttachment in dbAttachments) {
                 NSString *filename = [dbAttachment[@"filename"]stringByExpandingTildeInPath];
                 NSString *mimeType = dbAttachment[@"mime_type"];
