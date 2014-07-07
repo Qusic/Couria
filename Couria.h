@@ -49,5 +49,6 @@
 - (void)unregisterForApplication:(NSString *)applicationIdentifier; // Unregister your data source and delegate for an application.
 - (void)presentControllerForApplication:(NSString *)applicationIdentifier user:(NSString *)userIdentifier; // Manually present a quick compose view controller. If applicationIdentifier has not been registered, nothing will happen. If userIdentifier is nil and getContacts: has been implemented in the data source, contacts search view will be showed.
 - (void)handleBulletin:(BBBulletin *)bulletin; // Manually activate action of a bulletin. You may find useful if you are making some notifications tweaks.
+- (BOOL)canHandleBulletin:(BBBulletin *)bulletin; // Manually check whether a given bulletin can be handled by Couria.
 
 @end
