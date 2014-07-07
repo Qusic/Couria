@@ -98,6 +98,12 @@ typedef NS_ENUM(SInt32, CouriaMessagesExtensionMessageID) {
 - (CKConversation *)conversationForExistingChatWithGroupID:(NSString *)groupID;
 @end
 
+@interface CKPreferredServiceManager : NSObject
++ (instancetype)sharedPreferredServiceManager;
+- (void)refreshAvailabilityForConversation:(CKConversation *)conversation;
+- (id)preferredServiceForAddressString:(NSString *)addressString newComposition:(BOOL)newComposition checkWithServer:(BOOL)checkWithServer error:(NSError **)errpt;
+@end
+
 extern "C" NSString *IMStripFormattingFromAddress(NSString *formattedAddress);
 
 #pragma mark - Functions
@@ -528,8 +534,12 @@ static CFDataRef CouriaMessagesServiceCallback(CFMessagePortRef local, SInt32 me
             NSString *userIdentifier = [[NSString alloc]initWithData:(__bridge NSData *)data encoding:NSUTF8StringEncoding];
             [[NSOperationQueue mainQueue]addOperationWithBlock:^{
                 CKConversation *conversation = getConversation(userIdentifier, NO);
+                CKPreferredServiceManager *preferedServiceManager = [CKPreferredServiceManager sharedPreferredServiceManager];
                 if (conversation != nil) {
                     [conversation markAllMessagesAsRead];
+                    [preferedServiceManager refreshAvailabilityForConversation:conversation];
+                } else {
+                    [preferedServiceManager preferredServiceForAddressString:userIdentifier newComposition:YES checkWithServer:YES error:NULL];
                 }
             }];
             break;
