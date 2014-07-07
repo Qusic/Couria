@@ -127,7 +127,7 @@
     } else if ([identifier isEqualToString:@"Donate"]) {
         [[UIApplication sharedApplication]openURL:[NSURL URLWithString:@"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PJ93RW7TLKZZ4"]];
     } else if ([identifier isEqualToString:@"TranslationCredits"]) {
-        if ([[self.specifiers.lastObject identifier]isEqualToString:@"TranslationCredits"]) {
+        if ([((PSSpecifier *)(self.specifiers.lastObject)).identifier isEqualToString:@"TranslationCredits"]) {
             [self addSpecifiersFromArray:_translationCredits animated:YES];
         } else {
             for (PSSpecifier *specifier in _translationCredits) {
