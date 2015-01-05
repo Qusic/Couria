@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import <LAActivator/libactivator.h>
+#import <Activator/libactivator.h>
 #import <Flipswitch/Flipswitch.h>
 
 @interface CouriaExtras : NSObject <LAListener, FSSwitchDataSource>
