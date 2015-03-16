@@ -44,7 +44,7 @@
 
 @interface Couria : NSObject // This class is only available in SpringBoard by using NSClassFromString(@"Couria")
 
-+ (Couria *)sharedInstance; // You should always use this shared instance when needed.
++ (instancetype)sharedInstance; // You should always use this shared instance when needed.
 - (void)registerDataSource:(id<CouriaDataSource>)dataSource delegate:(id<CouriaDelegate>)delegate forApplication:(NSString *)applicationIdentifier; // Register your data source and delegate for an application.
 - (void)unregisterForApplication:(NSString *)applicationIdentifier; // Unregister your data source and delegate for an application.
 - (void)presentControllerForApplication:(NSString *)applicationIdentifier user:(NSString *)userIdentifier; // Manually present a quick compose view controller. If applicationIdentifier has not been registered, nothing will happen. If userIdentifier is nil and getContacts: has been implemented in the data source, contacts search view will be showed.

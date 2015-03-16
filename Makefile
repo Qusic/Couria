@@ -1,26 +1,26 @@
-TWEAK_NAME = Couria MessagesExtension
+TWEAK_NAME = Couria CouriaUI
 BUNDLE_NAME = CouriaPreferences
 
-Couria_FILES = 
-Couria_FRAMEWORKS = UIKit CoreGraphics QuartzCore MobileCoreServices MediaPlayer AudioToolbox
-Couria_PRIVATE_FRAMEWORKS = AppSupport
+Couria_FILES = src/Couria.m src/Notifications.m src/Extras.m
+Couria_FRAMEWORKS =
+Couria_PRIVATE_FRAMEWORKS = BulletinBoard ChatKit
 Couria_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 
-MessagesExtension_FILES = src/MessagesExtension.mm
-MessagesExtension_FRAMEWORKS = UIKit
-MessagesExtension_PRIVATE_FRAMEWORKS = ChatKit IMCore Search
-MessagesExtension_LIBRARIES = sqlite3
-MessagesExtension_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
+CouriaUI_FILES = src/ViewService.m src/ConversationView.m
+CouriaUI_FRAMEWORKS = UIKit
+CouriaUI_PRIVATE_FRAMEWORKS = ChatKit
+CouriaUI_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 
-CouriaPreferences_FILES = 
+CouriaPreferences_FILES = src/Preferences.m
 CouriaPreferences_FRAMEWORKS = UIKit Social
-CouriaPreferences_PRIVATE_FRAMEWORKS = Preferences AppSupport
+CouriaPreferences_PRIVATE_FRAMEWORKS = Preferences
 CouriaPreferences_INSTALL_PATH = /Library/PreferenceBundles
 
 export TARGET = iphone:clang
 export ARCHS = armv7 arm64
 export TARGET_IPHONEOS_DEPLOYMENT_VERSION = 8.0
 export ADDITIONAL_OBJCFLAGS = -fobjc-arc -fvisibility=hidden
+export SCHEMA = debug
 
 default: all package install
 
