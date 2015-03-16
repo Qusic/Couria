@@ -129,6 +129,7 @@ CHConstructor
 {
     @autoreleasepool {
         [Couria sharedInstance];
+        [[CouriaService sharedInstance]run];
         [[CouriaExtras sharedInstance]registerExtrasForApplication:MobileSMSIdentifier];
     }
 }

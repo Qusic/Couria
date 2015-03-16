@@ -11,27 +11,6 @@
 #define SpringBoardIdentifier @"com.apple.springboard"
 #define MobileSMSIdentifier @"com.apple.MobileSMS"
 
-@interface NSXPCInterface : NSObject
-@property (assign) Protocol *protocol;
-+ (NSXPCInterface *)interfaceWithProtocol:(Protocol *)protocol;
-- (void)setClasses:(NSSet *)classes forSelector:(SEL)sel argumentIndex:(NSUInteger)arg ofReply:(BOOL)ofReply;
-- (NSSet *)classesForSelector:(SEL)sel argumentIndex:(NSUInteger)arg ofReply:(BOOL)ofReply;
-- (void)setInterface:(NSXPCInterface *)ifc forSelector:(SEL)sel argumentIndex:(NSUInteger)arg ofReply:(BOOL)ofReply;
-- (NSXPCInterface *)interfaceForSelector:(SEL)sel argumentIndex:(NSUInteger)arg ofReply:(BOOL)ofReply;
-@end
-
-@interface UIViewController (Private)
-+ (NSXPCInterface *)_exportedInterface;
-+ (NSXPCInterface *)_remoteViewControllerInterface;
-- (NSProxy *)_remoteViewControllerProxy;
-@end
-
-@interface _UIRemoteViewController : UIViewController
-+ (NSXPCInterface *)exportedInterface;
-+ (NSXPCInterface *)serviceViewControllerInterface;
-- (NSProxy *)serviceViewControllerProxy;
-@end
-
 @interface BBAppearance : NSObject
 @property (copy, nonatomic) NSString *title;
 + (instancetype)appearanceWithTitle:(NSString *)title;
@@ -255,23 +234,7 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 - (void)_requestProximityMonitoringEnabled:(BOOL)enabled;
 @end
 
-typedef void (^CouriaXPCCallback)(id);
-
-@protocol CouriaInteractiveNotificationHostInterface_
-- (void)_Couria_getMessages:(NSDictionary *)userInfo callback:(CouriaXPCCallback)callback;
-- (void)_Couria_getContacts:(NSDictionary *)userInfo callback:(CouriaXPCCallback)callback;
-- (void)_Couria_sendMessage:(NSDictionary *)userInfo;
-- (void)_Couria_markRead:(NSDictionary *)userInfo;
-- (void)_Couria_updateBanner:(NSDictionary *)userInfo;
-@end
-
-@protocol CouriaInteractiveNotificationHostInterface <NCInteractiveNotificationHostInterface, CouriaInteractiveNotificationHostInterface_>
-@end
-
-@interface NCInteractiveNotificationHostViewController : _UIRemoteViewController <NCInteractiveNotificationHostInterface>
-@end
-
-@interface NCInteractiveNotificationHostViewController (Couria) <CouriaInteractiveNotificationHostInterface>
+@interface NCInteractiveNotificationHostViewController : UIViewController <NCInteractiveNotificationHostInterface>
 @end
 
 @protocol NCInteractiveNotificationServiceInterface
@@ -298,18 +261,29 @@ typedef void (^CouriaXPCCallback)(id);
 - (void)requestProximityMonitoringEnabled:(BOOL)enabled;
 @end
 
+@interface CPDistributedMessagingCenter : NSObject
++ (instancetype)centerNamed:(NSString *)name;
+- (void)runServerOnCurrentThread;
+- (void)stopServer;
+- (void)registerForMessageName:(NSString *)message target:(id)target selector:(SEL)selector;
+- (BOOL)sendNonBlockingMessageName:(NSString *)message userInfo:(NSDictionary *)userInfo;
+- (NSDictionary *)sendMessageAndReceiveReplyName:(NSString *)message userInfo:(NSDictionary *)userInfo error:(NSError * __autoreleasing *)errpt;
+@end
+
 @interface CKInlineReplyViewController : NCInteractiveNotificationViewController <CKMessageEntryViewDelegate>
 @property (retain, nonatomic) CKMessageEntryView *entryView;
 @property (retain, nonatomic) CKScheduledUpdater *typingUpdater;
 - (UITextView *)viewForTyping;
 - (void)setupConversation;
 - (void)setupView;
+- (void)interactiveNotificationDidAppear;
 - (void)updateSendButton;
 - (void)updateTyping;
 @end
 
 @interface CKInlineReplyViewController (Couria)
 @property (retain, nonatomic, readonly) CouriaConversationViewController *conversationViewController;
+@property (retain, nonatomic, readonly) CouriaContactsViewController *contactsViewController;
 @end
 
 @interface CouriaInlineReplyViewController_MobileSMSApp : CKInlineReplyViewController
@@ -421,6 +395,11 @@ CHInline NSString *CouriaLocalizedString(NSString *key)
 @property (copy) id media;
 @property (assign) BOOL outgoing;
 @property (copy) NSDate *timestamp;
+@end
+
+@interface CouriaService : NSObject
++ (instancetype)sharedInstance;
+- (void)run;
 @end
 
 @interface CouriaExtras : NSObject <LAListener, FSSwitchDataSource>

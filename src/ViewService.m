@@ -17,10 +17,24 @@ CHPropertyGetter(CKInlineReplyViewController, conversationViewController, Couria
     return viewController;
 }
 
+CHDeclareProperty(CKInlineReplyViewController, contactsViewController)
+CHPropertyGetter(CKInlineReplyViewController, contactsViewController, CouriaContactsViewController *)
+{
+    CouriaContactsViewController *viewController = CHPropertyGetValue(CKInlineReplyViewController, contactsViewController);
+    if (viewController == nil) {
+        viewController = [[CouriaContactsViewController alloc]initWithStyle:UITableViewStylePlain];
+        viewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        CHPropertySetValue(CKInlineReplyViewController, contactsViewController, viewController, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return viewController;
+}
+
 CHOptimizedMethod(0, self, void, CKInlineReplyViewController, setupView)
 {
     CHSuper(0, CKInlineReplyViewController, setupView);
     [self.view addSubview:self.conversationViewController.view];
+    [self.view addSubview:self.contactsViewController.view];
+    self.contactsViewController.view.hidden = YES;
 }
 
 CHOptimizedMethod(0, self, CGFloat, CKInlineReplyViewController, preferredContentHeight)
@@ -52,19 +66,21 @@ CHDeclareClass(CouriaInlineReplyViewController_MobileSMSApp)
 
 CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, setupConversation)
 {
-    CHSuper(0, CouriaInlineReplyViewController_MobileSMSApp, setupConversation);
     NSString *chatIdentifier = self.context[@"CKBBUserInfoKeyChatIdentifier"];
-    CKConversation *conversation = [[CKConversationList sharedConversationList]conversationForExistingChatWithGroupID:chatIdentifier];
-    static NSUInteger const messagesLimit = 51;
-    conversation.limitToLoad = messagesLimit;
-    conversation.chat.numberOfMessagesToKeepLoaded = messagesLimit;
-    [conversation.chat loadMessagesBeforeDate:nil limit:messagesLimit loadImmediately:YES];
-    NSMutableArray *chatItems = [NSMutableArray array];
-    [conversation.chat.chatItems enumerateObjectsUsingBlock:^(IMChatItem *item, NSUInteger index, BOOL *stop) {
-        [chatItems addObject:[self.conversationViewController chatItemWithIMChatItem:item]];
-    }];
-    self.conversationViewController.conversation = conversation;
-    self.conversationViewController.chatItems = chatItems;
+    if (chatIdentifier != nil) {
+        CHSuper(0, CouriaInlineReplyViewController_MobileSMSApp, setupConversation);
+        CKConversation *conversation = [[CKConversationList sharedConversationList]conversationForExistingChatWithGroupID:chatIdentifier];
+        static NSUInteger const messagesLimit = 51;
+        conversation.limitToLoad = messagesLimit;
+        conversation.chat.numberOfMessagesToKeepLoaded = messagesLimit;
+        [conversation.chat loadMessagesBeforeDate:nil limit:messagesLimit loadImmediately:YES];
+        NSMutableArray *chatItems = [NSMutableArray array];
+        [conversation.chat.chatItems enumerateObjectsUsingBlock:^(IMChatItem *item, NSUInteger index, BOOL *stop) {
+            [chatItems addObject:[self.conversationViewController chatItemWithIMChatItem:item]];
+        }];
+        self.conversationViewController.conversation = conversation;
+        self.conversationViewController.chatItems = chatItems;
+    }
 }
 
 CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController_MobileSMSApp, messageEntryViewDidChange, CKMessageEntryView *, entryView)
@@ -86,6 +102,7 @@ CHConstructor
     @autoreleasepool {
         CHLoadLateClass(CKInlineReplyViewController);
         CHHook(0, CKInlineReplyViewController, conversationViewController);
+        CHHook(0, CKInlineReplyViewController, contactsViewController);
         CHHook(0, CKInlineReplyViewController, setupView);
         CHHook(0, CKInlineReplyViewController, preferredContentHeight);
         CHHook(0, CKInlineReplyViewController, viewDidLayoutSubviews);

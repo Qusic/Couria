@@ -48,4 +48,9 @@
     return cell;
 }
 
+- (void)setChatItems:(NSArray *)chatItems
+{
+    [super setChatItems:chatItems];
+}
+
 @end
