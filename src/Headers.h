@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import <AddressBook/AddressBook.h>
 #import <CaptainHook.h>
 #import <Activator/libactivator.h>
 #import <Flipswitch/Flipswitch.h>
@@ -10,6 +11,20 @@
 #define CouriaIdentifier @"me.qusic.couria"
 #define SpringBoardIdentifier @"com.apple.springboard"
 #define MobileSMSIdentifier @"com.apple.MobileSMS"
+
+@interface UIScrollView (CKUtilities)
+- (void)__ck_scrollToTop:(BOOL)animated;
+- (BOOL)__ck_isScrolledToTop;
+- (CGPoint)__ck_scrollToTopContentOffset;
+- (void)__ck_scrollToBottom:(BOOL)animated;
+- (BOOL)__ck_isScrolledToBottom;
+- (CGPoint)__ck_scrollToBottomContentOffset;
+- (CGSize)__ck_contentSize;
+@end
+
+@interface UISearchBar (Private)
+- (UIView *)_backgroundView;
+@end
 
 @interface BBAppearance : NSObject
 @property (copy, nonatomic) NSString *title;
@@ -54,13 +69,33 @@
 - (void)publishBulletinRequest:(BBBulletinRequest *)bulletinRequest destinations:(NSUInteger)destinations alwaysToLockScreen:(BOOL)alwaysToLockScreen;
 @end
 
+extern NSString *IMStripFormattingFromAddress(NSString *formattedAddress);
+
+@interface IMHandle : NSObject
+@property (retain, nonatomic, readonly) NSString *ID;
+@property (retain, nonatomic, readonly) NSString *name;
+@end
+
 @interface IMChatItem : NSObject
 @end
 
 @interface IMChat : NSObject
-@property (retain, nonatomic, readonly) NSArray *chatItems;
+@property (nonatomic, readonly) NSString *chatIdentifier;
+@property (nonatomic, readonly) NSArray *participants;
+@property (nonatomic, readonly) NSArray *chatItems;
+@property (retain, nonatomic) IMHandle *recipient;
 @property (assign, nonatomic) NSUInteger numberOfMessagesToKeepLoaded;
 - (NSString *)loadMessagesBeforeDate:(NSDate *)date limit:(NSUInteger)limit loadImmediately:(BOOL)immediately;
+@end
+
+@interface IMHandleRegistrar : NSObject
++ (instancetype)sharedInstance;
+- (NSArray *)allIMHandles;
+@end
+
+@interface IMChatRegistry : NSObject
++ (instancetype)sharedInstance;
+- (NSArray *)allExistingChats;
 @end
 
 extern NSBundle *CKFrameworkBundle(void);
@@ -84,7 +119,7 @@ extern NSBundle *CKFrameworkBundle(void);
 @interface CKBalloonImageView : UIView
 @end
 
-@class CKBalloonView;
+@class CKBalloonView, CKMovieBalloonView;
 
 @protocol CKBalloonViewDelegate <NSObject>
 - (void)balloonViewWillResignFirstResponder:(CKBalloonView *)balloonView;
@@ -95,6 +130,17 @@ extern NSBundle *CKFrameworkBundle(void);
 - (BOOL)shouldShowMenuForBalloonView:(CKBalloonView *)balloonView;
 - (NSArray *)menuItemsForBalloonView:(CKBalloonView *)balloonView;
 - (void)balloonViewDidFinishDataDetectorAction:(CKBalloonView *)balloonView;
+@end
+
+@protocol CKMovieBalloonViewDelegate <CKBalloonViewDelegate>
+@required
+- (void)balloonView:(CKMovieBalloonView *)balloonView mediaObjectDidFinishPlaying:(id)mediaObject;
+@end
+
+@protocol CKLocationShareBalloonViewDelegate <CKBalloonViewDelegate>
+@required
+- (void)locationShareBalloonViewShareButtonTapped:(id)balloonView;
+- (void)locationShareBalloonViewIgnoreButtonTapped:(id)balloonView;
 @end
 
 typedef NS_ENUM(SInt8, CKBalloonOrientation) {
@@ -154,7 +200,7 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 @interface CKTranscriptCollectionView : CKEditableCollectionView
 @end
 
-@interface CKTranscriptCollectionViewController : CKViewController <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface CKTranscriptCollectionViewController : CKViewController <UICollectionViewDataSource, UICollectionViewDelegate, CKMovieBalloonViewDelegate, CKLocationShareBalloonViewDelegate>
 @property (retain, nonatomic) CKConversation *conversation;
 @property (copy, nonatomic) NSArray *chatItems;
 @property (retain, nonatomic) CKTranscriptCollectionView *collectionView;
@@ -163,6 +209,7 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 @end
 
 @interface CouriaConversationViewController : CKTranscriptCollectionViewController
+- (void)refreshData;
 @end
 
 @interface CKEditableCollectionViewCell : UICollectionViewCell
@@ -188,8 +235,12 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 @property (copy, nonatomic) NSAttributedString *drawerText;
 @end
 
-@interface CouriaContactsViewController : UITableViewController
+@interface CouriaContactsViewController : UITableViewController <UISearchBarDelegate>
 @property (retain, nonatomic) NSArray *contacts;
+@property (retain, nonatomic) UISearchBar *searchBar;
+@property (copy, nonatomic) void (^ keywordHandler)(NSString *keyword);
+@property (copy, nonatomic) void (^ selectionHandler)(NSDictionary *contact);
+- (void)refreshData;
 @end
 
 @interface CKMessageEntryContentView : UIScrollView
@@ -201,6 +252,8 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 @property (assign, nonatomic) BOOL shouldShowPhotoButton;
 @property (assign, nonatomic) BOOL shouldShowCharacterCount;
 @property (retain, nonatomic) CKMessageEntryContentView *contentView;
+@property (retain, nonatomic) UIButton *photoButton;
+- (instancetype)initWithFrame:(CGRect)frame shouldShowSendButton:(BOOL)sendButton shouldShowSubject:(BOOL)subject shouldShowPhotoButton:(BOOL)photoButton shouldShowCharacterCount:(BOOL)characterCount;
 @end
 
 @protocol CKMessageEntryViewDelegate <NSObject>
@@ -282,6 +335,7 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 @end
 
 @interface CKInlineReplyViewController (Couria)
+@property (retain, nonatomic, readonly) CPDistributedMessagingCenter *messagingCenter;
 @property (retain, nonatomic, readonly) CouriaConversationViewController *conversationViewController;
 @property (retain, nonatomic, readonly) CouriaContactsViewController *contactsViewController;
 @end
@@ -298,6 +352,39 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 - (UIEdgeInsets)balloonTranscriptInsets;
 - (CGFloat)leftBalloonMaxWidthForTranscriptWidth:(CGFloat)transcriptWidth marginInsets:(UIEdgeInsets)marginInsets;
 - (CGFloat)rightBalloonMaxWidthForEntryContentViewWidth:(CGFloat)entryContentViewWidth;
+@end
+
+@interface SPSearchResult : NSObject
+@property (nonatomic) NSUInteger identifier;
+@property (retain, nonatomic) NSString *title;
+@end
+
+@interface SPSearchResultSection : NSObject
+@property (retain, nonatomic) NSString *displayIdentifier;
+@property (retain, nonatomic) NSMutableArray *results;
+- (SPSearchResult *)resultsAtIndex:(NSUInteger)index;
+@end
+
+@class SPSearchAgent;
+
+@protocol SPSearchAgentDelegate
+@optional
+- (void)searchAgentUpdatedResults:(SPSearchAgent *)agent;
+- (void)searchAgentClearedResults:(SPSearchAgent *)agent;
+@end
+
+@interface SPSearchAgent : NSObject
+@property (retain, nonatomic) NSArray *searchDomains;
+@property (readonly, nonatomic) BOOL queryComplete;
+@property (readonly, nonatomic) NSUInteger resultCount;
+@property (assign, nonatomic) id<SPSearchAgentDelegate> delegate;
+- (SPSearchResultSection *)sectionAtIndex:(NSUInteger)index;
+- (NSString *)queryString;
+- (BOOL)setQueryString:(NSString *)queryString;
+@end
+
+@interface CouriaSearchAgent : SPSearchAgent <SPSearchAgentDelegate>
+@property (copy) void (^ updateHandler)(void);
 @end
 
 @interface SBApplication : NSObject
@@ -406,4 +493,83 @@ CHInline NSString *CouriaLocalizedString(NSString *key)
 + (instancetype)sharedInstance;
 - (void)registerExtrasForApplication:(NSString *)applicationIdentifier;
 - (void)unregisterExtrasForApplication:(NSString *)applicationIdentifier;
+@end
+
+typedef enum PSCellType {
+    PSGroupCell,
+    PSLinkCell,
+    PSLinkListCell,
+    PSListItemCell,
+    PSTitleValueCell,
+    PSSliderCell,
+    PSSwitchCell,
+    PSStaticTextCell,
+    PSEditTextCell,
+    PSSegmentCell,
+    PSGiantIconCell,
+    PSGiantCell,
+    PSSecureEditTextCell,
+    PSButtonCell,
+    PSEditTextViewCell,
+} PSCellType;
+
+@interface PSSpecifier : NSObject {
+@public
+    id target;
+    SEL getter;
+    SEL setter;
+    SEL action;
+    Class detailControllerClass;
+    PSCellType cellType;
+    Class editPaneClass;
+    UIKeyboardType keyboardType;
+    UITextAutocapitalizationType autoCapsType;
+    UITextAutocorrectionType autoCorrectionType;
+    int textFieldType;
+@private
+    NSString* _name;
+    NSArray* _values;
+    NSDictionary* _titleDict;
+    NSDictionary* _shortTitleDict;
+    id _userInfo;
+    NSMutableDictionary* _properties;
+}
+@property(retain) NSMutableDictionary* properties;
+@property(retain) NSString* identifier;
+@property(retain) NSString* name;
+@property(retain) id userInfo;
+@property(retain) id titleDictionary;
+@property(retain) id shortTitleDictionary;
+@property(retain) NSArray* values;
++(id)preferenceSpecifierNamed:(NSString*)title target:(id)target set:(SEL)set get:(SEL)get detail:(Class)detail cell:(PSCellType)cell edit:(Class)edit;
++(PSSpecifier*)groupSpecifierWithName:(NSString*)title;
++(PSSpecifier*)emptyGroupSpecifier;
++(UITextAutocapitalizationType)autoCapsTypeForString:(PSSpecifier*)string;
++(UITextAutocorrectionType)keyboardTypeForString:(PSSpecifier*)string;
+-(id)propertyForKey:(NSString*)key;
+-(void)setProperty:(id)property forKey:(NSString*)key;
+-(void)removePropertyForKey:(NSString*)key;
+-(void)loadValuesAndTitlesFromDataSource;
+-(void)setValues:(NSArray*)values titles:(NSArray*)titles;
+-(void)setValues:(NSArray*)values titles:(NSArray*)titles shortTitles:(NSArray*)shortTitles;
+-(void)setupIconImageWithPath:(NSString*)path;
+-(NSString*)identifier;
+-(void)setTarget:(id)target;
+-(void)setKeyboardType:(UIKeyboardType)type autoCaps:(UITextAutocapitalizationType)autoCaps autoCorrection:(UITextAutocorrectionType)autoCorrection;
+@end
+
+@interface PSViewController : UIViewController
+@end
+
+@interface PSListController : PSViewController {
+    NSArray *_specifiers;
+}
+@property(readonly, retain) PSSpecifier *specifier;
+@property(retain) NSArray *specifiers;
+- (NSArray *)loadSpecifiersFromPlistName:(NSString *)plistName target:(id)target;
+- (void)addSpecifiersFromArray:(NSArray*)array animated:(BOOL)animated;
+- (void)removeSpecifier:(PSSpecifier*)specifier animated:(BOOL)animated;
+@end
+
+@interface PSListItemsController : PSListController
 @end

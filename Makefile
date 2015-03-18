@@ -3,12 +3,12 @@ BUNDLE_NAME = CouriaPreferences
 
 Couria_FILES = src/Couria.m src/Service.m src/Extras.m src/Notifications.m
 Couria_FRAMEWORKS = UIKit
-Couria_PRIVATE_FRAMEWORKS = AppSupport BulletinBoard ChatKit
+Couria_PRIVATE_FRAMEWORKS = BulletinBoard AppSupport ChatKit
 Couria_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 
-CouriaUI_FILES = src/ViewService.m src/ConversationView.m src/ContactsView.m
-CouriaUI_FRAMEWORKS = UIKit
-CouriaUI_PRIVATE_FRAMEWORKS = ChatKit
+CouriaUI_FILES = src/ViewService.m src/MobileSMSApp.m src/ThirdPartyApp.m src/ConversationView.m src/ContactsView.m src/SearchAgent.m
+CouriaUI_FRAMEWORKS = UIKit CoreGraphics AddressBook
+CouriaUI_PRIVATE_FRAMEWORKS = ChatKit AppSupport IMCore Search
 CouriaUI_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 
 CouriaPreferences_FILES = src/Preferences.m

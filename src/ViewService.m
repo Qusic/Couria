@@ -1,6 +1,13 @@
 #import "Headers.h"
 
+static CPDistributedMessagingCenter *messagingCenter;
+
 CHDeclareClass(CKInlineReplyViewController)
+
+CHPropertyGetter(CKInlineReplyViewController, messagingCenter, CPDistributedMessagingCenter *)
+{
+    return messagingCenter;
+}
 
 CHDeclareProperty(CKInlineReplyViewController, conversationViewController)
 CHPropertyGetter(CKInlineReplyViewController, conversationViewController, CouriaConversationViewController *)
@@ -34,6 +41,8 @@ CHOptimizedMethod(0, self, void, CKInlineReplyViewController, setupView)
     CHSuper(0, CKInlineReplyViewController, setupView);
     [self.view addSubview:self.conversationViewController.view];
     [self.view addSubview:self.contactsViewController.view];
+    self.entryView.hidden = YES;
+    self.conversationViewController.view.hidden = YES;
     self.contactsViewController.view.hidden = YES;
 }
 
@@ -52,8 +61,20 @@ CHOptimizedMethod(0, self, void, CKInlineReplyViewController, viewDidLayoutSubvi
     CGSize size = self.view.bounds.size;
     CGFloat entryHeight = MIN([self.entryView sizeThatFits:size].height, size.height);
     CGFloat conversationHeight = size.height - entryHeight;
-    self.conversationViewController.view.frame = CGRectMake(0, 0, size.width, conversationHeight);
-    self.entryView.frame = CGRectMake(0, conversationHeight, size.width, entryHeight);
+    CGRect entryFrame = CGRectMake(0, conversationHeight, size.width, entryHeight);
+    CGRect conversationFrame = CGRectMake(0, 0, size.width, conversationHeight);
+    CGRect contactsFrame = CGRectMake(0, 0, size.width, size.height);
+    if (!CGRectEqualToRect(self.entryView.frame, entryFrame)) {
+        self.entryView.frame = entryFrame;
+    }
+    if (!CGRectEqualToRect(self.conversationViewController.view.frame, conversationFrame)) {
+        self.conversationViewController.view.frame = conversationFrame;
+        [self.conversationViewController.collectionView __ck_scrollToBottom:NO];
+    }
+    if (!CGRectEqualToRect(self.contactsViewController.view.frame, contactsFrame)) {
+        self.contactsViewController.view.frame = contactsFrame;
+        [self.contactsViewController.tableView __ck_scrollToTop:NO];
+    }
 }
 
 CHOptimizedMethod(1, self, void, CKInlineReplyViewController, messageEntryViewDidChange, CKMessageEntryView *, entryView)
@@ -62,57 +83,36 @@ CHOptimizedMethod(1, self, void, CKInlineReplyViewController, messageEntryViewDi
     [self.view layoutIfNeeded];
 }
 
-CHDeclareClass(CouriaInlineReplyViewController_MobileSMSApp)
+CHDeclareClass(CKMessageEntryView)
 
-CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, setupConversation)
+CHOptimizedMethod(5, self, id, CKMessageEntryView, initWithFrame, CGRect, frame, shouldShowSendButton, BOOL, sendButton, shouldShowSubject, BOOL, subject, shouldShowPhotoButton, BOOL, photoButton, shouldShowCharacterCount, BOOL, characterCount)
 {
-    NSString *chatIdentifier = self.context[@"CKBBUserInfoKeyChatIdentifier"];
-    if (chatIdentifier != nil) {
-        CHSuper(0, CouriaInlineReplyViewController_MobileSMSApp, setupConversation);
-        CKConversation *conversation = [[CKConversationList sharedConversationList]conversationForExistingChatWithGroupID:chatIdentifier];
-        static NSUInteger const messagesLimit = 51;
-        conversation.limitToLoad = messagesLimit;
-        conversation.chat.numberOfMessagesToKeepLoaded = messagesLimit;
-        [conversation.chat loadMessagesBeforeDate:nil limit:messagesLimit loadImmediately:YES];
-        NSMutableArray *chatItems = [NSMutableArray array];
-        [conversation.chat.chatItems enumerateObjectsUsingBlock:^(IMChatItem *item, NSUInteger index, BOOL *stop) {
-            [chatItems addObject:[self.conversationViewController chatItemWithIMChatItem:item]];
-        }];
-        self.conversationViewController.conversation = conversation;
-        self.conversationViewController.chatItems = chatItems;
-    }
+    photoButton = YES;
+    return CHSuper(5, CKMessageEntryView, initWithFrame, frame, shouldShowSendButton, sendButton, shouldShowSubject, subject, shouldShowPhotoButton, photoButton, shouldShowCharacterCount, characterCount);
 }
 
-CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController_MobileSMSApp, messageEntryViewDidChange, CKMessageEntryView *, entryView)
+CHOptimizedMethod(1, self, void, CKMessageEntryView, setShouldShowPhotoButton, BOOL, shouldShowPhotoButton)
 {
-    CHSuper(1, CouriaInlineReplyViewController_MobileSMSApp, messageEntryViewDidChange, entryView);
-    [self.typingUpdater setNeedsUpdate];
-    [self updateSendButton];
-}
-
-CHDeclareClass(CouriaInlineReplyViewController_ThirdPartyApp)
-
-CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp, setupConversation)
-{
-    //TODO: third party apps
+    CHSuper(1, CKMessageEntryView, setShouldShowPhotoButton, shouldShowPhotoButton);
+    self.photoButton.hidden = !shouldShowPhotoButton;
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 CHConstructor
 {
     @autoreleasepool {
+        messagingCenter = [CPDistributedMessagingCenter centerNamed:CouriaIdentifier];
         CHLoadLateClass(CKInlineReplyViewController);
+        CHHook(0, CKInlineReplyViewController, messagingCenter);
         CHHook(0, CKInlineReplyViewController, conversationViewController);
         CHHook(0, CKInlineReplyViewController, contactsViewController);
         CHHook(0, CKInlineReplyViewController, setupView);
         CHHook(0, CKInlineReplyViewController, preferredContentHeight);
         CHHook(0, CKInlineReplyViewController, viewDidLayoutSubviews);
         CHHook(1, CKInlineReplyViewController, messageEntryViewDidChange);
-        CHRegisterClass(CouriaInlineReplyViewController_MobileSMSApp, CKInlineReplyViewController) {
-            CHHook(0, CouriaInlineReplyViewController_MobileSMSApp, setupConversation);
-            CHHook(1, CouriaInlineReplyViewController_MobileSMSApp, messageEntryViewDidChange);
-        }
-        CHRegisterClass(CouriaInlineReplyViewController_ThirdPartyApp, CKInlineReplyViewController) {
-            CHHook(0, CouriaInlineReplyViewController_ThirdPartyApp, setupConversation);
-        }
+        CHLoadClass(CKMessageEntryView);
+        CHHook(5, CKMessageEntryView, initWithFrame, shouldShowSendButton, shouldShowSubject, shouldShowPhotoButton, shouldShowCharacterCount);
+        CHHook(1, CKMessageEntryView, setShouldShowPhotoButton);
     }
 }

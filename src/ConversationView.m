@@ -2,13 +2,10 @@
 
 @implementation CouriaConversationViewController
 
-- (instancetype)initWithConversation:(CKConversation *)conversation rightBalloonMaxWidth:(CGFloat)rightBalloonMaxWidth leftBalloonMaxWidth:(CGFloat)leftBalloonMaxWidth
+- (void)viewDidLoad
 {
-    self = [super initWithConversation:conversation rightBalloonMaxWidth:rightBalloonMaxWidth leftBalloonMaxWidth:leftBalloonMaxWidth];
-    if (self) {
-        self.view.backgroundColor = [UIColor clearColor];
-    }
-    return self;
+    [super viewDidLoad];
+    self.view.backgroundColor = [UIColor clearColor];
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -16,6 +13,7 @@
     if (self.conversation) {
         return [super collectionView:collectionView numberOfItemsInSection:section];
     } else {
+        //TODO: third party apps
         return 0;
     }
 }
@@ -39,6 +37,7 @@
                 CKTextBalloonView *textBalloonView = (CKTextBalloonView *)coloredBalloonView;
                 NSMutableAttributedString *text = textBalloonView.attributedText.mutableCopy;
                 [text addAttributes:@{NSForegroundColorAttributeName: [UIColor whiteColor]} range:NSMakeRange(0, text.length)];
+                [text removeAttribute:NSLinkAttributeName range:NSMakeRange(0, text.length)];
                 textBalloonView.attributedText = text;
             }
         }
@@ -48,9 +47,16 @@
     return cell;
 }
 
-- (void)setChatItems:(NSArray *)chatItems
+- (void)refreshData
 {
-    [super setChatItems:chatItems];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.collectionView reloadData];
+    });
+}
+
+- (BOOL)balloonView:(CKBalloonView *)balloonView canPerformAction:(SEL)action withSender:(id)sender
+{
+    return sel_isEqual(action, @selector(copy:)) ? [super balloonView:balloonView canPerformAction:action withSender:sender] : NO;
 }
 
 @end

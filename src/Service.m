@@ -20,6 +20,11 @@ static SBBannerController *bannerController;
 - (void)run
 {
     [messagingCenter runServerOnCurrentThread];
+    [messagingCenter registerForMessageName:@"getMessages" target:self selector:@selector(processRequest:data:)];
+    [messagingCenter registerForMessageName:@"getContacts" target:self selector:@selector(processRequest:data:)];
+    [messagingCenter registerForMessageName:@"sendMessage" target:self selector:@selector(processRequest:data:)];
+    [messagingCenter registerForMessageName:@"markRead" target:self selector:@selector(processRequest:data:)];
+    [messagingCenter registerForMessageName:@"updateBanner" target:self selector:@selector(processRequest:data:)];
 }
 
 - (NSDictionary *)processRequest:(NSString *)request data:(NSDictionary *)data
@@ -57,21 +62,25 @@ static SBBannerController *bannerController;
                 }
                 [result addObject:messageDictionary];
             }];
-            response = @{@"result": response};
+            response = @{@"result": result};
         } else if ([request isEqualToString:@"getContacts"]) {
             NSMutableArray *result = [NSMutableArray array];
             [[dataSource getContacts:data[@"keyword"]]enumerateObjectsUsingBlock:^(NSString *contact, NSUInteger idx, BOOL *stop) {
                 NSMutableDictionary *contactDictionary = [NSMutableDictionary dictionary];
-                UIImage *avatar = [dataSource getAvatar:contact];
+                NSString *nickname = [dataSource respondsToSelector:@selector(getNickname:)] ? [dataSource getNickname:contact] : contact;
+                UIImage *avatar = [dataSource respondsToSelector:@selector(getAvatar:)] ? [dataSource getAvatar:contact] : nil;
                 if (contact != nil && [contact isKindOfClass:NSString.class]) {
                     contactDictionary[@"identifier"] = contact;
+                }
+                if (nickname != nil && [nickname isKindOfClass:NSString.class]) {
+                    contactDictionary[@"nickname"] = nickname;
                 }
                 if (avatar != nil && [avatar isKindOfClass:UIImage.class]) {
                     contactDictionary[@"avatar"] = avatar;
                 }
                 [result addObject:contactDictionary];
             }];
-            response = @{@"result": response};
+            response = @{@"result": result};
         } else if ([request isEqualToString:@"sendMessage"]) {
             CouriaMessage *message = [[CouriaMessage alloc]init];
             message.text = data[@"text"];
@@ -88,8 +97,8 @@ static SBBannerController *bannerController;
                     SBDefaultBannerTextView * const *textViewRef = CHIvarRef(*contentViewRef, _textView, SBDefaultBannerTextView * const);
                     if (textViewRef != NULL && *textViewRef != nil) {
                         SBDefaultBannerTextView *textView = *textViewRef;
-                        textView.primaryText = data[@"primaryText"];
-                        textView.secondaryText = data[@"secondaryText"];
+                        textView.primaryText = data[@"primaryText"] ?: textView.primaryText;
+                        textView.secondaryText = data[@"secondaryText"] ?: textView.secondaryText;
                     }
                 }
             }
