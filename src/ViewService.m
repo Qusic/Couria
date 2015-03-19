@@ -43,6 +43,7 @@ CHOptimizedMethod(0, self, void, CKInlineReplyViewController, setupView)
     [self addChildViewController:self.contactsViewController];
     [self.view addSubview:self.conversationViewController.view];
     [self.view addSubview:self.contactsViewController.view];
+    [self.entryView.photoButton addTarget:self action:@selector(photoButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     self.entryView.hidden = YES;
     self.conversationViewController.view.hidden = YES;
     self.contactsViewController.view.hidden = YES;
@@ -80,6 +81,11 @@ CHOptimizedMethod(1, self, void, CKInlineReplyViewController, messageEntryViewDi
     [self.view layoutIfNeeded];
 }
 
+CHOptimizedMethod(1, new, void, CKInlineReplyViewController, photoButtonTapped, UIButton *, button)
+{
+    //TODO: CKPhotoPickerSheetViewController
+}
+
 CHDeclareClass(CKMessageEntryView)
 
 CHOptimizedMethod(5, self, id, CKMessageEntryView, initWithFrame, CGRect, frame, shouldShowSendButton, BOOL, sendButton, shouldShowSubject, BOOL, subject, shouldShowPhotoButton, BOOL, photoButton, shouldShowCharacterCount, BOOL, characterCount)
@@ -108,6 +114,7 @@ CHConstructor
         CHHook(0, CKInlineReplyViewController, preferredContentHeight);
         CHHook(0, CKInlineReplyViewController, viewDidLayoutSubviews);
         CHHook(1, CKInlineReplyViewController, messageEntryViewDidChange);
+        CHHook(1, CKInlineReplyViewController, photoButtonTapped);
         CHLoadClass(CKMessageEntryView);
         CHHook(5, CKMessageEntryView, initWithFrame, shouldShowSendButton, shouldShowSubject, shouldShowPhotoButton, shouldShowCharacterCount);
         CHHook(1, CKMessageEntryView, setShouldShowPhotoButton);

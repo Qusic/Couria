@@ -113,6 +113,9 @@ extern NSBundle *CKFrameworkBundle(void);
 - (CKConversation *)conversationForExistingChatWithGroupID:(NSString *)groupID;
 @end
 
+@interface CKComposition : NSObject
+@end
+
 @interface CKBalloonTextView : UITextView
 @end
 
@@ -253,6 +256,7 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 @property (assign, nonatomic) BOOL shouldShowCharacterCount;
 @property (retain, nonatomic) CKMessageEntryContentView *contentView;
 @property (retain, nonatomic) UIButton *photoButton;
+@property (retain, nonatomic) CKComposition *composition;
 - (instancetype)initWithFrame:(CGRect)frame shouldShowSendButton:(BOOL)sendButton shouldShowSubject:(BOOL)subject shouldShowPhotoButton:(BOOL)photoButton shouldShowCharacterCount:(BOOL)characterCount;
 @end
 
@@ -338,6 +342,7 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 @property (retain, nonatomic, readonly) CPDistributedMessagingCenter *messagingCenter;
 @property (retain, nonatomic, readonly) CouriaConversationViewController *conversationViewController;
 @property (retain, nonatomic, readonly) CouriaContactsViewController *contactsViewController;
+- (void)photoButtonTapped:(UIButton *)button;
 @end
 
 @interface CouriaInlineReplyViewController_MobileSMSApp : CKInlineReplyViewController
