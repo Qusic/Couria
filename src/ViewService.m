@@ -39,6 +39,8 @@ CHPropertyGetter(CKInlineReplyViewController, contactsViewController, CouriaCont
 CHOptimizedMethod(0, self, void, CKInlineReplyViewController, setupView)
 {
     CHSuper(0, CKInlineReplyViewController, setupView);
+    [self addChildViewController:self.conversationViewController];
+    [self addChildViewController:self.contactsViewController];
     [self.view addSubview:self.conversationViewController.view];
     [self.view addSubview:self.contactsViewController.view];
     self.entryView.hidden = YES;
@@ -61,18 +63,13 @@ CHOptimizedMethod(0, self, void, CKInlineReplyViewController, viewDidLayoutSubvi
     CGSize size = self.view.bounds.size;
     CGFloat entryHeight = MIN([self.entryView sizeThatFits:size].height, size.height);
     CGFloat conversationHeight = size.height - entryHeight;
-    CGRect entryFrame = CGRectMake(0, conversationHeight, size.width, entryHeight);
-    CGRect conversationFrame = CGRectMake(0, 0, size.width, conversationHeight);
-    CGRect contactsFrame = CGRectMake(0, 0, size.width, size.height);
-    if (!CGRectEqualToRect(self.entryView.frame, entryFrame)) {
-        self.entryView.frame = entryFrame;
-    }
-    if (!CGRectEqualToRect(self.conversationViewController.view.frame, conversationFrame)) {
-        self.conversationViewController.view.frame = conversationFrame;
+    self.entryView.frame = CGRectMake(0, conversationHeight, size.width, entryHeight);
+    self.conversationViewController.view.frame = CGRectMake(0, 0, size.width, conversationHeight);
+    self.contactsViewController.view.frame = CGRectMake(0, 0, size.width, size.height);
+    if (!self.conversationViewController.collectionView.__ck_isScrolledToBottom) {
         [self.conversationViewController.collectionView __ck_scrollToBottom:NO];
     }
-    if (!CGRectEqualToRect(self.contactsViewController.view.frame, contactsFrame)) {
-        self.contactsViewController.view.frame = contactsFrame;
+    if (!self.contactsViewController.tableView.__ck_isScrolledToTop) {
         [self.contactsViewController.tableView __ck_scrollToTop:NO];
     }
 }
