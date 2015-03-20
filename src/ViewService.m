@@ -1,6 +1,7 @@
 #import "Headers.h"
 
 static CPDistributedMessagingCenter *messagingCenter;
+static CKUIBehavior *uiBehavior;
 
 CHDeclareClass(CKInlineReplyViewController)
 
@@ -14,7 +15,6 @@ CHPropertyGetter(CKInlineReplyViewController, conversationViewController, Couria
 {
     CouriaConversationViewController *viewController = CHPropertyGetValue(CKInlineReplyViewController, conversationViewController);
     if (viewController == nil) {
-        CKUIBehavior *uiBehavior = [CKUIBehavior sharedBehaviors];
         CGFloat rightBalloonMaxWidth = [uiBehavior rightBalloonMaxWidthForEntryContentViewWidth:self.entryView.contentView.bounds.size.width];
         CGFloat leftBalloonMaxWidth = [uiBehavior leftBalloonMaxWidthForTranscriptWidth:self.view.bounds.size.width marginInsets:uiBehavior.transcriptMarginInsets];
         viewController = [[CouriaConversationViewController alloc]initWithConversation:nil rightBalloonMaxWidth:rightBalloonMaxWidth leftBalloonMaxWidth:leftBalloonMaxWidth];
@@ -106,6 +106,7 @@ CHConstructor
 {
     @autoreleasepool {
         messagingCenter = [CPDistributedMessagingCenter centerNamed:CouriaIdentifier];
+        uiBehavior = [CKUIBehavior sharedBehaviors];
         CHLoadLateClass(CKInlineReplyViewController);
         CHHook(0, CKInlineReplyViewController, messagingCenter);
         CHHook(0, CKInlineReplyViewController, conversationViewController);

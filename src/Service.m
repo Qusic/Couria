@@ -12,7 +12,9 @@ static SBBannerController *bannerController;
     dispatch_once(&onceToken, ^{
         sharedInstance = [[self alloc]init];
         messagingCenter = [CPDistributedMessagingCenter centerNamed:CouriaIdentifier];
-        bannerController = (SBBannerController *)[NSClassFromString(@"SBBannerController") sharedInstance];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            bannerController = (SBBannerController *)[NSClassFromString(@"SBBannerController") sharedInstance];
+        });
     });
     return sharedInstance;
 }

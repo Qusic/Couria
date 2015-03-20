@@ -26,7 +26,7 @@ void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest)
     [bulletinRequest setContextValue:bulletinRequest.sectionID forKey:CouriaIdentifier".application"];
     [bulletinRequest setContextValue:[CouriaDataSource(bulletinRequest.sectionID) getUserIdentifier:bulletinRequest] forKey:CouriaIdentifier".user"];
     if ([bulletinRequest.sectionID isEqualToString:MobileSMSIdentifier]) {
-        static void (^ const updateAction)(BBAction *, NSUInteger, BOOL *) = ^(BBAction *action, NSUInteger index, BOOL *stop) {
+        void (^ updateAction)(BBAction *, NSUInteger, BOOL *) = ^(BBAction *action, NSUInteger index, BOOL *stop) {
             if ([action.remoteServiceBundleIdentifier isEqualToString:@"com.apple.mobilesms.notification"] && [action.remoteViewControllerClassName isEqualToString:@"CKInlineReplyViewController"]) {
                 action.remoteViewControllerClassName = @"CouriaInlineReplyViewController_MobileSMSApp";
             }
@@ -86,8 +86,10 @@ void CouriaDismissViewController(void)
         dataSources = [NSMutableDictionary dictionary];
         delegates = [NSMutableDictionary dictionary];
         preferences = [[NSUserDefaults alloc]initWithSuiteName:CouriaIdentifier];
-        bulletinBannerController = (SBBulletinBannerController *)[NSClassFromString(@"SBBulletinBannerController") sharedInstance];
-        bannerController = (SBBannerController *)[NSClassFromString(@"SBBannerController") sharedInstance];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            bulletinBannerController = (SBBulletinBannerController *)[NSClassFromString(@"SBBulletinBannerController") sharedInstance];
+            bannerController = (SBBannerController *)[NSClassFromString(@"SBBannerController") sharedInstance];
+        });
     });
     return sharedInstance;
 }

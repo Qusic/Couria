@@ -1,7 +1,10 @@
 #import "Headers.h"
 
+static CKConversationList *conversationList;
+static IMChatRegistry *chatRegistry;
 static CouriaSearchAgent *searchAgent;
 static ABAddressBookRef addressBook;
+static CKUIBehavior *uiBehavior;
 
 CHDeclareClass(CKInlineReplyViewController)
 CHDeclareClass(CouriaInlineReplyViewController_MobileSMSApp)
@@ -27,7 +30,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
             NSMutableArray *contacts = [NSMutableArray array];
             NSString *queryString = searchAgent.queryString;
             if (queryString.length == 0) {
-                [[[IMChatRegistry sharedInstance].allExistingChats sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"dateModified" ascending:NO]]] enumerateObjectsUsingBlock:^(IMChat *chat, NSUInteger index, BOOL *stop) {
+                [[chatRegistry.allExistingChats sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"dateModified" ascending:NO]]] enumerateObjectsUsingBlock:^(IMChat *chat, NSUInteger index, BOOL *stop) {
                     [contacts addObject:@{
                         @"identifier": chat.chatIdentifier,
                         @"nickname": chat.recipient.name,
@@ -143,8 +146,11 @@ CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
 CHConstructor
 {
     @autoreleasepool {
+        conversationList = [CKConversationList sharedConversationList];
+        chatRegistry = [IMChatRegistry sharedInstance];
         searchAgent = [[CouriaSearchAgent alloc]init];
         addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
+        uiBehavior = [CKUIBehavior sharedBehaviors];
         CHLoadLateClass(CKInlineReplyViewController);
         CHRegisterClass(CouriaInlineReplyViewController_MobileSMSApp, CKInlineReplyViewController) {
             CHHook(0, CouriaInlineReplyViewController_MobileSMSApp, setupConversation);

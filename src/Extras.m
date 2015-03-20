@@ -1,9 +1,9 @@
 #import "Headers.h"
 
-static SBApplicationController *applicationController;
-static SBIconModel *iconModel;
 static LAActivator *activator;
 static FSSwitchPanel *flipswitch;
+static SBApplicationController *applicationController;
+static SBIconModel *iconModel;
 
 static NSString *getApplicationIdentifier(NSString *externalIdentifier)
 {
@@ -35,12 +35,14 @@ static UIImage *getApplicationIcon(NSString *applicationIdentifier, BOOL small)
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sharedInstance = [[self alloc]init];
-        applicationController = (SBApplicationController *)[NSClassFromString(@"SBApplicationController") sharedInstance];
-        iconModel = ((SBIconViewMap *)[NSClassFromString(@"SBIconViewMap") homescreenMap]).iconModel;
         dlopen("/Library/MobileSubstrate/DynamicLibraries/Activator.dylib", RTLD_LAZY);
         dlopen("/Library/MobileSubstrate/DynamicLibraries/Flipswitch.dylib", RTLD_LAZY);
         activator = (LAActivator *)[NSClassFromString(@"LAActivator") sharedInstance];
         flipswitch = (FSSwitchPanel *)[NSClassFromString(@"FSSwitchPanel") sharedPanel];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            applicationController = (SBApplicationController *)[NSClassFromString(@"SBApplicationController") sharedInstance];
+            iconModel = ((SBIconViewMap *)[NSClassFromString(@"SBIconViewMap") homescreenMap]).iconModel;
+        });
     });
     return sharedInstance;
 }
