@@ -14,7 +14,10 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
     NSString *chatIdentifier = self.context[@"CKBBUserInfoKeyChatIdentifier"];
     if (chatIdentifier != nil) {
         CHSuper(0, CouriaInlineReplyViewController_MobileSMSApp, setupConversation);
-        CKConversation *conversation = [[CKConversationList sharedConversationList]conversationForExistingChatWithGroupID:chatIdentifier];
+        CKConversation *conversation = [conversationList conversationForExistingChatWithGroupID:chatIdentifier];
+        if (conversation == nil) {
+            conversation = [conversationList conversationForHandles:@[[CKEntity copyEntityForAddressString:chatIdentifier].handle] create:YES];
+        }
         static NSUInteger const messagesLimit = 51;
         conversation.limitToLoad = messagesLimit;
         conversation.chat.numberOfMessagesToKeepLoaded = messagesLimit;
@@ -34,6 +37,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
                     [contacts addObject:@{
                         @"identifier": chat.chatIdentifier,
                         @"nickname": chat.recipient.name,
+                        @"avatar": [CKEntity copyEntityForAddressString:chat.chatIdentifier].transcriptContactImage
                     }];
                 }];
             } else if (searchAgent.resultCount > 0) {
@@ -46,37 +50,33 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
                 }
                 if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
                     [[searchAgent sectionAtIndex:0].results enumerateObjectsUsingBlock:^(SPSearchResult *agentResult, NSUInteger index, BOOL *stop) {
-                        ABRecordRef record = ABAddressBookGetPersonWithRecordID(addressBook, (ABRecordID)agentResult.identifier);
-                        CFStringRef name = ABRecordCopyCompositeName(record);
-                        ABMultiValueRef phoneNumbers = ABRecordCopyValue(record, kABPersonPhoneProperty);
-                        ABMultiValueRef emails = ABRecordCopyValue(record, kABPersonEmailProperty);
-                        for (CFIndex index = 0, count = ABMultiValueGetCount(phoneNumbers); index < count; index++) {
-                            CFStringRef label = ABMultiValueCopyLabelAtIndex(phoneNumbers, index);
-                            CFStringRef localizedLabel = ABAddressBookCopyLocalizedLabel(label);
-                            CFStringRef value = ABMultiValueCopyValueAtIndex(phoneNumbers, index);
-                            [contacts addObject:@{
-                                @"identifier": IMStripFormattingFromAddress((__bridge NSString *)value),
-                                @"nickname": [NSString stringWithFormat:@"%@ (%@)", (__bridge NSString *)name, (__bridge NSString *)localizedLabel]
-                            }];
-                            CFRelease(label);
-                            CFRelease(localizedLabel);
-                            CFRelease(value);
+                        ABRecordID recordID = (ABRecordID)agentResult.identifier;
+                        ABRecordRef record = ABAddressBookGetPersonWithRecordID(addressBook, recordID);
+                        if (record != NULL) {
+                            CFStringRef name = ABRecordCopyCompositeName(record);
+                            ABMultiValueRef phoneNumbers = ABRecordCopyValue(record, kABPersonPhoneProperty);
+                            ABMultiValueRef emails = ABRecordCopyValue(record, kABPersonEmailProperty);
+                            void (^ processMultiValue)(ABMultiValueRef) = ^(ABMultiValueRef multiValue) {
+                                for (CFIndex index = 0, count = ABMultiValueGetCount(multiValue); index < count; index++) {
+                                    CFStringRef label = ABMultiValueCopyLabelAtIndex(multiValue, index);
+                                    CFStringRef localizedLabel = ABAddressBookCopyLocalizedLabel(label);
+                                    CFStringRef value = ABMultiValueCopyValueAtIndex(multiValue, index);
+                                    [contacts addObject:@{
+                                        @"identifier": IMStripFormattingFromAddress((__bridge NSString *)value),
+                                        @"nickname": [NSString stringWithFormat:@"%@ (%@)", (__bridge NSString *)name, (__bridge NSString *)localizedLabel],
+                                        @"avatar": [CKAddressBook transcriptContactImageOfDiameter:uiBehavior.transcriptContactImageDiameter forRecordID:recordID]
+                                    }];
+                                    CFRelease(label);
+                                    CFRelease(localizedLabel);
+                                    CFRelease(value);
+                                }
+                            };
+                            processMultiValue(phoneNumbers);
+                            processMultiValue(emails);
+                            CFRelease(name);
+                            CFRelease(phoneNumbers);
+                            CFRelease(emails);
                         }
-                        for (CFIndex index = 0, count = ABMultiValueGetCount(emails); index < count; index++) {
-                            CFStringRef label = ABMultiValueCopyLabelAtIndex(emails, index);
-                            CFStringRef localizedLabel = ABAddressBookCopyLocalizedLabel(label);
-                            CFStringRef value = ABMultiValueCopyValueAtIndex(emails, index);
-                            [contacts addObject:@{
-                                @"identifier": IMStripFormattingFromAddress((__bridge NSString *)value),
-                                @"nickname": [NSString stringWithFormat:@"%@ (%@)", (__bridge NSString *)name, (__bridge NSString *)localizedLabel]
-                            }];
-                            CFRelease(label);
-                            CFRelease(localizedLabel);
-                            CFRelease(value);
-                        }
-                        CFRelease(name);
-                        CFRelease(phoneNumbers);
-                        CFRelease(emails);
                     }];
                 } else {
                     [contacts addObject:@{

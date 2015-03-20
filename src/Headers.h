@@ -100,6 +100,15 @@ extern NSString *IMStripFormattingFromAddress(NSString *formattedAddress);
 
 extern NSBundle *CKFrameworkBundle(void);
 
+@interface CKEntity : NSObject
+@property (copy, nonatomic, readonly) NSString *name;
+@property (copy, nonatomic, readonly) NSString *rawAddress;
+@property (retain, nonatomic, readonly) UIImage *transcriptContactImage;
+@property (retain, nonatomic) IMHandle *handle;
+@property (retain, nonatomic, readonly) IMHandle *defaultIMHandle;
++ (instancetype)copyEntityForAddressString:(NSString *)addressString;
+@end
+
 @interface CKChatItem : NSObject
 @end
 
@@ -111,9 +120,14 @@ extern NSBundle *CKFrameworkBundle(void);
 @interface CKConversationList : NSObject
 + (instancetype)sharedConversationList;
 - (CKConversation *)conversationForExistingChatWithGroupID:(NSString *)groupID;
+- (CKConversation *)conversationForHandles:(NSArray *)handled create:(BOOL)create;
 @end
 
 @interface CKComposition : NSObject
+@end
+
+@interface CKAddressBook : NSObject
++ (UIImage *)transcriptContactImageOfDiameter:(CGFloat)diameter forRecordID:(ABRecordID)recordID;
 @end
 
 @interface CKBalloonTextView : UITextView
@@ -357,6 +371,7 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 - (UIEdgeInsets)balloonTranscriptInsets;
 - (CGFloat)leftBalloonMaxWidthForTranscriptWidth:(CGFloat)transcriptWidth marginInsets:(UIEdgeInsets)marginInsets;
 - (CGFloat)rightBalloonMaxWidthForEntryContentViewWidth:(CGFloat)entryContentViewWidth;
+- (CGFloat)transcriptContactImageDiameter;
 @end
 
 @interface SPSearchResult : NSObject
