@@ -20,7 +20,7 @@ export TARGET = iphone:clang
 export ARCHS = armv7 arm64
 export TARGET_IPHONEOS_DEPLOYMENT_VERSION = 8.0
 export ADDITIONAL_OBJCFLAGS = -fobjc-arc -fvisibility=hidden
-export SCHEMA = debug
+#export SCHEMA = debug
 
 default: all package install
 
