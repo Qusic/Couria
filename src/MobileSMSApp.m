@@ -16,7 +16,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
         CHSuper(0, CouriaInlineReplyViewController_MobileSMSApp, setupConversation);
         CKConversation *conversation = [conversationList conversationForExistingChatWithGroupID:chatIdentifier];
         if (conversation == nil) {
-            conversation = [conversationList conversationForHandles:@[[CKEntity copyEntityForAddressString:chatIdentifier].handle] create:YES];
+            conversation = [conversationList conversationForHandles:@[[CKEntity copyEntityForAddressString:chatIdentifier].defaultIMHandle] create:YES];
         }
         static NSUInteger const messagesLimit = 51;
         conversation.limitToLoad = messagesLimit;
@@ -40,11 +40,19 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
             NSMutableArray *contacts = [NSMutableArray array];
             NSString *queryString = searchAgent.queryString;
             if (queryString.length == 0) {
-                [[chatRegistry.allExistingChats sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"dateModified" ascending:NO]]] enumerateObjectsUsingBlock:^(IMChat *chat, NSUInteger index, BOOL *stop) {
+                [[chatRegistry.allExistingChats sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastFinishedMessage.time" ascending:NO], [NSSortDescriptor sortDescriptorWithKey:@"__ck_watermarkMessageID" ascending:NO]]] enumerateObjectsUsingBlock:^(IMChat *chat, NSUInteger index, BOOL *stop) {
                     [contacts addObject:@{
                         @"identifier": chat.chatIdentifier,
-                        @"nickname": chat.recipient.name,
-                        @"avatar": [CKEntity copyEntityForAddressString:chat.chatIdentifier].transcriptContactImage
+                        @"nickname": chat.participants.count == 1 ? chat.recipient.name : ({
+                            NSMutableString *groupName = [NSMutableString string];
+                            [chat.participants enumerateObjectsUsingBlock:^(IMHandle *handle, NSUInteger index, BOOL *stop) {
+                                if (index > 0) {
+                                    [groupName appendString:index == chat.participants.count - 1 ? @" & " : @", "];
+                                }
+                                [groupName appendString:handle.name];
+                            }];
+                        groupName;}),
+                        @"avatar": [CKEntity copyEntityForAddressString:chat.chatIdentifier].transcriptContactImage //TODO: group thumbnail
                     }];
                 }];
             } else if (searchAgent.resultCount > 0) {

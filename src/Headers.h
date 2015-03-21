@@ -81,10 +81,12 @@ extern NSString *IMStripFormattingFromAddress(NSString *formattedAddress);
 
 @interface IMChat : NSObject
 @property (nonatomic, readonly) NSString *chatIdentifier;
+@property (retain, nonatomic) NSString *displayName;
+@property (retain, nonatomic) IMHandle *recipient;
 @property (nonatomic, readonly) NSArray *participants;
 @property (nonatomic, readonly) NSArray *chatItems;
-@property (retain, nonatomic) IMHandle *recipient;
 @property (assign, nonatomic) NSUInteger numberOfMessagesToKeepLoaded;
+- (NSInteger)__ck_watermarkMessageID;
 - (NSString *)loadMessagesBeforeDate:(NSDate *)date limit:(NSUInteger)limit loadImmediately:(BOOL)immediately;
 @end
 
