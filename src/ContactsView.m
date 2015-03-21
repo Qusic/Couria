@@ -24,7 +24,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSDictionary *contact = self.contacts[indexPath.row];
+    NSDictionary *contact = indexPath.row < self.contacts.count ? self.contacts[indexPath.row] : nil;
     static NSString * const cellReuseIdentifier = @"CouriaContactCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellReuseIdentifier];
     if (cell == nil) {
