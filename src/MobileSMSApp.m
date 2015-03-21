@@ -53,29 +53,22 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
                         ABRecordID recordID = (ABRecordID)agentResult.identifier;
                         ABRecordRef record = ABAddressBookGetPersonWithRecordID(addressBook, recordID);
                         if (record != NULL) {
-                            CFStringRef name = ABRecordCopyCompositeName(record);
-                            ABMultiValueRef phoneNumbers = ABRecordCopyValue(record, kABPersonPhoneProperty);
-                            ABMultiValueRef emails = ABRecordCopyValue(record, kABPersonEmailProperty);
-                            void (^ processMultiValue)(ABMultiValueRef) = ^(ABMultiValueRef multiValue) {
+                            NSString *name = CFBridgingRelease(ABRecordCopyCompositeName(record));
+                            void (^ processMultiValueProperty)(ABPropertyID) = ^(ABPropertyID property) {
+                                ABMultiValueRef multiValue = ABRecordCopyValue(record, property);
                                 for (CFIndex index = 0, count = ABMultiValueGetCount(multiValue); index < count; index++) {
-                                    CFStringRef label = ABMultiValueCopyLabelAtIndex(multiValue, index);
-                                    CFStringRef localizedLabel = ABAddressBookCopyLocalizedLabel(label);
-                                    CFStringRef value = ABMultiValueCopyValueAtIndex(multiValue, index);
+                                    NSString *label = CFBridgingRelease(ABMultiValueCopyLabelAtIndex(multiValue, index));
+                                    NSString *value = CFBridgingRelease(ABMultiValueCopyValueAtIndex(multiValue, index));
                                     [contacts addObject:@{
-                                        @"identifier": IMStripFormattingFromAddress((__bridge NSString *)value),
-                                        @"nickname": [NSString stringWithFormat:@"%@ (%@)", (__bridge NSString *)name, (__bridge NSString *)localizedLabel],
+                                        @"identifier": IMStripFormattingFromAddress(value),
+                                        @"nickname": label ? [NSString stringWithFormat:@"%@ (%@)", name, CFBridgingRelease(ABAddressBookCopyLocalizedLabel((__bridge CFStringRef)label))] : name,
                                         @"avatar": [CKAddressBook transcriptContactImageOfDiameter:uiBehavior.transcriptContactImageDiameter forRecordID:recordID]
                                     }];
-                                    CFRelease(label);
-                                    CFRelease(localizedLabel);
-                                    CFRelease(value);
                                 }
+                                CFRelease(multiValue);
                             };
-                            processMultiValue(phoneNumbers);
-                            processMultiValue(emails);
-                            CFRelease(name);
-                            CFRelease(phoneNumbers);
-                            CFRelease(emails);
+                            processMultiValueProperty(kABPersonPhoneProperty);
+                            processMultiValueProperty(kABPersonEmailProperty);
                         }
                     }];
                 } else {
@@ -96,10 +89,10 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
             self.contactsViewController.contacts = contacts;
             [self.contactsViewController refreshData];
         };
+        __weak __typeof__(self) weakSelf = self;
         self.contactsViewController.keywordHandler = ^(NSString *keyword) {
             searchAgent.queryString = keyword;
         };
-        __weak __typeof__(self) weakSelf = self;
         self.contactsViewController.selectionHandler = ^(NSDictionary *contact) {
             NSMutableDictionary *context = weakSelf.context.mutableCopy;
             context[@"CKBBUserInfoKeyChatIdentifier"] = contact[@"identifier"];
@@ -114,7 +107,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
     }
 }
 
-CHOptimizedMethod(0, self, void, CouriaInlineReplyViewController_MobileSMSApp, setupView)
+CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, setupView)
 {
     CHSuper(0, CouriaInlineReplyViewController_MobileSMSApp, setupView);
     self.entryView.shouldShowPhotoButton = NO; //TODO: photo not supported yet
