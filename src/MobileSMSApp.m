@@ -30,6 +30,13 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
         self.conversationViewController.chatItems = chatItems;
     } else {
         searchAgent.updateHandler = ^(void) {
+            if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
+                dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+                ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
+                    dispatch_semaphore_signal(semaphore);
+                });
+                dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+            }
             NSMutableArray *contacts = [NSMutableArray array];
             NSString *queryString = searchAgent.queryString;
             if (queryString.length == 0) {
@@ -41,13 +48,6 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
                     }];
                 }];
             } else if (searchAgent.resultCount > 0) {
-                if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
-                    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-                    ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
-                        dispatch_semaphore_signal(semaphore);
-                    });
-                    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-                }
                 if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
                     [[searchAgent sectionAtIndex:0].results enumerateObjectsUsingBlock:^(SPSearchResult *agentResult, NSUInteger index, BOOL *stop) {
                         ABRecordID recordID = (ABRecordID)agentResult.identifier;
