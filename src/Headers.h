@@ -464,11 +464,14 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 }
 @end
 
-@interface SBBannerController : NSObject
+@interface SBBannerController : NSObject {
+    NSInteger _activeGestureType;
+}
 + (instancetype)sharedInstance;
 - (SBUIBannerContext *)_bannerContext;
 - (SBBannerContextView *)_bannerView;
 - (void)dismissBannerWithAnimation:(BOOL)animated reason:(NSInteger)reason;
+- (void)_handleGestureState:(NSInteger)state location:(CGPoint)location displacement:(CGFloat)displacement velocity:(CGFloat)velocity;
 @end
 
 @interface SBBulletinBannerController : NSObject

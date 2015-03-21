@@ -1,7 +1,7 @@
 TWEAK_NAME = Couria CouriaUI
 BUNDLE_NAME = CouriaPreferences
 
-Couria_FILES = src/Couria.m src/Service.m src/Extras.m src/Notifications.m
+Couria_FILES = src/Couria.m src/Service.m src/Extras.m src/Notifications.m src/Miscellaneous.m
 Couria_FRAMEWORKS = UIKit
 Couria_PRIVATE_FRAMEWORKS = BulletinBoard AppSupport ChatKit
 Couria_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
