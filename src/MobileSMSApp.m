@@ -2,6 +2,8 @@
 
 static CKConversationList *conversationList;
 static IMChatRegistry *chatRegistry;
+static IMPreferredServiceManager *preferredServiceManager;
+static IMAccountController *accountController;
 static CouriaSearchAgent *searchAgent;
 static ABAddressBookRef addressBook;
 static CKUIBehavior *uiBehavior;
@@ -16,7 +18,11 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
         CHSuper(0, CouriaInlineReplyViewController_MobileSMSApp, setupConversation);
         CKConversation *conversation = [conversationList conversationForExistingChatWithGroupID:chatIdentifier];
         if (conversation == nil) {
-            conversation = [conversationList conversationForHandles:@[[CKEntity copyEntityForAddressString:chatIdentifier].defaultIMHandle] create:YES];
+            CKEntity *entity = [CKEntity copyEntityForAddressString:chatIdentifier];
+            IMService *service = [preferredServiceManager preferredServiceForHandles:@[entity.defaultIMHandle] newComposition:YES error:NULL serverCheckCompletionBlock:NULL];
+            IMAccount *account = [accountController __ck_defaultAccountForService:service];
+            NSArray *handles = [account __ck_handlesFromAddressStrings:@[chatIdentifier]];
+            conversation = [conversationList conversationForHandles:handles create:YES];
         }
         static NSUInteger const messagesLimit = 51;
         conversation.limitToLoad = messagesLimit;
@@ -28,6 +34,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
         }];
         self.conversationViewController.conversation = conversation;
         self.conversationViewController.chatItems = chatItems;
+        self.entryView.conversation = conversation;
     } else {
         searchAgent.updateHandler = ^(void) {
             if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
@@ -149,6 +156,8 @@ CHConstructor
     @autoreleasepool {
         conversationList = [CKConversationList sharedConversationList];
         chatRegistry = [IMChatRegistry sharedInstance];
+        preferredServiceManager = [IMPreferredServiceManager sharedPreferredServiceManager];
+        accountController = [IMAccountController sharedInstance];
         searchAgent = [[CouriaSearchAgent alloc]init];
         addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
         uiBehavior = [CKUIBehavior sharedBehaviors];

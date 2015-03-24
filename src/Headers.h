@@ -71,6 +71,13 @@
 
 extern NSString *IMStripFormattingFromAddress(NSString *formattedAddress);
 
+@interface IMService : NSObject
+@end
+
+@interface IMAccount : NSObject
+- (NSArray *)__ck_handlesFromAddressStrings:(NSArray *)addresses;
+@end
+
 @interface IMHandle : NSObject
 @property (retain, nonatomic, readonly) NSString *ID;
 @property (retain, nonatomic, readonly) NSString *name;
@@ -88,6 +95,16 @@ extern NSString *IMStripFormattingFromAddress(NSString *formattedAddress);
 @property (assign, nonatomic) NSUInteger numberOfMessagesToKeepLoaded;
 - (NSInteger)__ck_watermarkMessageID;
 - (NSString *)loadMessagesBeforeDate:(NSDate *)date limit:(NSUInteger)limit loadImmediately:(BOOL)immediately;
+@end
+
+@interface IMPreferredServiceManager : NSObject
++ (instancetype)sharedPreferredServiceManager;
+- (IMService *)preferredServiceForHandles:(NSArray *)handles newComposition:(BOOL)newComposition error:(NSError * __autoreleasing *)errpt serverCheckCompletionBlock:(id)completion;
+@end
+
+@interface IMAccountController : NSObject
++ (instancetype)sharedInstance;
+- (IMAccount *)__ck_defaultAccountForService:(IMService *)service;
 @end
 
 @interface IMHandleRegistrar : NSObject
@@ -266,13 +283,14 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 @end
 
 @interface CKMessageEntryView : UIView
+@property (retain, nonatomic) CKConversation *conversation;
+@property (retain, nonatomic) CKComposition *composition;
 @property (assign, nonatomic) BOOL shouldShowSendButton;
 @property (assign, nonatomic) BOOL shouldShowSubject;
 @property (assign, nonatomic) BOOL shouldShowPhotoButton;
 @property (assign, nonatomic) BOOL shouldShowCharacterCount;
 @property (retain, nonatomic) CKMessageEntryContentView *contentView;
 @property (retain, nonatomic) UIButton *photoButton;
-@property (retain, nonatomic) CKComposition *composition;
 - (instancetype)initWithFrame:(CGRect)frame shouldShowSendButton:(BOOL)sendButton shouldShowSubject:(BOOL)subject shouldShowPhotoButton:(BOOL)photoButton shouldShowCharacterCount:(BOOL)characterCount;
 @end
 
