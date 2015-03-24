@@ -58,7 +58,7 @@ void CouriaPresentViewController(NSString *application, NSString *user)
         bulletin.title = CouriaLocalizedString(@"NEW_MESSAGE");
         bulletin.defaultAction = [BBAction actionWithLaunchBundleID:application];
         CouriaUpdateBulletinRequest(bulletin);
-        [bulletin setContextValue:user forKey:CouriaIdentifier".user"];
+        [bulletin setContextValue:user forKey:[application isEqualToString:MobileSMSIdentifier] ? @"CKBBUserInfoKeyChatIdentifier" : CouriaIdentifier".user"];
         BBAction *action = bulletin.supplementaryActions[0];
         dispatch_async(dispatch_get_main_queue(), ^{
             [bulletinBannerController modallyPresentBannerForBulletin:bulletin action:action];
