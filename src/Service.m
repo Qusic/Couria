@@ -22,24 +22,23 @@ static SBBannerController *bannerController;
 - (void)run
 {
     [messagingCenter runServerOnCurrentThread];
-    [messagingCenter registerForMessageName:@"getMessages" target:self selector:@selector(processRequest:data:)];
-    [messagingCenter registerForMessageName:@"getContacts" target:self selector:@selector(processRequest:data:)];
-    [messagingCenter registerForMessageName:@"sendMessage" target:self selector:@selector(processRequest:data:)];
-    [messagingCenter registerForMessageName:@"markRead" target:self selector:@selector(processRequest:data:)];
-    [messagingCenter registerForMessageName:@"updateBanner" target:self selector:@selector(processRequest:data:)];
+    [messagingCenter registerForMessageName:@"getMessages" target:self selector:@selector(processAppRequest:data:)];
+    [messagingCenter registerForMessageName:@"getContacts" target:self selector:@selector(processAppRequest:data:)];
+    [messagingCenter registerForMessageName:@"sendMessage" target:self selector:@selector(processAppRequest:data:)];
+    [messagingCenter registerForMessageName:@"markRead" target:self selector:@selector(processAppRequest:data:)];
+    [messagingCenter registerForMessageName:@"updateBanner" target:self selector:@selector(processUIRequest:data:)];
 }
 
-- (NSDictionary *)processRequest:(NSString *)request data:(NSDictionary *)data
+- (NSDictionary *)processAppRequest:(NSString *)request data:(NSDictionary *)data
 {
     id<CouriaDataSource> dataSource; id<CouriaDelegate> delegate; NSString *user; NSDictionary *response;
     for (BOOL _valid = ({
         BOOL valid = NO;
-        BBBulletin *bulletin = bannerController._bannerContext.item.seedBulletin;
-        NSString *application = bulletin.sectionID;
+        NSString *application = data[@"application"];
         if (CouriaRegistered(application)) {
             dataSource = CouriaDataSource(application);
             delegate = CouriaDelegate(application);
-            user = [dataSource getUserIdentifier:bulletin];
+            user = data[@"user"];
             valid = YES;
         }
         valid;
@@ -48,21 +47,17 @@ static SBBannerController *bannerController;
             NSMutableArray *result = [NSMutableArray array];
             [[dataSource getMessages:user]enumerateObjectsUsingBlock:^(id<CouriaMessage> message, NSUInteger idx, BOOL *stop) {
                 NSMutableDictionary *messageDictionary = [NSMutableDictionary dictionary];
-                NSString *text = message.text;
-                id media = message.media;
+                id content = message.content;
                 BOOL outgoing = message.outgoing;
                 NSDate *timestamp = [message respondsToSelector:@selector(timestamp)] ? message.timestamp : nil;
-                if (text != nil && [text isKindOfClass:NSString.class]) {
-                    messageDictionary[@"text"] = text;
-                }
-                if (media != nil && ([media isKindOfClass:UIImage.class] || [media isKindOfClass:NSURL.class])) {
-                    messageDictionary[@"media"] = media;
-                }
                 messageDictionary[@"outgoing"] = @(outgoing);
-                if (timestamp != nil && [timestamp isKindOfClass:NSDate.class]) {
+                if ([timestamp isKindOfClass:NSDate.class]) {
                     messageDictionary[@"timestamp"] = timestamp;
                 }
-                [result addObject:messageDictionary];
+                if ([content isKindOfClass:NSString.class] || [content isKindOfClass:UIImage.class] || [content isKindOfClass:NSURL.class]) {
+                    messageDictionary[@"content"] = content;
+                    [result addObject:messageDictionary];
+                }
             }];
             response = @{@"result": result};
         } else if ([request isEqualToString:@"getContacts"]) {
@@ -71,37 +66,46 @@ static SBBannerController *bannerController;
                 NSMutableDictionary *contactDictionary = [NSMutableDictionary dictionary];
                 NSString *nickname = [dataSource respondsToSelector:@selector(getNickname:)] ? [dataSource getNickname:contact] : contact;
                 UIImage *avatar = [dataSource respondsToSelector:@selector(getAvatar:)] ? [dataSource getAvatar:contact] : nil;
-                if (contact != nil && [contact isKindOfClass:NSString.class]) {
-                    contactDictionary[@"identifier"] = contact;
-                }
-                if (nickname != nil && [nickname isKindOfClass:NSString.class]) {
+                if ([nickname isKindOfClass:NSString.class]) {
                     contactDictionary[@"nickname"] = nickname;
                 }
-                if (avatar != nil && [avatar isKindOfClass:UIImage.class]) {
+                if ([avatar isKindOfClass:UIImage.class]) {
                     contactDictionary[@"avatar"] = avatar;
                 }
-                [result addObject:contactDictionary];
+                if ([contact isKindOfClass:NSString.class]) {
+                    contactDictionary[@"identifier"] = contact;
+                    [result addObject:contactDictionary];
+                }
             }];
             response = @{@"result": result};
         } else if ([request isEqualToString:@"sendMessage"]) {
             CouriaMessage *message = [[CouriaMessage alloc]init];
-            message.text = data[@"text"];
-            message.media = data[@"media"];
             message.outgoing = [data[@"outgoing"] boolValue];
-            [delegate sendMessage:message toUser:user];
+            id content = data[@"content"];
+            if ([content isKindOfClass:NSString.class] || [content isKindOfClass:UIImage.class] || [content isKindOfClass:NSURL.class]) {
+                message.content = content;
+                [delegate sendMessage:message toUser:user];
+            }
         } else if ([request isEqualToString:@"markRead"]) {
             [delegate markRead:user];
-        } else if ([request isEqualToString:@"updateBanner"]) {
-            SBBannerContextView *bannerView = bannerController._bannerView;
-            if (bannerView != nil) {
-                SBDefaultBannerView * const *contentViewRef = CHIvarRef(bannerView, _contentView, SBDefaultBannerView * const);
-                if (contentViewRef != NULL && *contentViewRef != nil) {
-                    SBDefaultBannerTextView * const *textViewRef = CHIvarRef(*contentViewRef, _textView, SBDefaultBannerTextView * const);
-                    if (textViewRef != NULL && *textViewRef != nil) {
-                        SBDefaultBannerTextView *textView = *textViewRef;
-                        textView.primaryText = data[@"primaryText"] ?: textView.primaryText;
-                        textView.secondaryText = data[@"secondaryText"] ?: textView.secondaryText;
-                    }
+        }
+    }
+    return response;
+}
+
+- (NSDictionary *)processUIRequest:(NSString *)request data:(NSDictionary *)data
+{
+    NSDictionary *response;
+    if ([request isEqualToString:@"updateBanner"]) {
+        SBBannerContextView *bannerView = bannerController._bannerView;
+        if (bannerView != nil) {
+            SBDefaultBannerView * const *contentViewRef = CHIvarRef(bannerView, _contentView, SBDefaultBannerView * const);
+            if (contentViewRef != NULL && *contentViewRef != nil) {
+                SBDefaultBannerTextView * const *textViewRef = CHIvarRef(*contentViewRef, _textView, SBDefaultBannerTextView * const);
+                if (textViewRef != NULL && *textViewRef != nil) {
+                    SBDefaultBannerTextView *textView = *textViewRef;
+                    textView.primaryText = data[@"primaryText"] ?: textView.primaryText;
+                    textView.secondaryText = data[@"secondaryText"] ?: textView.secondaryText;
                 }
             }
         }
