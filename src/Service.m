@@ -31,7 +31,7 @@ static SBBannerController *bannerController;
 
 - (NSDictionary *)processAppRequest:(NSString *)request data:(NSDictionary *)data
 {
-    id<CouriaDataSource> dataSource; id<CouriaDelegate> delegate; NSString *user; NSDictionary *response;
+    id<CouriaDataSource> dataSource; id<CouriaDelegate> delegate; NSString *user; id response;
     for (BOOL _valid = ({
         BOOL valid = NO;
         NSString *application = data[@"application"];
@@ -59,7 +59,7 @@ static SBBannerController *bannerController;
                     [result addObject:messageDictionary];
                 }
             }];
-            response = @{@"result": result};
+            response = result;
         } else if ([request isEqualToString:@"getContacts"]) {
             NSMutableArray *result = [NSMutableArray array];
             [[dataSource getContacts:data[@"keyword"]]enumerateObjectsUsingBlock:^(NSString *contact, NSUInteger idx, BOOL *stop) {
@@ -77,7 +77,7 @@ static SBBannerController *bannerController;
                     [result addObject:contactDictionary];
                 }
             }];
-            response = @{@"result": result};
+            response = result;
         } else if ([request isEqualToString:@"sendMessage"]) {
             CouriaMessage *message = [[CouriaMessage alloc]init];
             message.outgoing = [data[@"outgoing"] boolValue];
@@ -90,7 +90,7 @@ static SBBannerController *bannerController;
             [delegate markRead:user];
         }
     }
-    return response;
+    return response ? @{@"data": [NSKeyedArchiver archivedDataWithRootObject:response]} : nil;
 }
 
 - (NSDictionary *)processUIRequest:(NSString *)request data:(NSDictionary *)data
