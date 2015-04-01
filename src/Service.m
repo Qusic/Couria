@@ -54,7 +54,7 @@ static SBBannerController *bannerController;
                 if ([timestamp isKindOfClass:NSDate.class]) {
                     messageDictionary[@"timestamp"] = timestamp;
                 }
-                if ([content isKindOfClass:NSString.class] || [content isKindOfClass:UIImage.class] || [content isKindOfClass:NSURL.class]) {
+                if ([content isKindOfClass:NSString.class] || [content isKindOfClass:NSURL.class]) {
                     messageDictionary[@"content"] = content;
                     [result addObject:messageDictionary];
                 }
@@ -82,7 +82,7 @@ static SBBannerController *bannerController;
             CouriaMessage *message = [[CouriaMessage alloc]init];
             message.outgoing = [data[@"outgoing"] boolValue];
             id content = data[@"content"];
-            if ([content isKindOfClass:NSString.class] || [content isKindOfClass:UIImage.class] || [content isKindOfClass:NSURL.class]) {
+            if ([content isKindOfClass:NSString.class] || [content isKindOfClass:NSURL.class]) {
                 message.content = content;
                 [delegate sendMessage:message toUser:user];
             }
