@@ -8,7 +8,7 @@ Couria_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 
 CouriaUI_FILES = src/ViewService.m src/MobileSMSApp.m src/ThirdPartyApp.m src/ConversationView.m src/ContactsView.m src/SearchAgent.m
 CouriaUI_FRAMEWORKS = UIKit CoreGraphics AddressBook
-CouriaUI_PRIVATE_FRAMEWORKS = ChatKit AppSupport IMCore Search
+CouriaUI_PRIVATE_FRAMEWORKS = ChatKit AppSupport IMCore IMFoundation Search
 CouriaUI_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 
 CouriaPreferences_FILES = src/Preferences.m

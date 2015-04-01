@@ -69,6 +69,13 @@
 - (void)publishBulletinRequest:(BBBulletinRequest *)bulletinRequest destinations:(NSUInteger)destinations alwaysToLockScreen:(BOOL)alwaysToLockScreen;
 @end
 
+extern NSString *IMAttachmentCharacterString;
+extern NSString *IMMessagePartAttributeName;
+extern NSString *IMFileTransferGUIDAttributeName;
+extern NSString *IMFilenameAttributeName;
+extern NSString *IMInlineMediaWidthAttributeName;
+extern NSString *IMInlineMediaHeightAttributeName;
+extern NSString *IMBaseWritingDirectionAttributeName;
 extern NSString *IMStripFormattingFromAddress(NSString *formattedAddress);
 
 @interface IMService : NSObject
@@ -83,7 +90,54 @@ extern NSString *IMStripFormattingFromAddress(NSString *formattedAddress);
 @property (retain, nonatomic, readonly) NSString *name;
 @end
 
+@class IMChatItem;
+
+@interface IMItem : NSObject
+@property (retain, nonatomic) NSDate *time;
+@property (retain, nonatomic) id context;
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
+- (IMChatItem *)_newChatItems;
+@end
+
+@interface IMMessageItem : IMItem
+@property (retain, nonatomic) NSString *subject;
+@property (retain, nonatomic) NSAttributedString *body;
+@property (retain, nonatomic) NSString *plainBody;
+@property (retain, nonatomic) NSData *bodyData;
+@property (retain, nonatomic) NSDate *timeDelivered;
+@property (retain, nonatomic) NSDate *timeRead;
+@property (assign, nonatomic) NSUInteger flags;
+@end
+
+@interface IMMessage : NSObject
++ (instancetype)messageFromIMMessageItem:(IMMessageItem *)item sender:(id)sender subject:(id)subject;
+@end
+
 @interface IMChatItem : NSObject
+@end
+
+@interface IMTranscriptChatItem : IMChatItem
+@end
+
+@protocol IMMessageChatItem <NSObject>
+@required
+- (NSDate *)time;
+- (IMHandle *)sender;
+- (BOOL)isFromMe;
+- (BOOL)failed;
+@end
+
+@interface IMMessageChatItem : IMTranscriptChatItem <IMMessageChatItem>
+@end
+
+@interface IMMessagePartChatItem : IMMessageChatItem
+@end
+
+@interface IMTextMessagePartChatItem : IMMessagePartChatItem
+@end
+
+@interface IMAttachmentMessagePartChatItem : IMMessagePartChatItem
+- (instancetype)_initWithItem:(IMMessageItem *)item text:(NSAttributedString *)text index:(NSInteger)index transferGUID:(NSString *)transferGUID;
 @end
 
 @interface IMChat : NSObject
@@ -129,6 +183,30 @@ extern NSBundle *CKFrameworkBundle(void);
 @end
 
 @interface CKChatItem : NSObject
+@end
+
+@interface CKMediaObject : NSObject
+@property (copy, nonatomic, readonly) NSString *transferGUID;
+@end
+
+@interface CKMediaObjectManager : NSObject
+@property (retain, nonatomic) NSMutableDictionary *transfers;
++ (instancetype)sharedInstance;
+- (CKMediaObject *)mediaObjectWithFileURL:(NSURL *)url filename:(NSString *)filename transcoderUserInfo:(NSDictionary *)transcoderUserInfo;
+- (CKMediaObject *)mediaObjectWithData:(NSData *)data UTIType:(NSString *)type filename:(NSString *)filename transcoderUserInfo:(NSDictionary *)transcoderUserInfo;
+@end
+
+@interface CKBalloonChatItem : CKChatItem
+@end
+
+@interface CKMessagePartChatItem : CKBalloonChatItem
+@end
+
+@interface CKTextMessagePartChatItem : CKMessagePartChatItem
+@end
+
+@interface CKAttachmentMessagePartChatItem : CKMessagePartChatItem
+@property (retain, nonatomic) CKMediaObject *mediaObject;
 @end
 
 @interface CKConversation : NSObject
@@ -240,6 +318,8 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 @property (retain, nonatomic) CKConversation *conversation;
 @property (copy, nonatomic) NSArray *chatItems;
 @property (retain, nonatomic) CKTranscriptCollectionView *collectionView;
+@property (nonatomic, readonly) CGFloat leftBalloonMaxWidth;
+@property (nonatomic, readonly) CGFloat rightBalloonMaxWidth;
 - (instancetype)initWithConversation:(CKConversation *)conversation rightBalloonMaxWidth:(CGFloat)rightBalloonMaxWidth leftBalloonMaxWidth:(CGFloat)leftBalloonMaxWidth;
 - (CKChatItem *)chatItemWithIMChatItem:(IMChatItem *)imChatItem;
 @end
@@ -252,6 +332,7 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 @end
 
 @interface CKTranscriptCell : CKEditableCollectionViewCell
+@property (assign, nonatomic) BOOL wantsDrawerLayout;
 @end
 
 @interface CKTranscriptHeaderCell : CKTranscriptCell
@@ -261,6 +342,8 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 @end
 
 @interface CKTranscriptMessageCell : CKTranscriptCell
+@property (assign, nonatomic) BOOL wantsContactImageLayout;
+@property (retain, nonatomic) UIImage *contactImage;
 @end
 
 @interface CKTranscriptStatusCell : CKTranscriptLabelCell
@@ -521,8 +604,7 @@ CHInline NSString *CouriaLocalizedString(NSString *key)
 }
 
 @interface CouriaMessage : NSObject <CouriaMessage>
-@property (copy) NSString *text;
-@property (copy) id media;
+@property (copy) id content;
 @property (assign) BOOL outgoing;
 @property (copy) NSDate *timestamp;
 @end

@@ -6,8 +6,7 @@
 @protocol CouriaMessage <NSObject>
 
 @required
-- (NSString *)text;
-- (id)media; // The class of returned object must be: UIImage if a photo, NSURL(the filesystem URL for the movie) if a movie. Other file types are currently not supported.
+- (id)content; // The class of returned object must be: NSString for text messages, NSURL for images and any other attachments.
 - (BOOL)outgoing;
 
 @optional
