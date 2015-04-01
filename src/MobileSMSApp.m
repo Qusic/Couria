@@ -165,8 +165,8 @@ CHConstructor
         CHRegisterClass(CouriaInlineReplyViewController_MobileSMSApp, CKInlineReplyViewController) {
             CHHook(0, CouriaInlineReplyViewController_MobileSMSApp, setupConversation);
             CHHook(0, CouriaInlineReplyViewController_MobileSMSApp, setupView);
-            CHHook(1, CouriaInlineReplyViewController_MobileSMSApp, messageEntryViewDidChange);
             CHHook(0, CouriaInlineReplyViewController_MobileSMSApp, interactiveNotificationDidAppear);
+            CHHook(1, CouriaInlineReplyViewController_MobileSMSApp, messageEntryViewDidChange);
         }
     }
 }

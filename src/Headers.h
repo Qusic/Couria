@@ -187,10 +187,10 @@ extern NSBundle *CKFrameworkBundle(void);
 
 @interface CKMediaObject : NSObject
 @property (copy, nonatomic, readonly) NSString *transferGUID;
+@property (copy, nonatomic, readonly) NSURL *fileURL;
 @end
 
 @interface CKMediaObjectManager : NSObject
-@property (retain, nonatomic) NSMutableDictionary *transfers;
 + (instancetype)sharedInstance;
 - (CKMediaObject *)mediaObjectWithFileURL:(NSURL *)url filename:(NSString *)filename transcoderUserInfo:(NSDictionary *)transcoderUserInfo;
 - (CKMediaObject *)mediaObjectWithData:(NSData *)data UTIType:(NSString *)type filename:(NSString *)filename transcoderUserInfo:(NSDictionary *)transcoderUserInfo;

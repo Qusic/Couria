@@ -14,7 +14,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
         NSArray *result = [NSKeyedUnarchiver unarchiveObjectWithData:[self.messagingCenter sendMessageAndReceiveReplyName:@"getMessages" userInfo:@{
             @"application": applicationIdentifier,
             @"user": userIdentifier
-        } error:nil][@"data"]];
+        } error:nil][@"messages"]];
         NSMutableArray *chatItems = [NSMutableArray array];
         [result enumerateObjectsUsingBlock:^(NSDictionary *messageDictionary, NSUInteger index, BOOL *stop) {
             id content = messageDictionary[@"content"];
@@ -53,7 +53,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
             NSArray *result = [NSKeyedUnarchiver unarchiveObjectWithData:[weakSelf.messagingCenter sendMessageAndReceiveReplyName:@"getContacts" userInfo:@{
                 @"application": applicationIdentifier,
                 @"keyword": keyword ?: @""
-            } error:nil][@"data"]];
+            } error:nil][@"contacts"]];
             weakSelf.contactsViewController.contacts = result;
             [weakSelf.contactsViewController refreshData];
         };
@@ -108,8 +108,20 @@ CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
 
 CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp, sendMessage)
 {
+    NSString *applicationIdentifier = self.context[CouriaIdentifier".application"];
+    NSString *userIdentifier = self.context[CouriaIdentifier".user"];
     CKComposition *composition = self.entryView.composition;
-    NSLog(@"***** %@ %@", composition.text, composition.mediaObjects);
+    void (^ sendMessage)(id) = ^(id content) {
+        [self.messagingCenter sendNonBlockingMessageName:@"sendMessage" userInfo:@{
+            @"application": applicationIdentifier,
+            @"user": userIdentifier,
+            @"content": [NSKeyedArchiver archivedDataWithRootObject:content]
+        }];
+    };
+    sendMessage(composition.text.string);
+    for (CKMediaObject *mediaObject in composition.mediaObjects) {
+        sendMessage(mediaObject.fileURL);
+    }
 }
 
 CHConstructor

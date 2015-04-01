@@ -31,7 +31,7 @@ static SBBannerController *bannerController;
 
 - (NSDictionary *)processAppRequest:(NSString *)request data:(NSDictionary *)data
 {
-    id<CouriaDataSource> dataSource; id<CouriaDelegate> delegate; NSString *user; id response;
+    id<CouriaDataSource> dataSource; id<CouriaDelegate> delegate; NSString *user; NSDictionary *response;
     for (BOOL _valid = ({
         BOOL valid = NO;
         NSString *application = data[@"application"];
@@ -59,7 +59,7 @@ static SBBannerController *bannerController;
                     [result addObject:messageDictionary];
                 }
             }];
-            response = result;
+            response = @{@"messages": [NSKeyedArchiver archivedDataWithRootObject:result]};
         } else if ([request isEqualToString:@"getContacts"]) {
             NSMutableArray *result = [NSMutableArray array];
             [[dataSource getContacts:data[@"keyword"]]enumerateObjectsUsingBlock:^(NSString *contact, NSUInteger idx, BOOL *stop) {
@@ -77,11 +77,12 @@ static SBBannerController *bannerController;
                     [result addObject:contactDictionary];
                 }
             }];
-            response = result;
+            response = @{@"contacts": [NSKeyedArchiver archivedDataWithRootObject:result]};;
         } else if ([request isEqualToString:@"sendMessage"]) {
             CouriaMessage *message = [[CouriaMessage alloc]init];
-            message.outgoing = [data[@"outgoing"] boolValue];
-            id content = data[@"content"];
+            message.outgoing = YES;
+            message.timestamp = [NSDate date];
+            id content = [NSKeyedUnarchiver unarchiveObjectWithData:data[@"content"]];
             if ([content isKindOfClass:NSString.class] || [content isKindOfClass:NSURL.class]) {
                 message.content = content;
                 [delegate sendMessage:message toUser:user];
@@ -90,7 +91,7 @@ static SBBannerController *bannerController;
             [delegate markRead:user];
         }
     }
-    return response ? @{@"data": [NSKeyedArchiver archivedDataWithRootObject:response]} : nil;
+    return response;
 }
 
 - (NSDictionary *)processUIRequest:(NSString *)request data:(NSDictionary *)data
