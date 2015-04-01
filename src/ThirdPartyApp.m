@@ -74,6 +74,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
 CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp, setupView)
 {
     CHSuper(0, CouriaInlineReplyViewController_ThirdPartyApp, setupView);
+    self.entryView.shouldShowCharacterCount = NO;
     self.entryView.shouldShowPhotoButton = NO; //TODO: photo not supported yet
 }
 
@@ -99,6 +100,18 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
     }
 }
 
+CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController_ThirdPartyApp, messageEntryViewDidChange, CKMessageEntryView *, entryView)
+{
+    CHSuper(1, CouriaInlineReplyViewController_ThirdPartyApp, messageEntryViewDidChange, entryView);
+    entryView.sendButton.enabled = entryView.composition.hasContent;
+}
+
+CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp, sendMessage)
+{
+    CKComposition *composition = self.entryView.composition;
+    NSLog(@"***** %@ %@", composition.text, composition.mediaObjects);
+}
+
 CHConstructor
 {
     @autoreleasepool {
@@ -108,6 +121,8 @@ CHConstructor
             CHHook(0, CouriaInlineReplyViewController_ThirdPartyApp, setupConversation);
             CHHook(0, CouriaInlineReplyViewController_ThirdPartyApp, setupView);
             CHHook(0, CouriaInlineReplyViewController_ThirdPartyApp, interactiveNotificationDidAppear);
+            CHHook(1, CouriaInlineReplyViewController_ThirdPartyApp, messageEntryViewDidChange);
+            CHHook(0, CouriaInlineReplyViewController_ThirdPartyApp, sendMessage);
         }
     }
 }

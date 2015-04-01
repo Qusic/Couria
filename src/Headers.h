@@ -221,6 +221,16 @@ extern NSBundle *CKFrameworkBundle(void);
 @end
 
 @interface CKComposition : NSObject
+@property (copy, nonatomic) NSAttributedString *subject;
+@property (copy, nonatomic) NSAttributedString *text;
+@property (retain, nonatomic, readonly) NSArray *mediaObjects;
+@property (nonatomic, readonly) BOOL hasContent;
+@property (nonatomic, readonly) BOOL hasNonwhiteSpaceContent;
++ (instancetype)composition;
+- (instancetype)compositionByAppendingComposition:(CKComposition *)composition;
+- (instancetype)compositionByAppendingText:(NSAttributedString *)text;
+- (instancetype)compositionByAppendingMediaObjects:(NSArray *)mediaObjects;
+- (instancetype)compositionByAppendingMediaObject:(CKMediaObject *)mediaObject;
 @end
 
 @interface CKAddressBook : NSObject
@@ -373,6 +383,7 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 @property (assign, nonatomic) BOOL shouldShowPhotoButton;
 @property (assign, nonatomic) BOOL shouldShowCharacterCount;
 @property (retain, nonatomic) CKMessageEntryContentView *contentView;
+@property (retain, nonatomic) UIButton *sendButton;
 @property (retain, nonatomic) UIButton *photoButton;
 - (instancetype)initWithFrame:(CGRect)frame shouldShowSendButton:(BOOL)sendButton shouldShowSubject:(BOOL)subject shouldShowPhotoButton:(BOOL)photoButton shouldShowCharacterCount:(BOOL)characterCount;
 @end
@@ -453,6 +464,7 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 - (void)interactiveNotificationDidAppear;
 - (void)updateSendButton;
 - (void)updateTyping;
+- (void)sendMessage;
 @end
 
 @interface CKInlineReplyViewController (Couria)
