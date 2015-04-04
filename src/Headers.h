@@ -487,6 +487,19 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 - (CGFloat)leftBalloonMaxWidthForTranscriptWidth:(CGFloat)transcriptWidth marginInsets:(UIEdgeInsets)marginInsets;
 - (CGFloat)rightBalloonMaxWidthForEntryContentViewWidth:(CGFloat)entryContentViewWidth;
 - (CGFloat)transcriptContactImageDiameter;
+- (UIColor *)transcriptBackgroundColor;
+@end
+
+@interface CKUIBehaviorPhone : CKUIBehavior
+@end
+
+@interface CKUIBehaviorPad : CKUIBehavior
+@end
+
+@interface CKUIBehaviorHUDPhone : CKUIBehavior
+@end
+
+@interface CKUIBehaviorHUDPad : CKUIBehavior
 @end
 
 @interface SPSearchResult : NSObject

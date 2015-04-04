@@ -1,7 +1,6 @@
 #import "Headers.h"
 
 static CPDistributedMessagingCenter *messagingCenter;
-static CKUIBehavior *uiBehavior;
 
 CHDeclareClass(CKInlineReplyViewController)
 
@@ -15,6 +14,7 @@ CHPropertyGetter(CKInlineReplyViewController, conversationViewController, Couria
 {
     CouriaConversationViewController *viewController = CHPropertyGetValue(CKInlineReplyViewController, conversationViewController);
     if (viewController == nil) {
+        CKUIBehavior *uiBehavior = [CKUIBehavior sharedBehaviors];
         CGFloat rightBalloonMaxWidth = [uiBehavior rightBalloonMaxWidthForEntryContentViewWidth:self.entryView.contentView.bounds.size.width];
         CGFloat leftBalloonMaxWidth = [uiBehavior leftBalloonMaxWidthForTranscriptWidth:self.view.bounds.size.width marginInsets:uiBehavior.transcriptMarginInsets];
         viewController = [[CouriaConversationViewController alloc]initWithConversation:nil rightBalloonMaxWidth:rightBalloonMaxWidth leftBalloonMaxWidth:leftBalloonMaxWidth];
@@ -102,11 +102,25 @@ CHOptimizedMethod(1, self, void, CKMessageEntryView, setShouldShowPhotoButton, B
     [self layoutIfNeeded];
 }
 
+CHDeclareClass(CKUIBehavior)
+
+#define CHCKUIBehavior(type, name, value) \
+CHOptimizedMethod(0, self, type, CKUIBehavior, name) \
+{ \
+    static type name; \
+    static dispatch_once_t onceToken; \
+    dispatch_once(&onceToken, ^{ \
+        name = value; \
+    }); \
+    return name; \
+}
+
+CHCKUIBehavior(UIColor *, transcriptBackgroundColor, [UIColor clearColor])
+
 CHConstructor
 {
     @autoreleasepool {
         messagingCenter = [CPDistributedMessagingCenter centerNamed:CouriaIdentifier];
-        uiBehavior = [CKUIBehavior sharedBehaviors];
         CHLoadLateClass(CKInlineReplyViewController);
         CHHook(0, CKInlineReplyViewController, messagingCenter);
         CHHook(0, CKInlineReplyViewController, conversationViewController);
@@ -119,5 +133,7 @@ CHConstructor
         CHLoadClass(CKMessageEntryView);
         CHHook(5, CKMessageEntryView, initWithFrame, shouldShowSendButton, shouldShowSubject, shouldShowPhotoButton, shouldShowCharacterCount);
         CHHook(1, CKMessageEntryView, setShouldShowPhotoButton);
+        CHLoadClass(CKUIBehavior);
+        CHHook(0, CKUIBehavior, transcriptBackgroundColor);
     }
 }

@@ -2,12 +2,6 @@
 
 @implementation CouriaConversationViewController
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    self.view.backgroundColor = [UIColor clearColor];
-}
-
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CKTranscriptCell *cell = (CKTranscriptCell *)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];

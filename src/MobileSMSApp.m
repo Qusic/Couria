@@ -6,7 +6,6 @@ static IMPreferredServiceManager *preferredServiceManager;
 static IMAccountController *accountController;
 static CouriaSearchAgent *searchAgent;
 static ABAddressBookRef addressBook;
-static CKUIBehavior *uiBehavior;
 
 CHDeclareClass(CKInlineReplyViewController)
 CHDeclareClass(CouriaInlineReplyViewController_MobileSMSApp)
@@ -77,7 +76,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
                                     [contacts addObject:@{
                                         @"identifier": IMStripFormattingFromAddress(value),
                                         @"nickname": label ? [NSString stringWithFormat:@"%@ (%@)", name, CFBridgingRelease(ABAddressBookCopyLocalizedLabel((__bridge CFStringRef)label))] : name,
-                                        @"avatar": [CKAddressBook transcriptContactImageOfDiameter:uiBehavior.transcriptContactImageDiameter forRecordID:recordID]
+                                        @"avatar": [CKAddressBook transcriptContactImageOfDiameter:[CKUIBehavior sharedBehaviors].transcriptContactImageDiameter forRecordID:recordID]
                                     }];
                                 }
                                 CFRelease(multiValue);
@@ -160,7 +159,6 @@ CHConstructor
         accountController = [IMAccountController sharedInstance];
         searchAgent = [[CouriaSearchAgent alloc]init];
         addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
-        uiBehavior = [CKUIBehavior sharedBehaviors];
         CHLoadLateClass(CKInlineReplyViewController);
         CHRegisterClass(CouriaInlineReplyViewController_MobileSMSApp, CKInlineReplyViewController) {
             CHHook(0, CouriaInlineReplyViewController_MobileSMSApp, setupConversation);
