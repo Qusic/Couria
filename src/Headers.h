@@ -227,6 +227,13 @@ extern NSBundle *CKFrameworkBundle(void);
 @property (nonatomic, readonly) BOOL hasContent;
 @property (nonatomic, readonly) BOOL hasNonwhiteSpaceContent;
 + (instancetype)composition;
++ (instancetype)compositionWithMediaObjects:(NSArray *)mediaObjects subject:(NSAttributedString *)subject;
++ (instancetype)compositionWithMediaObject:(CKMediaObject *)mediaObject subject:(NSAttributedString *)subject;
++ (instancetype)photoPickerCompositionWithMediaObjects:(NSArray *)mediaObjects;
++ (instancetype)photoPickerCompositionWithMediaObject:(CKMediaObject *)mediaObject;
++ (instancetype)quickImageCompositionWithMediaObject:(CKMediaObject *)mediaObject;
++ (instancetype)audioCompositionWithMediaObject:(CKMediaObject *)mediaObject;
++ (instancetype)expirableCompositionWithMediaObject:(CKMediaObject *)mediaObject;
 - (instancetype)compositionByAppendingComposition:(CKComposition *)composition;
 - (instancetype)compositionByAppendingText:(NSAttributedString *)text;
 - (instancetype)compositionByAppendingMediaObjects:(NSArray *)mediaObjects;
@@ -411,6 +418,32 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 @interface CKScheduledUpdater : CKManualUpdater
 @end
 
+@class CKPhotoPickerSheetViewController;
+
+@protocol CKCameraSheetViewControllerDelegate <NSObject>
+@required
+- (void)ckPhotoPickerViewControllerProceedToTakeAPicture:(CKPhotoPickerSheetViewController *)pickerController;
+- (void)ckPhotoPickerViewControllerProceedToChooseExisting:(CKPhotoPickerSheetViewController *)pickerController;
+- (void)ckPhotoPickerViewControllerCancel:(CKPhotoPickerSheetViewController *)pickerController;
+- (void)ckPhotoPickerViewController:(CKPhotoPickerSheetViewController *)pickerController selectedAssets:(NSArray *)assets shouldSend:(BOOL)send;
+- (void)ckPhotoPickerViewController:(CKPhotoPickerSheetViewController *)pickerController resizeToSize:(CGSize)size;
+@end
+
+@interface CKPhotoPickerCollectionView : UICollectionView
+@end
+
+@interface CKPhotoPickerSheetViewController : UIViewController {
+    NSArray *_assets;
+}
+@property (retain, nonatomic) CKPhotoPickerCollectionView *photosCollectionView;
+@property (assign, nonatomic) id<CKCameraSheetViewControllerDelegate> delegate;
+- (instancetype)initWithPresentationViewController:(UIViewController *)viewController;
+@end
+
+@interface CouriaPhotosViewController : CKPhotoPickerSheetViewController
+- (NSArray *)fetchAndClearSelectedAssets;
+@end
+
 @protocol NCInteractiveNotificationHostInterface
 @required
 - (void)_dismissWithContext:(NSDictionary *)context;
@@ -471,6 +504,7 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 @property (retain, nonatomic, readonly) CPDistributedMessagingCenter *messagingCenter;
 @property (retain, nonatomic, readonly) CouriaConversationViewController *conversationViewController;
 @property (retain, nonatomic, readonly) CouriaContactsViewController *contactsViewController;
+@property (retain, nonatomic, readonly) CouriaPhotosViewController *photosViewController;
 - (void)photoButtonTapped:(UIButton *)button;
 @end
 
@@ -488,6 +522,7 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 - (CGFloat)rightBalloonMaxWidthForEntryContentViewWidth:(CGFloat)entryContentViewWidth;
 - (CGFloat)transcriptContactImageDiameter;
 - (UIColor *)transcriptBackgroundColor;
+- (BOOL)photoPickerShouldZoomOnSelection;
 @end
 
 @interface CKUIBehaviorPhone : CKUIBehavior

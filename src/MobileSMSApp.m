@@ -124,7 +124,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
 CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, setupView)
 {
     CHSuper(0, CouriaInlineReplyViewController_MobileSMSApp, setupView);
-    self.entryView.shouldShowPhotoButton = NO; //TODO: photo not supported yet
+    self.entryView.shouldShowPhotoButton = YES;
 }
 
 CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, interactiveNotificationDidAppear)
