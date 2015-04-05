@@ -44,40 +44,44 @@ static SBBannerController *bannerController;
         valid;
     }); _valid; _valid = NO) {
         if ([request isEqualToString:@"getMessages"]) {
-            NSMutableArray *result = [NSMutableArray array];
-            [[dataSource getMessages:user]enumerateObjectsUsingBlock:^(id<CouriaMessage> message, NSUInteger idx, BOOL *stop) {
-                NSMutableDictionary *messageDictionary = [NSMutableDictionary dictionary];
-                id content = message.content;
-                BOOL outgoing = message.outgoing;
-                NSDate *timestamp = [message respondsToSelector:@selector(timestamp)] ? message.timestamp : nil;
-                messageDictionary[@"outgoing"] = @(outgoing);
-                if ([timestamp isKindOfClass:NSDate.class]) {
-                    messageDictionary[@"timestamp"] = timestamp;
-                }
-                if ([content isKindOfClass:NSString.class] || [content isKindOfClass:NSURL.class]) {
-                    messageDictionary[@"content"] = content;
-                    [result addObject:messageDictionary];
-                }
-            }];
-            response = @{@"messages": [NSKeyedArchiver archivedDataWithRootObject:result]};
+            if ([dataSource respondsToSelector:@selector(getMessages:)]) {
+                NSMutableArray *result = [NSMutableArray array];
+                [[dataSource getMessages:user]enumerateObjectsUsingBlock:^(id<CouriaMessage> message, NSUInteger idx, BOOL *stop) {
+                    NSMutableDictionary *messageDictionary = [NSMutableDictionary dictionary];
+                    id content = message.content;
+                    BOOL outgoing = message.outgoing;
+                    NSDate *timestamp = [message respondsToSelector:@selector(timestamp)] ? message.timestamp : nil;
+                    messageDictionary[@"outgoing"] = @(outgoing);
+                    if ([timestamp isKindOfClass:NSDate.class]) {
+                        messageDictionary[@"timestamp"] = timestamp;
+                    }
+                    if ([content isKindOfClass:NSString.class] || [content isKindOfClass:NSURL.class]) {
+                        messageDictionary[@"content"] = content;
+                        [result addObject:messageDictionary];
+                    }
+                }];
+                response = @{@"messages": [NSKeyedArchiver archivedDataWithRootObject:result]};
+            }
         } else if ([request isEqualToString:@"getContacts"]) {
-            NSMutableArray *result = [NSMutableArray array];
-            [[dataSource getContacts:data[@"keyword"]]enumerateObjectsUsingBlock:^(NSString *contact, NSUInteger idx, BOOL *stop) {
-                NSMutableDictionary *contactDictionary = [NSMutableDictionary dictionary];
-                NSString *nickname = [dataSource respondsToSelector:@selector(getNickname:)] ? [dataSource getNickname:contact] : contact;
-                UIImage *avatar = [dataSource respondsToSelector:@selector(getAvatar:)] ? [dataSource getAvatar:contact] : nil;
-                if ([nickname isKindOfClass:NSString.class]) {
-                    contactDictionary[@"nickname"] = nickname;
-                }
-                if ([avatar isKindOfClass:UIImage.class]) {
-                    contactDictionary[@"avatar"] = avatar;
-                }
-                if ([contact isKindOfClass:NSString.class]) {
-                    contactDictionary[@"identifier"] = contact;
-                    [result addObject:contactDictionary];
-                }
-            }];
-            response = @{@"contacts": [NSKeyedArchiver archivedDataWithRootObject:result]};;
+            if ([dataSource respondsToSelector:@selector(getContacts:)]) {
+                NSMutableArray *result = [NSMutableArray array];
+                [[dataSource getContacts:data[@"keyword"]]enumerateObjectsUsingBlock:^(NSString *contact, NSUInteger idx, BOOL *stop) {
+                    NSMutableDictionary *contactDictionary = [NSMutableDictionary dictionary];
+                    NSString *nickname = [dataSource respondsToSelector:@selector(getNickname:)] ? [dataSource getNickname:contact] : contact;
+                    UIImage *avatar = [dataSource respondsToSelector:@selector(getAvatar:)] ? [dataSource getAvatar:contact] : nil;
+                    if ([nickname isKindOfClass:NSString.class]) {
+                        contactDictionary[@"nickname"] = nickname;
+                    }
+                    if ([avatar isKindOfClass:UIImage.class]) {
+                        contactDictionary[@"avatar"] = avatar;
+                    }
+                    if ([contact isKindOfClass:NSString.class]) {
+                        contactDictionary[@"identifier"] = contact;
+                        [result addObject:contactDictionary];
+                    }
+                }];
+                response = @{@"contacts": [NSKeyedArchiver archivedDataWithRootObject:result]};
+            }
         } else if ([request isEqualToString:@"sendMessage"]) {
             CouriaMessage *message = [[CouriaMessage alloc]init];
             message.outgoing = YES;
@@ -88,7 +92,9 @@ static SBBannerController *bannerController;
                 [delegate sendMessage:message toUser:user];
             }
         } else if ([request isEqualToString:@"markRead"]) {
-            [delegate markRead:user];
+            if ([delegate respondsToSelector:@selector(markRead:)]) {
+                [delegate markRead:user];
+            }
         }
     }
     return response;
