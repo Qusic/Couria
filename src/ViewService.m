@@ -1,6 +1,7 @@
 #import "Headers.h"
 
 static CPDistributedMessagingCenter *messagingCenter;
+static CKMediaObjectManager *mediaObjectManager;
 
 CHDeclareClass(CKInlineReplyViewController)
 CHDeclareProperty(CKInlineReplyViewController, conversationViewController)
@@ -102,7 +103,14 @@ CHOptimizedMethod(1, new, void, CKInlineReplyViewController, photoButtonTapped, 
     if (self.photosViewController.photosCollectionView.superview != self.view) {
         [self.view addSubview:self.photosViewController.photosCollectionView];
     } else {
-        //TODO: CKMediaObject from ALAsset (self.photosViewController.selectedAssets)
+        NSMutableArray *mediaObjects = [NSMutableArray array];
+        [self.photosViewController.fetchAndClearSelectedAssets enumerateObjectsUsingBlock:^(ALAsset *asset, NSUInteger index, BOOL *stop) {
+            ALAssetRepresentation *representation = asset.defaultRepresentation;
+            CKMediaObject *mediaObject = [mediaObjectManager mediaObjectWithData:UIImageJPEGRepresentation([UIImage imageWithCGImage:representation.fullResolutionImage scale:1 orientation:(UIImageOrientation)representation.orientation], 0.8) UTIType:(__bridge NSString *)kUTTypeJPEG filename:nil transcoderUserInfo:@{IMFileTransferAVTranscodeOptionAssetURI: asset.defaultRepresentation.url.absoluteString}];
+            [mediaObjects addObject:mediaObject];
+        }];
+        CKComposition *photosComposition = [CKComposition photoPickerCompositionWithMediaObjects:mediaObjects];
+        self.entryView.composition = [self.entryView.composition compositionByAppendingComposition:photosComposition];
         [self.photosViewController.photosCollectionView removeFromSuperview];
     }
 }
@@ -147,6 +155,7 @@ CHConstructor
 {
     @autoreleasepool {
         messagingCenter = [CPDistributedMessagingCenter centerNamed:CouriaIdentifier];
+        mediaObjectManager = [CKMediaObjectManager sharedInstance];
         CHLoadLateClass(CKInlineReplyViewController);
         CHHook(0, CKInlineReplyViewController, init);
         CHHook(0, CKInlineReplyViewController, messagingCenter);

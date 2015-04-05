@@ -2,6 +2,8 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import <AddressBook/AddressBook.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 #import <CaptainHook.h>
 #import <Activator/libactivator.h>
 #import <Flipswitch/Flipswitch.h>
@@ -76,6 +78,7 @@ extern NSString *IMFilenameAttributeName;
 extern NSString *IMInlineMediaWidthAttributeName;
 extern NSString *IMInlineMediaHeightAttributeName;
 extern NSString *IMBaseWritingDirectionAttributeName;
+extern NSString *IMFileTransferAVTranscodeOptionAssetURI;
 extern NSString *IMStripFormattingFromAddress(NSString *formattedAddress);
 
 @interface IMService : NSObject

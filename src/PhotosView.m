@@ -17,6 +17,7 @@
     [self.photosCollectionView.indexPathsForSelectedItems enumerateObjectsUsingBlock:^(NSIndexPath *indexPath, NSUInteger index, BOOL *stop) {
         [selectedAssets addObject:allAssets[indexPath.item]];
         [self.photosCollectionView deselectItemAtIndexPath:indexPath animated:NO];
+        [self.photosCollectionView.delegate collectionView:self.photosCollectionView didDeselectItemAtIndexPath:indexPath];
     }];
     return selectedAssets;
 }
