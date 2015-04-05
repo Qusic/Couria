@@ -635,6 +635,7 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 - (SBBannerContextView *)_bannerView;
 - (void)dismissBannerWithAnimation:(BOOL)animated reason:(NSInteger)reason;
 - (void)_handleGestureState:(NSInteger)state location:(CGPoint)location displacement:(CGFloat)displacement velocity:(CGFloat)velocity;
+- (BOOL)isShowingModalBanner;
 @end
 
 @interface SBBulletinBannerController : NSObject
