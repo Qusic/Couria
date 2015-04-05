@@ -31,22 +31,21 @@ static SBBannerController *bannerController;
 
 - (NSDictionary *)processAppRequest:(NSString *)request data:(NSDictionary *)data
 {
-    id<CouriaDataSource> dataSource; id<CouriaDelegate> delegate; NSString *user; NSDictionary *response;
+    id<CouriaExtension> extension; NSString *user; NSDictionary *response;
     for (BOOL _valid = ({
         BOOL valid = NO;
         NSString *application = data[@"application"];
         if (CouriaRegistered(application)) {
-            dataSource = CouriaDataSource(application);
-            delegate = CouriaDelegate(application);
+            extension = CouriaExtension(application);
             user = data[@"user"];
             valid = YES;
         }
         valid;
     }); _valid; _valid = NO) {
         if ([request isEqualToString:@"getMessages"]) {
-            if ([dataSource respondsToSelector:@selector(getMessages:)]) {
+            if ([extension respondsToSelector:@selector(getMessages:)]) {
                 NSMutableArray *result = [NSMutableArray array];
-                [[dataSource getMessages:user]enumerateObjectsUsingBlock:^(id<CouriaMessage> message, NSUInteger idx, BOOL *stop) {
+                [[extension getMessages:user]enumerateObjectsUsingBlock:^(id<CouriaMessage> message, NSUInteger idx, BOOL *stop) {
                     NSMutableDictionary *messageDictionary = [NSMutableDictionary dictionary];
                     id content = message.content;
                     BOOL outgoing = message.outgoing;
@@ -63,12 +62,12 @@ static SBBannerController *bannerController;
                 response = @{@"messages": [NSKeyedArchiver archivedDataWithRootObject:result]};
             }
         } else if ([request isEqualToString:@"getContacts"]) {
-            if ([dataSource respondsToSelector:@selector(getContacts:)]) {
+            if ([extension respondsToSelector:@selector(getContacts:)]) {
                 NSMutableArray *result = [NSMutableArray array];
-                [[dataSource getContacts:data[@"keyword"]]enumerateObjectsUsingBlock:^(NSString *contact, NSUInteger idx, BOOL *stop) {
+                [[extension getContacts:data[@"keyword"]]enumerateObjectsUsingBlock:^(NSString *contact, NSUInteger idx, BOOL *stop) {
                     NSMutableDictionary *contactDictionary = [NSMutableDictionary dictionary];
-                    NSString *nickname = [dataSource respondsToSelector:@selector(getNickname:)] ? [dataSource getNickname:contact] : contact;
-                    UIImage *avatar = [dataSource respondsToSelector:@selector(getAvatar:)] ? [dataSource getAvatar:contact] : nil;
+                    NSString *nickname = [extension respondsToSelector:@selector(getNickname:)] ? [extension getNickname:contact] : contact;
+                    UIImage *avatar = [extension respondsToSelector:@selector(getAvatar:)] ? [extension getAvatar:contact] : nil;
                     if ([nickname isKindOfClass:NSString.class]) {
                         contactDictionary[@"nickname"] = nickname;
                     }
@@ -89,11 +88,14 @@ static SBBannerController *bannerController;
             id content = [NSKeyedUnarchiver unarchiveObjectWithData:data[@"content"]];
             if ([content isKindOfClass:NSString.class] || [content isKindOfClass:NSURL.class]) {
                 message.content = content;
-                [delegate sendMessage:message toUser:user];
+                [extension sendMessage:message toUser:user];
             }
         } else if ([request isEqualToString:@"markRead"]) {
-            if ([delegate respondsToSelector:@selector(markRead:)]) {
-                [delegate markRead:user];
+            if ([extension respondsToSelector:@selector(markRead:)]) {
+                [extension markRead:user];
+            }
+            if ([extension respondsToSelector:@selector(shouldClearNotifications)] ? extension.shouldClearNotifications : NO) {
+                //TODO: clear notifications
             }
         }
     }

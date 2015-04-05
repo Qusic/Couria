@@ -75,7 +75,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
 {
     CHSuper(0, CouriaInlineReplyViewController_ThirdPartyApp, setupView);
     self.entryView.shouldShowCharacterCount = NO;
-    self.entryView.shouldShowPhotoButton = NO; //TODO: photo not supported yet
+    self.entryView.shouldShowPhotoButton = [self.context[CouriaIdentifier".options"][@"canSendPhotos"] boolValue];
 }
 
 CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp, interactiveNotificationDidAppear)

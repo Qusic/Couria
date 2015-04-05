@@ -646,9 +646,8 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 - (void)modallyPresentBannerForBulletin:(BBBulletin *)bulletin action:(BBAction *)action;
 @end
 
+extern id<CouriaExtension> CouriaExtension(NSString *application);
 extern BOOL CouriaRegistered(NSString *application);
-extern id<CouriaDataSource> CouriaDataSource(NSString *application);
-extern id<CouriaDelegate> CouriaDelegate(NSString *application);
 extern void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest);
 extern void CouriaPresentViewController(NSString *application, NSString *user);
 extern void CouriaDismissViewController(void);
