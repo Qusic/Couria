@@ -28,6 +28,24 @@
 - (UIView *)_backgroundView;
 @end
 
+@class BBDataProvider, BBBulletinRequest;
+
+extern void _BBDataProviderAddBulletinForDestinations(BBDataProvider *dataProvider, BBBulletinRequest *bulletin, NSUInteger destinations, BOOL addToLockScreen);
+extern void BBDataProviderAddBulletinForDestinations(BBDataProvider *dataProvider, BBBulletinRequest *bulletin, NSUInteger destinations); // _BBDataProviderAddBulletinForDestinations: addToLockScreen = NO
+extern void BBDataProviderAddBulletin(BBDataProvider *dataProvider, BBBulletinRequest *bulletin, BOOL allDestinations); // _BBDataProviderAddBulletinForDestinations: destinations = allDestinations ? 0xe : 0x2, addToLockScreen = NO
+extern void BBDataProviderAddBulletinToLockScreen(BBDataProvider *dataProvider, BBBulletinRequest *bulletin); // _BBDataProviderAddBulletinForDestinations: destinations = 0x4, addToLockScreen = YES
+extern void BBDataProviderModifyBulletin(BBDataProvider *dataProvider, BBBulletinRequest *bulletin); // _BBDataProviderAddBulletinForDestinations: destinations = 0x0, addToLockScreen = NO
+extern void BBDataProviderWithdrawBulletinWithPublisherBulletinID(BBDataProvider *dataProvider, NSString *publisherBulletinID);
+extern void BBDataProviderWithdrawBulletinsWithRecordID(BBDataProvider *dataProvider, NSString *recordID);
+extern void BBDataProviderInvalidateBulletinsForDestinations(BBDataProvider *dataProvider, NSUInteger destinations);
+extern void BBDataProviderInvalidateBulletins(BBDataProvider *dataProvider); // BBDataProviderInvalidateBulletinsForDestinations: destinations = 0x32
+extern void BBDataProviderReloadDefaultSectionInfo(BBDataProvider *dataProvider);
+extern void BBDataProviderSetApplicationBadge(BBDataProvider *dataProvider, NSInteger value);
+extern void BBDataProviderSetApplicationBadgeString(BBDataProvider *dataProvider, NSString *value);
+
+@interface BBDataProvider : NSObject
+@end
+
 @interface BBAppearance : NSObject
 @property (copy, nonatomic) NSString *title;
 + (instancetype)appearanceWithTitle:(NSString *)title;
@@ -49,6 +67,8 @@
 @interface BBBulletin : NSObject
 @property (copy, nonatomic) NSString *bulletinID;
 @property (copy, nonatomic) NSString *sectionID;
+@property (copy, nonatomic) NSString *recordID;
+@property (copy, nonatomic) NSString *publisherBulletinID;
 @property (copy, nonatomic) NSString *title;
 @property (copy, nonatomic) NSString *subtitle;
 @property (copy, nonatomic) NSString *message;
@@ -67,8 +87,17 @@
 @end
 
 @interface BBServer : NSObject
+- (BBDataProvider *)dataProviderForSectionID:(NSString *)sectionID;
+- (NSSet *)allBulletinIDsForSectionID:(NSString *)sectionID;
+- (NSSet *)bulletinIDsForSectionID:(NSString *)sectionID inFeed:(NSUInteger)feed;
+- (NSSet *)bulletinsRequestsForBulletinIDs:(NSSet *)bulletinIDs;
+- (NSSet *)bulletinsForPublisherBulletinIDs:(NSSet *)publisherBulletinIDs sectionID:(NSString *)sectionID;
 - (void)_publishBulletinRequest:(BBBulletinRequest *)bulletinRequest forSectionID:(NSString *)sectionID forDestinations:(NSUInteger)destinations alwaysToLockScreen:(BOOL)alwaysToLockScreen;
 - (void)publishBulletinRequest:(BBBulletinRequest *)bulletinRequest destinations:(NSUInteger)destinations alwaysToLockScreen:(BOOL)alwaysToLockScreen;
+@end
+
+@interface BBServer (Couria)
++ (instancetype)sharedInstance;
 @end
 
 extern NSString *IMAttachmentCharacterString;

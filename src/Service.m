@@ -2,6 +2,7 @@
 
 static CPDistributedMessagingCenter *messagingCenter;
 static SBBannerController *bannerController;
+static BBServer *bbServer;
 
 @implementation CouriaService
 
@@ -14,6 +15,7 @@ static SBBannerController *bannerController;
         messagingCenter = [CPDistributedMessagingCenter centerNamed:CouriaIdentifier];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             bannerController = (SBBannerController *)[NSClassFromString(@"SBBannerController") sharedInstance];
+            bbServer = [BBServer sharedInstance];
         });
     });
     return sharedInstance;
@@ -31,11 +33,10 @@ static SBBannerController *bannerController;
 
 - (NSDictionary *)processAppRequest:(NSString *)request data:(NSDictionary *)data
 {
-    id<CouriaExtension> extension; NSString *user; NSDictionary *response;
+    id<CouriaExtension> extension; NSString *application; NSString *user; NSDictionary *response;
     for (BOOL _valid = ({
         BOOL valid = NO;
-        NSString *application = data[@"application"];
-        if (CouriaRegistered(application)) {
+        if (CouriaRegistered(application = data[@"application"])) {
             extension = CouriaExtension(application);
             user = data[@"user"];
             valid = YES;
@@ -95,7 +96,17 @@ static SBBannerController *bannerController;
                 [extension markRead:user];
             }
             if ([extension respondsToSelector:@selector(shouldClearNotifications)] ? extension.shouldClearNotifications : NO) {
-                //TODO: clear notifications
+                BBDataProvider *dataProvider = [bbServer dataProviderForSectionID:application];
+                NSSet *bulletins = [bbServer bulletinsRequestsForBulletinIDs:[bbServer allBulletinIDsForSectionID:application]];
+                NSInteger remainingCount = 0;
+                for (BBBulletinRequest *bulletin in bulletins) {
+                    if ([[extension getUserIdentifier:bulletin]isEqualToString:user]) {
+                        BBDataProviderWithdrawBulletinWithPublisherBulletinID(dataProvider, bulletin.publisherBulletinID);
+                    } else {
+                        remainingCount++;
+                    }
+                }
+                BBDataProviderSetApplicationBadge(dataProvider, remainingCount);
             }
         }
     }
