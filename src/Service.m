@@ -24,14 +24,15 @@ static BBServer *bbServer;
 - (void)run
 {
     [messagingCenter runServerOnCurrentThread];
-    [messagingCenter registerForMessageName:@"getMessages" target:self selector:@selector(processAppRequest:data:)];
-    [messagingCenter registerForMessageName:@"getContacts" target:self selector:@selector(processAppRequest:data:)];
-    [messagingCenter registerForMessageName:@"sendMessage" target:self selector:@selector(processAppRequest:data:)];
-    [messagingCenter registerForMessageName:@"markRead" target:self selector:@selector(processAppRequest:data:)];
-    [messagingCenter registerForMessageName:@"updateBanner" target:self selector:@selector(processUIRequest:data:)];
+    [messagingCenter registerForMessageName:@"getMessages" target:self selector:@selector(processExtensionRequest:data:)];
+    [messagingCenter registerForMessageName:@"getContacts" target:self selector:@selector(processExtensionRequest:data:)];
+    [messagingCenter registerForMessageName:@"sendMessage" target:self selector:@selector(processExtensionRequest:data:)];
+    [messagingCenter registerForMessageName:@"markRead" target:self selector:@selector(processExtensionRequest:data:)];
+    [messagingCenter registerForMessageName:@"listExtensions" target:self selector:@selector(processMiscellaneousRequest:data:)];
+    [messagingCenter registerForMessageName:@"updateBanner" target:self selector:@selector(processMiscellaneousRequest:data:)];
 }
 
-- (NSDictionary *)processAppRequest:(NSString *)request data:(NSDictionary *)data
+- (NSDictionary *)processExtensionRequest:(NSString *)request data:(NSDictionary *)data
 {
     id<CouriaExtension> extension; NSString *application; NSString *user; NSDictionary *response;
     for (BOOL _valid = ({
@@ -113,10 +114,20 @@ static BBServer *bbServer;
     return response;
 }
 
-- (NSDictionary *)processUIRequest:(NSString *)request data:(NSDictionary *)data
+- (NSDictionary *)processMiscellaneousRequest:(NSString *)request data:(NSDictionary *)data
 {
     NSDictionary *response;
-    if ([request isEqualToString:@"updateBanner"]) {
+    if ([request isEqualToString:@"listExtensions"]) {
+        NSMutableArray *result = [NSMutableArray array];
+        [CouriaExtensions().allKeys enumerateObjectsUsingBlock:^(NSString *applicationIdentifier, NSUInteger index, BOOL *stop) {
+            [result addObject:@{
+                @"identifier": applicationIdentifier,
+                @"name": CouriaApplicationName(applicationIdentifier),
+                @"icon": CouriaApplicationIcon(applicationIdentifier, YES)
+            }];
+        }];
+        response = @{@"extensions": [NSKeyedArchiver archivedDataWithRootObject:result]};
+    } else if ([request isEqualToString:@"updateBanner"]) {
         SBBannerContextView *bannerView = bannerController._bannerView;
         if (bannerView != nil) {
             SBDefaultBannerView * const *contentViewRef = CHIvarRef(bannerView, _contentView, SBDefaultBannerView * const);
