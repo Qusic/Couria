@@ -1,0 +1,9 @@
+{
+    entry = {
+        bundle = CouriaPreferences;
+        label = Couria;
+        icon = Couria.png;
+        cell = PSLinkCell;
+        isController = 1;
+    };
+}
