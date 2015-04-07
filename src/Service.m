@@ -126,7 +126,7 @@ static BBServer *bbServer;
                 IconKey: CouriaApplicationIcon(applicationIdentifier, YES)
             }];
         }];
-        response = @{@"extensions": [NSKeyedArchiver archivedDataWithRootObject:result]};
+        response = @{ExtensionsKey: [NSKeyedArchiver archivedDataWithRootObject:result]};
     } else if ([request isEqualToString:UpdateBannerMessage]) {
         SBBannerContextView *bannerView = bannerController._bannerView;
         if (bannerView != nil) {
@@ -135,8 +135,8 @@ static BBServer *bbServer;
                 SBDefaultBannerTextView * const *textViewRef = CHIvarRef(*contentViewRef, _textView, SBDefaultBannerTextView * const);
                 if (textViewRef != NULL && *textViewRef != nil) {
                     SBDefaultBannerTextView *textView = *textViewRef;
-                    textView.primaryText = data[@"primaryText"] ?: textView.primaryText;
-                    textView.secondaryText = data[@"secondaryText"] ?: textView.secondaryText;
+                    textView.primaryText = data[PrimaryTextKey] ?: textView.primaryText;
+                    textView.secondaryText = data[SecondaryTextKey] ?: textView.secondaryText;
                     [textView setNeedsLayout];
                     [textView layoutIfNeeded];
                 }

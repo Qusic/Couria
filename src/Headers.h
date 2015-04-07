@@ -20,6 +20,7 @@
 #define ActionDomain ".action"
 #define OptionsDomain ".options"
 
+#define ExtensionsKey @"extensions"
 #define IdentifierKey @"identifier"
 #define ApplicationKey @"application"
 #define NameKey @"name"
@@ -33,6 +34,8 @@
 #define TimestampKey @"timestamp"
 #define OutgoingKey @"outgoing"
 #define KeywordKey @"keyword"
+#define PrimaryTextKey @"primaryText"
+#define SecondaryTextKey @"secondaryText"
 
 #define GetMessagesMessage @"getMessages"
 #define GetContactsMessage @"getContacts"

@@ -65,7 +65,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
             [weakSelf.conversationViewController refreshData];
             [weakSelf interactiveNotificationDidAppear];
             [weakSelf.messagingCenter sendNonBlockingMessageName:UpdateBannerMessage userInfo:@{
-                @"primaryText": contact[NicknameKey]
+                PrimaryTextKey: contact[NicknameKey]
             }];
         };
     }

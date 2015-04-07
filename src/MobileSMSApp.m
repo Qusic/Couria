@@ -90,8 +90,8 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
                         IdentifierKey: IMStripFormattingFromAddress(queryString),
                         NicknameKey: queryString
                     }];
-                    [self.messagingCenter sendNonBlockingMessageName:@"updateBanner" userInfo:@{
-                        @"secondaryText": CouriaLocalizedString(@"NO_ACCESS_TO_CONTACTS")
+                    [self.messagingCenter sendNonBlockingMessageName:UpdateBannerMessage userInfo:@{
+                        SecondaryTextKey: CouriaLocalizedString(@"NO_ACCESS_TO_CONTACTS")
                     }];
                 }
             } else {
@@ -114,8 +114,8 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
             [weakSelf setupConversation];
             [weakSelf.conversationViewController refreshData];
             [weakSelf interactiveNotificationDidAppear];
-            [weakSelf.messagingCenter sendNonBlockingMessageName:@"updateBanner" userInfo:@{
-                @"primaryText": contact[NicknameKey]
+            [weakSelf.messagingCenter sendNonBlockingMessageName:UpdateBannerMessage userInfo:@{
+                PrimaryTextKey: contact[NicknameKey]
             }];
         };
     }
