@@ -108,6 +108,7 @@ CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
 
 CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp, sendMessage)
 {
+    CHSuper(0, CouriaInlineReplyViewController_ThirdPartyApp, sendMessage);
     NSString *applicationIdentifier = self.context[CouriaIdentifier".application"];
     NSString *userIdentifier = self.context[CouriaIdentifier".user"];
     CKComposition *composition = self.entryView.composition;

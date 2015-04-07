@@ -98,6 +98,14 @@ CHOptimizedMethod(1, self, void, CKInlineReplyViewController, messageEntryViewDi
     [self.view layoutIfNeeded];
 }
 
+CHOptimizedMethod(0, self, void, CKInlineReplyViewController, sendMessage)
+{
+    if (self.photosViewController.photosCollectionView.superview == self.view) {
+        [self photoButtonTapped:nil];
+    }
+    CHSuper(0, CKInlineReplyViewController, sendMessage);
+}
+
 CHOptimizedMethod(1, new, void, CKInlineReplyViewController, photoButtonTapped, UIButton *, button)
 {
     if (self.photosViewController.photosCollectionView.superview != self.view) {
@@ -166,6 +174,7 @@ CHConstructor
         CHHook(0, CKInlineReplyViewController, preferredContentHeight);
         CHHook(0, CKInlineReplyViewController, viewDidLayoutSubviews);
         CHHook(1, CKInlineReplyViewController, messageEntryViewDidChange);
+        CHHook(0, CKInlineReplyViewController, sendMessage);
         CHHook(1, CKInlineReplyViewController, photoButtonTapped);
         CHLoadClass(CKMessageEntryView);
         CHHook(5, CKMessageEntryView, initWithFrame, shouldShowSendButton, shouldShowSubject, shouldShowPhotoButton, shouldShowCharacterCount);
