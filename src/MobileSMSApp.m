@@ -91,7 +91,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
                         @"nickname": queryString
                     }];
                     [self.messagingCenter sendNonBlockingMessageName:@"updateBanner" userInfo:@{
-                        @"secondaryText": @"No Access to Contacts"
+                        @"secondaryText": CouriaLocalizedString(@"NO_ACCESS_TO_CONTACTS")
                     }];
                 }
             } else {
