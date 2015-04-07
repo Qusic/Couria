@@ -2,8 +2,20 @@
 
 static NSMutableDictionary *extensions;
 static NSUserDefaults *preferences;
+static SBApplicationController *applicationController;
+static SBIconModel *iconModel;
 static SBBulletinBannerController *bulletinBannerController;
 static SBBannerController *bannerController;
+
+NSDictionary *CouriaExtensions(void)
+{
+    return extensions;
+}
+
+NSUserDefaults *CouriaPreferences(void)
+{
+    return preferences;
+}
 
 id<CouriaExtension> CouriaExtension(NSString *application)
 {
@@ -13,6 +25,18 @@ id<CouriaExtension> CouriaExtension(NSString *application)
 BOOL CouriaRegistered(NSString *application)
 {
     return [application isEqualToString:MobileSMSIdentifier] || CouriaExtension(application);
+}
+
+NSString *CouriaApplicationName(NSString *applicationIdentifier)
+{
+    SBApplication *application = [applicationController applicationWithBundleIdentifier:applicationIdentifier];
+    return application.displayName;
+}
+
+UIImage *CouriaApplicationIcon(NSString *applicationIdentifier, BOOL small)
+{
+    SBApplicationIcon *icon = [iconModel applicationIconForBundleIdentifier:applicationIdentifier];
+    return [icon getIconImage:small ? 0 : 2];
 }
 
 void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest)
@@ -84,6 +108,8 @@ void CouriaDismissViewController(void)
         extensions = [NSMutableDictionary dictionary];
         preferences = [[NSUserDefaults alloc]initWithSuiteName:CouriaIdentifier];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            applicationController = (SBApplicationController *)[NSClassFromString(@"SBApplicationController") sharedInstance];
+            iconModel = ((SBIconViewMap *)[NSClassFromString(@"SBIconViewMap") homescreenMap]).iconModel;
             bulletinBannerController = (SBBulletinBannerController *)[NSClassFromString(@"SBBulletinBannerController") sharedInstance];
             bannerController = (SBBannerController *)[NSClassFromString(@"SBBannerController") sharedInstance];
         });

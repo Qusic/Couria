@@ -675,8 +675,12 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 - (void)modallyPresentBannerForBulletin:(BBBulletin *)bulletin action:(BBAction *)action;
 @end
 
+extern NSDictionary *CouriaExtensions(void);
+extern NSUserDefaults *CouriaPreferences(void);
 extern id<CouriaExtension> CouriaExtension(NSString *application);
 extern BOOL CouriaRegistered(NSString *application);
+extern NSString *CouriaApplicationName(NSString *applicationIdentifier);
+extern UIImage *CouriaApplicationIcon(NSString *applicationIdentifier, BOOL small);
 extern void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest);
 extern void CouriaPresentViewController(NSString *application, NSString *user);
 extern void CouriaDismissViewController(void);
@@ -744,35 +748,35 @@ typedef enum PSCellType {
     UITextAutocorrectionType autoCorrectionType;
     int textFieldType;
 @private
-    NSString* _name;
-    NSArray* _values;
-    NSDictionary* _titleDict;
-    NSDictionary* _shortTitleDict;
+    NSString *_name;
+    NSArray *_values;
+    NSDictionary *_titleDict;
+    NSDictionary *_shortTitleDict;
     id _userInfo;
-    NSMutableDictionary* _properties;
+    NSMutableDictionary *_properties;
 }
-@property(retain) NSMutableDictionary* properties;
-@property(retain) NSString* identifier;
-@property(retain) NSString* name;
-@property(retain) id userInfo;
-@property(retain) id titleDictionary;
-@property(retain) id shortTitleDictionary;
-@property(retain) NSArray* values;
-+(id)preferenceSpecifierNamed:(NSString*)title target:(id)target set:(SEL)set get:(SEL)get detail:(Class)detail cell:(PSCellType)cell edit:(Class)edit;
-+(PSSpecifier*)groupSpecifierWithName:(NSString*)title;
-+(PSSpecifier*)emptyGroupSpecifier;
-+(UITextAutocapitalizationType)autoCapsTypeForString:(PSSpecifier*)string;
-+(UITextAutocorrectionType)keyboardTypeForString:(PSSpecifier*)string;
--(id)propertyForKey:(NSString*)key;
--(void)setProperty:(id)property forKey:(NSString*)key;
--(void)removePropertyForKey:(NSString*)key;
--(void)loadValuesAndTitlesFromDataSource;
--(void)setValues:(NSArray*)values titles:(NSArray*)titles;
--(void)setValues:(NSArray*)values titles:(NSArray*)titles shortTitles:(NSArray*)shortTitles;
--(void)setupIconImageWithPath:(NSString*)path;
--(NSString*)identifier;
--(void)setTarget:(id)target;
--(void)setKeyboardType:(UIKeyboardType)type autoCaps:(UITextAutocapitalizationType)autoCaps autoCorrection:(UITextAutocorrectionType)autoCorrection;
+@property (retain) NSMutableDictionary *properties;
+@property (retain) NSString *identifier;
+@property (retain) NSString *name;
+@property (retain) id userInfo;
+@property (retain) id titleDictionary;
+@property (retain) id shortTitleDictionary;
+@property (retain) NSArray *values;
++ (id)preferenceSpecifierNamed:(NSString *)title target:(id)target set:(SEL)set get:(SEL)get detail:(Class)detail cell:(PSCellType)cell edit:(Class)edit;
++ (PSSpecifier *)groupSpecifierWithName:(NSString *)title;
++ (PSSpecifier *)emptyGroupSpecifier;
++ (UITextAutocapitalizationType)autoCapsTypeForString:(PSSpecifier *)string;
++ (UITextAutocorrectionType)keyboardTypeForString:(PSSpecifier *)string;
+- (id)propertyForKey:(NSString *)key;
+- (void)setProperty:(id)property forKey:(NSString *)key;
+- (void)removePropertyForKey:(NSString *)key;
+- (void)loadValuesAndTitlesFromDataSource;
+- (void)setValues:(NSArray *)values titles:(NSArray *)titles;
+- (void)setValues:(NSArray *)values titles:(NSArray *)titles shortTitles:(NSArray *)shortTitles;
+- (void)setupIconImageWithPath:(NSString *)path;
+- (NSString *)identifier;
+- (void)setTarget:(id)target;
+- (void)setKeyboardType:(UIKeyboardType)type autoCaps:(UITextAutocapitalizationType)autoCaps autoCorrection:(UITextAutocorrectionType)autoCorrection;
 @end
 
 @interface PSViewController : UIViewController
@@ -781,10 +785,10 @@ typedef enum PSCellType {
 @interface PSListController : PSViewController {
     NSArray *_specifiers;
 }
-@property(readonly, retain) PSSpecifier *specifier;
-@property(retain) NSArray *specifiers;
+@property (retain, readonly) PSSpecifier *specifier;
+@property (retain) NSArray *specifiers;
 - (NSArray *)loadSpecifiersFromPlistName:(NSString *)plistName target:(id)target;
-- (void)addSpecifiersFromArray:(NSArray*)array animated:(BOOL)animated;
+- (void)addSpecifiersFromArray:(NSArray *)array animated:(BOOL)animated;
 - (void)removeSpecifier:(PSSpecifier*)specifier animated:(BOOL)animated;
 @end
 

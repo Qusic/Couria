@@ -2,8 +2,6 @@
 
 static LAActivator *activator;
 static FSSwitchPanel *flipswitch;
-static SBApplicationController *applicationController;
-static SBIconModel *iconModel;
 
 static NSString *getApplicationIdentifier(NSString *externalIdentifier)
 {
@@ -13,18 +11,6 @@ static NSString *getApplicationIdentifier(NSString *externalIdentifier)
 static NSString *getExternalIdentifier(NSString *applicationIdentifier)
 {
     return [NSString stringWithFormat:CouriaIdentifier".%@", applicationIdentifier];
-}
-
-static NSString *getApplicationName(NSString *applicationIdentifier)
-{
-    SBApplication *application = [applicationController applicationWithBundleIdentifier:applicationIdentifier];
-    return application.displayName;
-}
-
-static UIImage *getApplicationIcon(NSString *applicationIdentifier, BOOL small)
-{
-    SBApplicationIcon *icon = [iconModel applicationIconForBundleIdentifier:applicationIdentifier];
-    return [icon getIconImage:small ? 0 : 2];
 }
 
 @implementation CouriaExtras
@@ -39,10 +25,6 @@ static UIImage *getApplicationIcon(NSString *applicationIdentifier, BOOL small)
         dlopen("/Library/MobileSubstrate/DynamicLibraries/Flipswitch.dylib", RTLD_LAZY);
         activator = (LAActivator *)[NSClassFromString(@"LAActivator") sharedInstance];
         flipswitch = (FSSwitchPanel *)[NSClassFromString(@"FSSwitchPanel") sharedPanel];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            applicationController = (SBApplicationController *)[NSClassFromString(@"SBApplicationController") sharedInstance];
-            iconModel = ((SBIconViewMap *)[NSClassFromString(@"SBIconViewMap") homescreenMap]).iconModel;
-        });
     });
     return sharedInstance;
 }
@@ -81,7 +63,7 @@ static UIImage *getApplicationIcon(NSString *applicationIdentifier, BOOL small)
 - (NSString *)activator:(LAActivator *)activator requiresLocalizedTitleForListenerName:(NSString *)listenerName
 {
     NSString *applicationIdentifier = getApplicationIdentifier(listenerName);
-    return [NSString stringWithFormat:@"Couria/%@", getApplicationName(applicationIdentifier)];
+    return [NSString stringWithFormat:@"Couria/%@", CouriaApplicationName(applicationIdentifier)];
 }
 
 - (NSString *)activator:(LAActivator *)activator requiresLocalizedDescriptionForListenerName:(NSString *)listenerName
@@ -92,13 +74,13 @@ static UIImage *getApplicationIcon(NSString *applicationIdentifier, BOOL small)
 - (UIImage *)activator:(LAActivator *)activator requiresIconForListenerName:(NSString *)listenerName scale:(CGFloat)scale
 {
     NSString *applicationIdentifier = getApplicationIdentifier(listenerName);
-    return getApplicationIcon(applicationIdentifier, NO);
+    return CouriaApplicationIcon(applicationIdentifier, NO);
 }
 
 - (UIImage *)activator:(LAActivator *)activator requiresSmallIconForListenerName:(NSString *)listenerName scale:(CGFloat)scale
 {
     NSString *applicationIdentifier = getApplicationIdentifier(listenerName);
-    return getApplicationIcon(applicationIdentifier, YES);
+    return CouriaApplicationIcon(applicationIdentifier, YES);
 }
 
 - (void)applyActionForSwitchIdentifier:(NSString *)switchIdentifier
@@ -110,7 +92,7 @@ static UIImage *getApplicationIcon(NSString *applicationIdentifier, BOOL small)
 - (NSString *)titleForSwitchIdentifier:(NSString *)switchIdentifier
 {
     NSString *applicationIdentifier = getApplicationIdentifier(switchIdentifier);
-    return [NSString stringWithFormat:@"Couria/%@", getApplicationName(applicationIdentifier)];
+    return [NSString stringWithFormat:@"Couria/%@", CouriaApplicationName(applicationIdentifier)];
 }
 
 - (NSBundle *)bundleForSwitchIdentifier:(NSString *)switchIdentifier
