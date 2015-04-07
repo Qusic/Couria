@@ -86,22 +86,6 @@
     zh_CN = 其它设置
     zh_TW = 其它設定
 [[AboutSection]]
-  [TWITTER]
-    en = @QusicS on Twitter
-    ar = @QusicS on Twitter
-    da = @QusicS på Twitter
-    de = @QusicS auf Twitter
-    es = @QusicS en Twitter
-    fr = @QusicS sur Twitter
-    it = @QusicS su Twitter
-    ja = Twitter: @QusicS
-    ko = @QusicS on Twitter
-    nl = @QusicS op Twitter
-    ru = @QusicS на Twitter
-    sv = @QusicS på Twitter
-    tr = Twitter'da @QusicS
-    zh_CN = 关注推特 @QusicS
-    zh_TW = 關註 @QusicS 的推特
   [DONATE]
     en = Donate
     ar = تبرع

@@ -46,6 +46,14 @@
 
 #define CanSendPhotosOption @"canSendPhotos"
 
+#define EnabledSetting ".enabled"
+#define DisableOnLockScreenSetting ".disableOnLockScreen"
+#define BubbleThemeSetting ".bubbleTheme"
+#define CustomMyBubbleColorSetting ".customMyBubbleColor"
+#define CustomMyBubbleTextColorSetting ".customMyBubbleTextColor"
+#define CustomOthersBubbleColorSetting ".customOthersBubbleColor"
+#define CustomOthersBubbleTextColorSetting ".customOthersBubbleTextColor"
+
 @interface UIScrollView (CKUtilities)
 - (void)__ck_scrollToTop:(BOOL)animated;
 - (BOOL)__ck_isScrolledToTop;
@@ -728,7 +736,7 @@ CHInline NSBundle *CouriaResourcesBundle(void)
 CHInline NSString *CouriaLocalizedString(NSString *key)
 {
     NSString *string = [CKFrameworkBundle() localizedStringForKey:key value:nil table:@"ChatKit"];
-    if (string.length == 0) {
+    if ([string isEqualToString:key]) {
         string = [CouriaResourcesBundle() localizedStringForKey:key value:nil table:nil];
     }
     return string;
@@ -814,17 +822,69 @@ typedef enum PSCellType {
 - (void)setKeyboardType:(UIKeyboardType)type autoCaps:(UITextAutocapitalizationType)autoCaps autoCorrection:(UITextAutocorrectionType)autoCorrection;
 @end
 
-@interface PSViewController : UIViewController
+@interface PSViewController : UIViewController {
+    PSSpecifier *_specifier;
+}
+@property (retain) PSSpecifier *specifier;
 @end
 
 @interface PSListController : PSViewController {
     NSArray *_specifiers;
 }
-@property (retain, readonly) PSSpecifier *specifier;
 @property (retain) NSArray *specifiers;
 - (NSArray *)loadSpecifiersFromPlistName:(NSString *)plistName target:(id)target;
+- (PSSpecifier *)specifierForID:(NSString *)identifier;
+- (PSSpecifier *)specifierAtIndex:(NSInteger)index;
+- (NSArray *)specifiersForIDs:(NSArray *)identifiers;
+- (NSArray *)specifiersInGroup:(NSInteger)group;
+- (BOOL)containsSpecifier:(PSSpecifier *)specifier;
+- (NSInteger)numberOfGroups;
+- (NSInteger)rowsForGroup:(NSInteger)group;
+- (NSInteger)indexForRow:(NSInteger)row inGroup:(NSInteger)group;
+- (BOOL)getGroup:(NSInteger *)group row:(NSInteger *)row ofSpecifier:(PSSpecifier *)specifier;
+- (BOOL)getGroup:(NSInteger *)group row:(NSInteger *)row ofSpecifierID:(NSString *)identifier;
+- (BOOL)getGroup:(NSInteger *)group row:(NSInteger *)row ofSpecifierAtIndex:(NSInteger )index;
+- (void)addSpecifier:(PSSpecifier *)specifier;
+- (void)addSpecifiersFromArray:(NSArray *)array;
+- (void)addSpecifier:(PSSpecifier *)specifier animated:(BOOL)animated;
 - (void)addSpecifiersFromArray:(NSArray *)array animated:(BOOL)animated;
-- (void)removeSpecifier:(PSSpecifier*)specifier animated:(BOOL)animated;
+- (void)insertSpecifier:(PSSpecifier *)specifier afterSpecifier:(PSSpecifier *)afterSpecifier;
+- (void)insertSpecifier:(PSSpecifier *)specifier afterSpecifierID:(NSString *)afterSpecifierID;
+- (void)insertSpecifier:(PSSpecifier *)specifier atIndex:(NSInteger)index;
+- (void)insertSpecifier:(PSSpecifier *)specifier atEndOfGroup:(NSInteger)index;
+- (void)insertContiguousSpecifiers:(NSArray *)spcifiers afterSpecifier:(PSSpecifier *)afterSpecifier;
+- (void)insertContiguousSpecifiers:(NSArray *)spcifiers afterSpecifierID:(NSString *)afterSpecifierID;
+- (void)insertContiguousSpecifiers:(NSArray *)spcifiers atIndex:(NSInteger)index;
+- (void)insertContiguousSpecifiers:(NSArray *)spcifiers atEndOfGroup:(NSInteger)index;
+- (void)insertSpecifier:(PSSpecifier *)specifier afterSpecifier:(PSSpecifier *)afterSpecifier animated:(BOOL)animated;
+- (void)insertSpecifier:(PSSpecifier *)specifier afterSpecifierID:(NSString *)afterSpecifierID animated:(BOOL)animated;
+- (void)insertSpecifier:(PSSpecifier *)specifier atIndex:(NSInteger)index animated:(BOOL)animated;
+- (void)insertSpecifier:(PSSpecifier *)specifier atEndOfGroup:(NSInteger)index animated:(BOOL)animated;
+- (void)insertContiguousSpecifiers:(NSArray *)spcifiers afterSpecifier:(PSSpecifier *)afterSpecifier animated:(BOOL)animated;
+- (void)insertContiguousSpecifiers:(NSArray *)spcifiers afterSpecifierID:(NSString *)afterSpecifierID animated:(BOOL)animated;
+- (void)insertContiguousSpecifiers:(NSArray *)spcifiers atIndex:(NSInteger)index animated:(BOOL)animated;
+- (void)insertContiguousSpecifiers:(NSArray *)spcifiers atEndOfGroup:(NSInteger)index animated:(BOOL)animated;
+- (void)replaceContiguousSpecifiers:(NSArray *)oldSpecifiers withSpecifiers:(NSArray *)newSpecifiers;
+- (void)replaceContiguousSpecifiers:(NSArray *)oldSpecifiers withSpecifiers:(NSArray *)newSpecifiers animated:(BOOL)animated;
+- (void)removeSpecifier:(PSSpecifier *)specifier;
+- (void)removeSpecifierID:(NSString *)identifier;
+- (void)removeSpecifierAtIndex:(NSInteger)index;
+- (void)removeLastSpecifier;
+- (void)removeContiguousSpecifiers:(NSArray *)specifiers;
+- (void)removeSpecifier:(PSSpecifier *)specifier animated:(BOOL)animated;
+- (void)removeSpecifierID:(NSString *)identifier animated:(BOOL)animated;
+- (void)removeSpecifierAtIndex:(NSInteger)index animated:(BOOL)animated;
+- (void)removeLastSpecifierAnimated:(BOOL)animated;
+- (void)removeContiguousSpecifiers:(NSArray *)specifiers animated:(BOOL)animated;
+- (void)reloadSpecifier:(PSSpecifier *)specifier;
+- (void)reloadSpecifierID:(NSString *)identifier;
+- (void)reloadSpecifierAtIndex:(NSInteger)index;
+- (void)reloadSpecifier:(PSSpecifier *)specifier animated:(BOOL)animated;
+- (void)reloadSpecifierID:(NSString *)identifier animated:(BOOL)animated;
+- (void)reloadSpecifierAtIndex:(NSInteger)index animated:(BOOL)animated;
+- (void)reloadSpecifiers;
+- (void)updateSpecifiers:(NSArray *)oldSpecifiers withSpecifiers:(NSArray *)newSpecifiers;
+- (void)updateSpecifiersInRange:(NSRange)range withSpecifiers:(NSArray *)newSpecifiers;
 @end
 
 @interface PSListItemsController : PSListController

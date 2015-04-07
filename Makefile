@@ -14,7 +14,7 @@ CouriaUI_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 CouriaPreferences_FILES = src/Preferences.m
 CouriaPreferences_RESOURCE_DIRS = res
 CouriaPreferences_FRAMEWORKS = UIKit Social
-CouriaPreferences_PRIVATE_FRAMEWORKS = Preferences ChatKit
+CouriaPreferences_PRIVATE_FRAMEWORKS = Preferences AppSupport ChatKit
 CouriaPreferences_INSTALL_PATH = /Library/PreferenceBundles
 
 export TARGET = iphone:clang:8.1

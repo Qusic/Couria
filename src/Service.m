@@ -119,7 +119,9 @@ static BBServer *bbServer;
     NSDictionary *response;
     if ([request isEqualToString:ListExtensionsMessage]) {
         NSMutableArray *result = [NSMutableArray array];
-        [CouriaExtensions().allKeys enumerateObjectsUsingBlock:^(NSString *applicationIdentifier, NSUInteger index, BOOL *stop) {
+        NSMutableArray *applicationIdentifiers = [NSMutableArray arrayWithObject:MobileSMSIdentifier];
+        [applicationIdentifiers addObjectsFromArray:CouriaExtensions().allKeys];
+        [applicationIdentifiers enumerateObjectsUsingBlock:^(NSString *applicationIdentifier, NSUInteger index, BOOL *stop) {
             [result addObject:@{
                 IdentifierKey: applicationIdentifier,
                 NameKey: CouriaApplicationName(applicationIdentifier),
