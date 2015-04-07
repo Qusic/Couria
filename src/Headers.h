@@ -647,6 +647,8 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 @interface SBDefaultBannerTextView : UIView
 @property (copy, nonatomic) NSString *primaryText;
 @property (copy, nonatomic) NSString *secondaryText;
+@property (nonatomic, readonly) UILabel *relevanceDateLabel;
+- (void)setRelevanceDate:(NSDate *)relevanceDate;
 @end
 
 @interface SBDefaultBannerView : UIView {

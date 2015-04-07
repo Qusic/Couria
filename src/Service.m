@@ -137,6 +137,8 @@ static BBServer *bbServer;
                     SBDefaultBannerTextView *textView = *textViewRef;
                     textView.primaryText = data[@"primaryText"] ?: textView.primaryText;
                     textView.secondaryText = data[@"secondaryText"] ?: textView.secondaryText;
+                    [textView setNeedsLayout];
+                    [textView layoutIfNeeded];
                 }
             }
         }
