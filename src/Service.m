@@ -24,12 +24,12 @@ static BBServer *bbServer;
 - (void)run
 {
     [messagingCenter runServerOnCurrentThread];
-    [messagingCenter registerForMessageName:@"getMessages" target:self selector:@selector(processExtensionRequest:data:)];
-    [messagingCenter registerForMessageName:@"getContacts" target:self selector:@selector(processExtensionRequest:data:)];
-    [messagingCenter registerForMessageName:@"sendMessage" target:self selector:@selector(processExtensionRequest:data:)];
-    [messagingCenter registerForMessageName:@"markRead" target:self selector:@selector(processExtensionRequest:data:)];
-    [messagingCenter registerForMessageName:@"listExtensions" target:self selector:@selector(processMiscellaneousRequest:data:)];
-    [messagingCenter registerForMessageName:@"updateBanner" target:self selector:@selector(processMiscellaneousRequest:data:)];
+    [messagingCenter registerForMessageName:GetMessagesMessage target:self selector:@selector(processExtensionRequest:data:)];
+    [messagingCenter registerForMessageName:GetContactsMessage target:self selector:@selector(processExtensionRequest:data:)];
+    [messagingCenter registerForMessageName:SendMessageMessage target:self selector:@selector(processExtensionRequest:data:)];
+    [messagingCenter registerForMessageName:MarkReadMessage target:self selector:@selector(processExtensionRequest:data:)];
+    [messagingCenter registerForMessageName:ListExtensionsMessage target:self selector:@selector(processMiscellaneousRequest:data:)];
+    [messagingCenter registerForMessageName:UpdateBannerMessage target:self selector:@selector(processMiscellaneousRequest:data:)];
 }
 
 - (NSDictionary *)processExtensionRequest:(NSString *)request data:(NSDictionary *)data
@@ -37,14 +37,14 @@ static BBServer *bbServer;
     id<CouriaExtension> extension; NSString *application; NSString *user; NSDictionary *response;
     for (BOOL _valid = ({
         BOOL valid = NO;
-        if (CouriaRegistered(application = data[@"application"])) {
+        if (CouriaEnabled(application = data[ApplicationKey])) {
             extension = CouriaExtension(application);
-            user = data[@"user"];
+            user = data[UserKey];
             valid = YES;
         }
         valid;
     }); _valid; _valid = NO) {
-        if ([request isEqualToString:@"getMessages"]) {
+        if ([request isEqualToString:GetMessagesMessage]) {
             if ([extension respondsToSelector:@selector(getMessages:)]) {
                 NSMutableArray *result = [NSMutableArray array];
                 [[extension getMessages:user]enumerateObjectsUsingBlock:^(id<CouriaMessage> message, NSUInteger idx, BOOL *stop) {
@@ -52,47 +52,47 @@ static BBServer *bbServer;
                     id content = message.content;
                     BOOL outgoing = message.outgoing;
                     NSDate *timestamp = [message respondsToSelector:@selector(timestamp)] ? message.timestamp : nil;
-                    messageDictionary[@"outgoing"] = @(outgoing);
+                    messageDictionary[OutgoingKey] = @(outgoing);
                     if ([timestamp isKindOfClass:NSDate.class]) {
-                        messageDictionary[@"timestamp"] = timestamp;
+                        messageDictionary[TimestampKey] = timestamp;
                     }
                     if ([content isKindOfClass:NSString.class] || [content isKindOfClass:NSURL.class]) {
-                        messageDictionary[@"content"] = content;
+                        messageDictionary[ContentKey] = content;
                         [result addObject:messageDictionary];
                     }
                 }];
-                response = @{@"messages": [NSKeyedArchiver archivedDataWithRootObject:result]};
+                response = @{MessagesKey: [NSKeyedArchiver archivedDataWithRootObject:result]};
             }
-        } else if ([request isEqualToString:@"getContacts"]) {
+        } else if ([request isEqualToString:GetContactsMessage]) {
             if ([extension respondsToSelector:@selector(getContacts:)]) {
                 NSMutableArray *result = [NSMutableArray array];
-                [[extension getContacts:data[@"keyword"]]enumerateObjectsUsingBlock:^(NSString *contact, NSUInteger idx, BOOL *stop) {
+                [[extension getContacts:data[KeywordKey]]enumerateObjectsUsingBlock:^(NSString *contact, NSUInteger idx, BOOL *stop) {
                     NSMutableDictionary *contactDictionary = [NSMutableDictionary dictionary];
                     NSString *nickname = [extension respondsToSelector:@selector(getNickname:)] ? [extension getNickname:contact] : contact;
                     UIImage *avatar = [extension respondsToSelector:@selector(getAvatar:)] ? [extension getAvatar:contact] : nil;
                     if ([nickname isKindOfClass:NSString.class]) {
-                        contactDictionary[@"nickname"] = nickname;
+                        contactDictionary[NicknameKey] = nickname;
                     }
                     if ([avatar isKindOfClass:UIImage.class]) {
-                        contactDictionary[@"avatar"] = avatar;
+                        contactDictionary[AvatarKey] = avatar;
                     }
                     if ([contact isKindOfClass:NSString.class]) {
-                        contactDictionary[@"identifier"] = contact;
+                        contactDictionary[IdentifierKey] = contact;
                         [result addObject:contactDictionary];
                     }
                 }];
-                response = @{@"contacts": [NSKeyedArchiver archivedDataWithRootObject:result]};
+                response = @{ContactsKey: [NSKeyedArchiver archivedDataWithRootObject:result]};
             }
-        } else if ([request isEqualToString:@"sendMessage"]) {
+        } else if ([request isEqualToString:SendMessageMessage]) {
             CouriaMessage *message = [[CouriaMessage alloc]init];
             message.outgoing = YES;
             message.timestamp = [NSDate date];
-            id content = [NSKeyedUnarchiver unarchiveObjectWithData:data[@"content"]];
+            id content = [NSKeyedUnarchiver unarchiveObjectWithData:data[ContentKey]];
             if ([content isKindOfClass:NSString.class] || [content isKindOfClass:NSURL.class]) {
                 message.content = content;
                 [extension sendMessage:message toUser:user];
             }
-        } else if ([request isEqualToString:@"markRead"]) {
+        } else if ([request isEqualToString:MarkReadMessage]) {
             if ([extension respondsToSelector:@selector(markRead:)]) {
                 [extension markRead:user];
             }
@@ -117,17 +117,17 @@ static BBServer *bbServer;
 - (NSDictionary *)processMiscellaneousRequest:(NSString *)request data:(NSDictionary *)data
 {
     NSDictionary *response;
-    if ([request isEqualToString:@"listExtensions"]) {
+    if ([request isEqualToString:ListExtensionsMessage]) {
         NSMutableArray *result = [NSMutableArray array];
         [CouriaExtensions().allKeys enumerateObjectsUsingBlock:^(NSString *applicationIdentifier, NSUInteger index, BOOL *stop) {
             [result addObject:@{
-                @"identifier": applicationIdentifier,
-                @"name": CouriaApplicationName(applicationIdentifier),
-                @"icon": CouriaApplicationIcon(applicationIdentifier, YES)
+                IdentifierKey: applicationIdentifier,
+                NameKey: CouriaApplicationName(applicationIdentifier),
+                IconKey: CouriaApplicationIcon(applicationIdentifier, YES)
             }];
         }];
         response = @{@"extensions": [NSKeyedArchiver archivedDataWithRootObject:result]};
-    } else if ([request isEqualToString:@"updateBanner"]) {
+    } else if ([request isEqualToString:UpdateBannerMessage]) {
         SBBannerContextView *bannerView = bannerController._bannerView;
         if (bannerView != nil) {
             SBDefaultBannerView * const *contentViewRef = CHIvarRef(bannerView, _contentView, SBDefaultBannerView * const);

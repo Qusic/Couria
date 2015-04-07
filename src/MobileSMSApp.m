@@ -12,7 +12,7 @@ CHDeclareClass(CouriaInlineReplyViewController_MobileSMSApp)
 
 CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, setupConversation)
 {
-    NSString *chatIdentifier = self.context[@"CKBBUserInfoKeyChatIdentifier"];
+    NSString *chatIdentifier = self.context[CKBBUserInfoKeyChatIdentifierKey];
     if (chatIdentifier != nil) {
         CHSuper(0, CouriaInlineReplyViewController_MobileSMSApp, setupConversation);
         CKConversation *conversation = [conversationList conversationForExistingChatWithGroupID:chatIdentifier];
@@ -48,8 +48,8 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
             if (queryString.length == 0) {
                 [[chatRegistry.allExistingChats sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastFinishedMessage.time" ascending:NO], [NSSortDescriptor sortDescriptorWithKey:@"__ck_watermarkMessageID" ascending:NO]]] enumerateObjectsUsingBlock:^(IMChat *chat, NSUInteger index, BOOL *stop) {
                     [contacts addObject:@{
-                        @"identifier": chat.chatIdentifier,
-                        @"nickname": chat.participants.count == 1 ? chat.recipient.name : ({
+                        IdentifierKey: chat.chatIdentifier,
+                        NicknameKey: chat.participants.count == 1 ? chat.recipient.name : ({
                             NSMutableString *groupName = [NSMutableString string];
                             [chat.participants enumerateObjectsUsingBlock:^(IMHandle *handle, NSUInteger index, BOOL *stop) {
                                 if (index > 0) {
@@ -58,7 +58,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
                                 [groupName appendString:handle.name];
                             }];
                         groupName;}),
-                        @"avatar": [CKEntity copyEntityForAddressString:chat.chatIdentifier].transcriptContactImage //TODO: group thumbnail
+                        AvatarKey: [CKEntity copyEntityForAddressString:chat.chatIdentifier].transcriptContactImage //TODO: group thumbnail
                     }];
                 }];
             } else if (searchAgent.resultCount > 0) {
@@ -74,9 +74,9 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
                                     NSString *label = CFBridgingRelease(ABMultiValueCopyLabelAtIndex(multiValue, index));
                                     NSString *value = CFBridgingRelease(ABMultiValueCopyValueAtIndex(multiValue, index));
                                     [contacts addObject:@{
-                                        @"identifier": IMStripFormattingFromAddress(value),
-                                        @"nickname": label ? [NSString stringWithFormat:@"%@ (%@)", name, CFBridgingRelease(ABAddressBookCopyLocalizedLabel((__bridge CFStringRef)label))] : name,
-                                        @"avatar": [CKAddressBook transcriptContactImageOfDiameter:[CKUIBehavior sharedBehaviors].transcriptContactImageDiameter forRecordID:recordID]
+                                        IdentifierKey: IMStripFormattingFromAddress(value),
+                                        NicknameKey: label ? [NSString stringWithFormat:@"%@ (%@)", name, CFBridgingRelease(ABAddressBookCopyLocalizedLabel((__bridge CFStringRef)label))] : name,
+                                        AvatarKey: [CKAddressBook transcriptContactImageOfDiameter:[CKUIBehavior sharedBehaviors].transcriptContactImageDiameter forRecordID:recordID]
                                     }];
                                 }
                                 CFRelease(multiValue);
@@ -87,8 +87,8 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
                     }];
                 } else {
                     [contacts addObject:@{
-                        @"identifier": IMStripFormattingFromAddress(queryString),
-                        @"nickname": queryString
+                        IdentifierKey: IMStripFormattingFromAddress(queryString),
+                        NicknameKey: queryString
                     }];
                     [self.messagingCenter sendNonBlockingMessageName:@"updateBanner" userInfo:@{
                         @"secondaryText": CouriaLocalizedString(@"NO_ACCESS_TO_CONTACTS")
@@ -96,8 +96,8 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
                 }
             } else {
                 [contacts addObject:@{
-                    @"identifier": IMStripFormattingFromAddress(queryString),
-                    @"nickname": queryString
+                    IdentifierKey: IMStripFormattingFromAddress(queryString),
+                    NicknameKey: queryString
                 }];
             }
             self.contactsViewController.contacts = contacts;
@@ -109,13 +109,13 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
         };
         self.contactsViewController.selectionHandler = ^(NSDictionary *contact) {
             NSMutableDictionary *context = weakSelf.context.mutableCopy;
-            context[@"CKBBUserInfoKeyChatIdentifier"] = contact[@"identifier"];
+            context[CKBBUserInfoKeyChatIdentifierKey] = contact[IdentifierKey];
             weakSelf.context = context;
             [weakSelf setupConversation];
             [weakSelf.conversationViewController refreshData];
             [weakSelf interactiveNotificationDidAppear];
             [weakSelf.messagingCenter sendNonBlockingMessageName:@"updateBanner" userInfo:@{
-                @"primaryText": contact[@"nickname"]
+                @"primaryText": contact[NicknameKey]
             }];
         };
     }
@@ -130,7 +130,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
 CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, interactiveNotificationDidAppear)
 {
     CHSuper(0, CouriaInlineReplyViewController_MobileSMSApp, interactiveNotificationDidAppear);
-    if (self.context[@"CKBBUserInfoKeyChatIdentifier"] != nil) {
+    if (self.context[CKBBUserInfoKeyChatIdentifierKey] != nil) {
         self.entryView.hidden = NO;
         self.conversationViewController.view.hidden = NO;
         self.contactsViewController.view.hidden = YES;

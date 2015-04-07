@@ -35,9 +35,9 @@
         cell.textLabel.textColor = [[UIColor whiteColor]colorWithAlphaComponent:0.6];
         cell.detailTextLabel.textColor = [[UIColor whiteColor]colorWithAlphaComponent:0.3];
     }
-    cell.textLabel.text = contact[@"nickname"];
-    cell.detailTextLabel.text = contact[@"identifier"];
-    cell.imageView.image = contact[@"avatar"];
+    cell.textLabel.text = contact[NicknameKey];
+    cell.detailTextLabel.text = contact[IdentifierKey];
+    cell.imageView.image = contact[AvatarKey];
     return cell;
 }
 

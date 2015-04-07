@@ -22,7 +22,7 @@ id<CouriaExtension> CouriaExtension(NSString *application)
     return extensions[application];
 }
 
-BOOL CouriaRegistered(NSString *application)
+BOOL CouriaEnabled(NSString *application)
 {
     return [application isEqualToString:MobileSMSIdentifier] || CouriaExtension(application);
 }
@@ -42,30 +42,30 @@ UIImage *CouriaApplicationIcon(NSString *applicationIdentifier, BOOL small)
 void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest)
 {
     id<CouriaExtension> extension = CouriaExtension(bulletinRequest.sectionID);
-    [bulletinRequest setContextValue:bulletinRequest.sectionID forKey:CouriaIdentifier".application"];
-    [bulletinRequest setContextValue:[extension getUserIdentifier:bulletinRequest] forKey:CouriaIdentifier".user"];
+    [bulletinRequest setContextValue:bulletinRequest.sectionID forKey:CouriaIdentifier ApplicationDomain];
+    [bulletinRequest setContextValue:[extension getUserIdentifier:bulletinRequest] forKey:CouriaIdentifier UserDomain];
     [bulletinRequest setContextValue:@{
-        @"canSendPhotos": @([extension respondsToSelector:@selector(canSendPhotos)] ? extension.canSendPhotos : NO)
-    } forKey:CouriaIdentifier".options"];
+        CanSendPhotosOption: @([extension respondsToSelector:@selector(canSendPhotos)] ? extension.canSendPhotos : NO)
+    } forKey:CouriaIdentifier OptionsDomain];
     if ([bulletinRequest.sectionID isEqualToString:MobileSMSIdentifier]) {
         void (^ updateAction)(BBAction *, NSUInteger, BOOL *) = ^(BBAction *action, NSUInteger index, BOOL *stop) {
-            if ([action.remoteServiceBundleIdentifier isEqualToString:@"com.apple.mobilesms.notification"] && [action.remoteViewControllerClassName isEqualToString:@"CKInlineReplyViewController"]) {
+            if ([action.remoteServiceBundleIdentifier isEqualToString:MessagesNotificationViewServiceIdentifier] && [action.remoteViewControllerClassName isEqualToString:@"CKInlineReplyViewController"]) {
                 action.remoteViewControllerClassName = @"CouriaInlineReplyViewController_MobileSMSApp";
             }
         };
         [bulletinRequest.actions.allValues enumerateObjectsUsingBlock:updateAction];
         [bulletinRequest.supplementaryActions enumerateObjectsUsingBlock:updateAction];
         if (bulletinRequest.supplementaryActions.count == 0) {
-            BBAction *action = [BBAction actionWithIdentifier:CouriaIdentifier".action"];
+            BBAction *action = [BBAction actionWithIdentifier:CouriaIdentifier ActionDomain];
             action.appearance = [BBAppearance appearanceWithTitle:CouriaLocalizedString(@"REPLY_NOTIFICATION_ACTION")];
-            action.remoteServiceBundleIdentifier = @"com.apple.mobilesms.notification";
+            action.remoteServiceBundleIdentifier = MessagesNotificationViewServiceIdentifier;
             action.remoteViewControllerClassName = @"CouriaInlineReplyViewController_MobileSMSApp";
             bulletinRequest.supplementaryActions = @[action];
         }
-    } else if (CouriaRegistered(bulletinRequest.sectionID)) {
-        BBAction *action = [BBAction actionWithIdentifier:CouriaIdentifier".action"];
+    } else if (CouriaEnabled(bulletinRequest.sectionID)) {
+        BBAction *action = [BBAction actionWithIdentifier:CouriaIdentifier ActionDomain];
         action.appearance = [BBAppearance appearanceWithTitle:CouriaLocalizedString(@"REPLY_NOTIFICATION_ACTION")];
-        action.remoteServiceBundleIdentifier = @"com.apple.mobilesms.notification";
+        action.remoteServiceBundleIdentifier = MessagesNotificationViewServiceIdentifier;
         action.remoteViewControllerClassName = @"CouriaInlineReplyViewController_ThirdPartyApp";
         bulletinRequest.supplementaryActions = @[action];
     }
@@ -73,14 +73,14 @@ void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest)
 
 void CouriaPresentViewController(NSString *application, NSString *user)
 {
-    if (CouriaRegistered(application) && bannerController._bannerContext == nil) {
+    if (CouriaEnabled(application) && bannerController._bannerContext == nil) {
         BBBulletinRequest *bulletin = [[BBBulletinRequest alloc]init];
         [bulletin generateNewBulletinID];
         bulletin.sectionID = application;
         bulletin.title = CouriaLocalizedString(@"NEW_MESSAGE");
         bulletin.defaultAction = [BBAction actionWithLaunchBundleID:application];
         CouriaUpdateBulletinRequest(bulletin);
-        [bulletin setContextValue:user forKey:[application isEqualToString:MobileSMSIdentifier] ? @"CKBBUserInfoKeyChatIdentifier" : CouriaIdentifier".user"];
+        [bulletin setContextValue:user forKey:[application isEqualToString:MobileSMSIdentifier] ? CKBBUserInfoKeyChatIdentifierKey : CouriaIdentifier UserDomain];
         BBAction *action = bulletin.supplementaryActions[0];
         dispatch_async(dispatch_get_main_queue(), ^{
             [bulletinBannerController modallyPresentBannerForBulletin:bulletin action:action];

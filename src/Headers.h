@@ -13,6 +13,35 @@
 #define CouriaIdentifier @"me.qusic.couria"
 #define SpringBoardIdentifier @"com.apple.springboard"
 #define MobileSMSIdentifier @"com.apple.MobileSMS"
+#define MessagesNotificationViewServiceIdentifier @"com.apple.mobilesms.notification"
+
+#define ApplicationDomain ".application"
+#define UserDomain ".user"
+#define ActionDomain ".action"
+#define OptionsDomain ".options"
+
+#define IdentifierKey @"identifier"
+#define ApplicationKey @"application"
+#define NameKey @"name"
+#define IconKey @"icon"
+#define UserKey @"user"
+#define NicknameKey @"nickname"
+#define AvatarKey @"avatar"
+#define MessagesKey @"messages"
+#define ContactsKey @"contacts"
+#define ContentKey @"content"
+#define TimestampKey @"timestamp"
+#define OutgoingKey @"outgoing"
+#define KeywordKey @"keyword"
+
+#define GetMessagesMessage @"getMessages"
+#define GetContactsMessage @"getContacts"
+#define SendMessageMessage @"sendMessage"
+#define MarkReadMessage @"markRead"
+#define ListExtensionsMessage @"listExtensions"
+#define UpdateBannerMessage @"updateBanner"
+
+#define CanSendPhotosOption @"canSendPhotos"
 
 @interface UIScrollView (CKUtilities)
 - (void)__ck_scrollToTop:(BOOL)animated;
@@ -203,6 +232,7 @@ extern NSString *IMStripFormattingFromAddress(NSString *formattedAddress);
 - (NSArray *)allExistingChats;
 @end
 
+#define CKBBUserInfoKeyChatIdentifierKey @"CKBBUserInfoKeyChatIdentifier"
 extern NSBundle *CKFrameworkBundle(void);
 
 @interface CKEntity : NSObject
@@ -680,7 +710,7 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 extern NSDictionary *CouriaExtensions(void);
 extern NSUserDefaults *CouriaPreferences(void);
 extern id<CouriaExtension> CouriaExtension(NSString *application);
-extern BOOL CouriaRegistered(NSString *application);
+extern BOOL CouriaEnabled(NSString *application);
 extern NSString *CouriaApplicationName(NSString *applicationIdentifier);
 extern UIImage *CouriaApplicationIcon(NSString *applicationIdentifier, BOOL small);
 extern void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest);
