@@ -4,6 +4,7 @@
 #import <AddressBook/AddressBook.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <MobileCoreServices/MobileCoreServices.h>
+#import <Social/Social.h>
 #import <CaptainHook.h>
 #import <Activator/libactivator.h>
 #import <Flipswitch/Flipswitch.h>
@@ -731,6 +732,11 @@ extern void CouriaDismissViewController(void);
 CHInline NSBundle *CouriaResourcesBundle(void)
 {
     return [NSBundle bundleWithPath:@"/Library/PreferenceBundles/CouriaPreferences.bundle"];
+}
+
+CHInline UIImage *CouriaImage(NSString *name)
+{
+    return [UIImage imageNamed:name inBundle:CouriaResourcesBundle() compatibleWithTraitCollection:nil];
 }
 
 CHInline NSString *CouriaLocalizedString(NSString *key)

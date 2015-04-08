@@ -41,26 +41,30 @@
         }
         [specifiers addObject:[PSSpecifier groupSpecifierWithName:CouriaLocalizedString(@"ABOUT")]];
         [specifiers addObject:({
-            PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:@"Twitter: @QusicS" target:self set:NULL get:NULL detail:Nil cell:PSButtonCell edit:Nil];
+            PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:@"@QusicS" target:self set:NULL get:NULL detail:Nil cell:PSButtonCell edit:Nil];
             [specifier setIdentifier:@"twitter"];
+            [specifier setProperty:CouriaImage(@"Twitter") forKey:@"iconImage"];
             specifier->action = @selector(actionForSpecifier:);
             specifier;
         })];
         [specifiers addObject:({
-            PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:@"Github: Couria" target:self set:NULL get:NULL detail:Nil cell:PSButtonCell edit:Nil];
+            PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:@"Couria" target:self set:NULL get:NULL detail:Nil cell:PSButtonCell edit:Nil];
             [specifier setIdentifier:@"github"];
+            [specifier setProperty:CouriaImage(@"Github") forKey:@"iconImage"];
             specifier->action = @selector(actionForSpecifier:);
             specifier;
         })];
         [specifiers addObject:({
             PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"DONATE") target:self set:NULL get:NULL detail:Nil cell:PSButtonCell edit:Nil];
             [specifier setIdentifier:@"donate"];
+            [specifier setProperty:CouriaImage(@"PayPal") forKey:@"iconImage"];
             specifier->action = @selector(actionForSpecifier:);
             specifier;
         })];
         [specifiers addObject:({
             PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"TRANSLATION_CREDITS") target:self set:NULL get:NULL detail:Nil cell:PSButtonCell edit:Nil];
             [specifier setIdentifier:@"translationCredits"];
+            [specifier setProperty:CouriaImage(@"Languages") forKey:@"iconImage"];
             specifier->action = @selector(actionForSpecifier:);
             specifier;
         })];
@@ -83,6 +87,12 @@
     return _specifiers;
 }
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"😘" style:UIBarButtonItemStylePlain target:self action:@selector(shareAction:)];
+}
+
 - (void)actionForSpecifier:(PSSpecifier *)specifier
 {
     NSString *identifier = specifier.identifier;
@@ -103,9 +113,17 @@
     }
 }
 
-- (void)actionForButtonItem:(UIBarButtonItem *)buttonItem
+- (void)shareAction:(UIBarButtonItem *)buttonItem
 {
-
+    NSString *serviceType = nil;
+    if ([[NSLocale preferredLanguages][0]isEqualToString:@"zh-Hans"]) {
+        serviceType = SLServiceTypeSinaWeibo;
+    } else {
+        serviceType = SLServiceTypeTwitter;
+    }
+    SLComposeViewController *composeSheet = [SLComposeViewController composeViewControllerForServiceType:serviceType];
+    [composeSheet setInitialText:CouriaLocalizedString(@"SHARE_TEXT")];
+    [self presentViewController:composeSheet animated:YES completion:nil];
 }
 
 - (NSDictionary *)translationCreditsData
