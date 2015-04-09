@@ -97,17 +97,19 @@ static BBServer *bbServer;
                 [extension markRead:user];
             }
             if ([extension respondsToSelector:@selector(shouldClearNotifications)] ? extension.shouldClearNotifications : NO) {
-                BBDataProvider *dataProvider = [bbServer dataProviderForSectionID:application];
-                NSSet *bulletins = [bbServer bulletinsRequestsForBulletinIDs:[bbServer allBulletinIDsForSectionID:application]];
-                NSInteger remainingCount = 0;
-                for (BBBulletinRequest *bulletin in bulletins) {
-                    if ([[extension getUserIdentifier:bulletin]isEqualToString:user]) {
-                        BBDataProviderWithdrawBulletinWithPublisherBulletinID(dataProvider, bulletin.publisherBulletinID);
-                    } else {
-                        remainingCount++;
+                dispatch_sync(__BBServerQueue, ^{
+                    BBDataProvider *dataProvider = [bbServer dataProviderForSectionID:application];
+                    NSSet *bulletins = [bbServer bulletinsRequestsForBulletinIDs:[bbServer allBulletinIDsForSectionID:application]];
+                    NSInteger remainingCount = 0;
+                    for (BBBulletinRequest *bulletin in bulletins) {
+                        if ([[extension getUserIdentifier:bulletin]isEqualToString:user]) {
+                            BBDataProviderWithdrawBulletinWithPublisherBulletinID(dataProvider, bulletin.publisherBulletinID);
+                        } else {
+                            remainingCount++;
+                        }
                     }
-                }
-                BBDataProviderSetApplicationBadge(dataProvider, remainingCount);
+                    BBDataProviderSetApplicationBadge(dataProvider, remainingCount);
+                });
             }
         }
     }
