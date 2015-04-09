@@ -53,38 +53,33 @@
     ja = ロック画面でのアクセス
     ru = Откл. при заблок. экране
     zh_CN = 在锁屏禁用
-  [THEME]
-    en = Theme
-    ar = الموضوعات
-    da = Tema
-    de = Theme
-    es = Tema
-    fr = Thème
-    it = Tema
-    ja = テーマ
-    ko = 테마
-    nl = Thema
-    ru = Тема
-    sv = Tema
-    tr = Tema
-    zh_CN = 主题
-    zh_TW = 主題
-  [OTHER_PREFERENCES]
-    en = Other Preferences
-    ar = تفضيلات اخري
-    da = Andre indstillinger
-    de = Erweiterte Einstellungen
-    es = Otras Configuraciones
-    fr = Autres préférences
-    it = Altre Preferenze
-    ja = その他の設定
-    ko = Other Preferences
-    nl = Andere instellingen
-    ru = Другие настройки
-    sv = Andra inställningar
-    tr = Daha Fazla Ayar
-    zh_CN = 其它设置
-    zh_TW = 其它設定
+  [BUBBLE_THEME]
+    en = Bubble Theme
+    zh_CN = 气泡主题
+  [BUBBLE_THEME_DESCRIPTION]
+    en = Color settings are effective only when the bubble theme Custom is chosen. Colors are specified as an RGB triplet or an RGBa quadlet in hexadecimal format. For example, 'AABBCCDD' represents a color whose red/green/blue value and optional alpha value are respectively 0xAA, 0xBB, 0xCC and 0xDD.
+    zh_CN = 颜色设置只在选择了自定义气泡主题时才生效。颜色的格式为 3 组或 4 组十六进制数字，分别表示 RGB 或 RGBa 颜色。例如，‘AABBCCDD’ 表示一个 RGB 值和可选的 alpha 值分别为 0xAA，0xBB，0xCC，0xDD 的颜色。
+  [BUBBLE_THEME_ORIGINAL]
+    en = Original
+    zh_CN = 原始
+  [BUBBLE_THEME_OUTLINE]
+    en = Outline
+    zh_CN = 轮廓
+  [BUBBLE_THEME_CUSTOM]
+    en = Custom
+    zh_CN = 自定义
+  [MY_BUBBLE_COLOR]
+    en = My Bubble Color
+    zh_CN = 我的气泡颜色
+  [MY_BUBBLE_TEXT_COLOR]
+    en = My Bubble Text Color
+    zh_CN = 我的气泡字体颜色
+  [OTHERS_BUBBLE_COLOR]
+    en = Others' Bubble Color
+    zh_CN = 对方的气泡颜色
+  [OTHERS_BUBBLE_TEXT_COLOR]
+    en = Others' Bubble Text Color
+    zh_CN = 对方的气泡字体颜色
 [[AboutSection]]
   [DONATE]
     en = Donate

@@ -4,6 +4,7 @@ static CPDistributedMessagingCenter *messagingCenter;
 static CKMediaObjectManager *mediaObjectManager;
 
 CHDeclareClass(CKInlineReplyViewController)
+CHDeclareProperty(CKInlineReplyViewController, preferences)
 CHDeclareProperty(CKInlineReplyViewController, conversationViewController)
 CHDeclareProperty(CKInlineReplyViewController, contactsViewController)
 CHDeclareProperty(CKInlineReplyViewController, photosViewController)
@@ -12,6 +13,7 @@ CHOptimizedMethod(0, self, id, CKInlineReplyViewController, init)
 {
     self = CHSuper(0, CKInlineReplyViewController, init);
     if (self) {
+        CHPropertySetValue(CKInlineReplyViewController, preferences, [[NSUserDefaults alloc]initWithSuiteName:CouriaIdentifier], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         CHPropertySetValue(CKInlineReplyViewController, conversationViewController, ({
             CKUIBehavior *uiBehavior = [CKUIBehavior sharedBehaviors];
             CGFloat rightBalloonMaxWidth = [uiBehavior rightBalloonMaxWidthForEntryContentViewWidth:self.entryView.contentView.bounds.size.width];
@@ -36,6 +38,11 @@ CHPropertyGetter(CKInlineReplyViewController, messagingCenter, CPDistributedMess
     return messagingCenter;
 }
 
+CHPropertyGetter(CKInlineReplyViewController, preferences, NSUserDefaults *)
+{
+    return CHPropertyGetValue(CKInlineReplyViewController, preferences);
+}
+
 CHPropertyGetter(CKInlineReplyViewController, conversationViewController, CouriaConversationViewController *)
 {
     return CHPropertyGetValue(CKInlineReplyViewController, conversationViewController);
@@ -49,6 +56,12 @@ CHPropertyGetter(CKInlineReplyViewController, contactsViewController, CouriaCont
 CHPropertyGetter(CKInlineReplyViewController, photosViewController, CouriaPhotosViewController *)
 {
     return CHPropertyGetValue(CKInlineReplyViewController, photosViewController);
+}
+
+CHOptimizedMethod(0, super, void, CKInlineReplyViewController, setupConversation)
+{
+    CHSuper(0, CKInlineReplyViewController, setupConversation);
+    CouriaRegisterDefaults(self.preferences, self.context[CouriaIdentifier ApplicationDomain]);
 }
 
 CHOptimizedMethod(0, self, void, CKInlineReplyViewController, setupView)
@@ -167,9 +180,11 @@ CHConstructor
         CHLoadLateClass(CKInlineReplyViewController);
         CHHook(0, CKInlineReplyViewController, init);
         CHHook(0, CKInlineReplyViewController, messagingCenter);
+        CHHook(0, CKInlineReplyViewController, preferences);
         CHHook(0, CKInlineReplyViewController, conversationViewController);
         CHHook(0, CKInlineReplyViewController, contactsViewController);
         CHHook(0, CKInlineReplyViewController, photosViewController);
+        CHHook(0, CKInlineReplyViewController, setupConversation);
         CHHook(0, CKInlineReplyViewController, setupView);
         CHHook(0, CKInlineReplyViewController, preferredContentHeight);
         CHHook(0, CKInlineReplyViewController, viewDidLayoutSubviews);

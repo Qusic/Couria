@@ -47,13 +47,19 @@
 
 #define CanSendPhotosOption @"canSendPhotos"
 
-#define EnabledSetting ".enabled"
-#define DisableOnLockScreenSetting ".disableOnLockScreen"
-#define BubbleThemeSetting ".bubbleTheme"
-#define CustomMyBubbleColorSetting ".customMyBubbleColor"
-#define CustomMyBubbleTextColorSetting ".customMyBubbleTextColor"
-#define CustomOthersBubbleColorSetting ".customOthersBubbleColor"
-#define CustomOthersBubbleTextColorSetting ".customOthersBubbleTextColor"
+#define EnabledSetting @".enabled"
+#define DisableOnLockScreenSetting @".disableOnLockScreen"
+#define BubbleThemeSetting @".bubbleTheme"
+#define CustomMyBubbleColorSetting @".customMyBubbleColor"
+#define CustomMyBubbleTextColorSetting @".customMyBubbleTextColor"
+#define CustomOthersBubbleColorSetting @".customOthersBubbleColor"
+#define CustomOthersBubbleTextColorSetting @".customOthersBubbleTextColor"
+
+typedef NS_ENUM(NSInteger, CouriaBubbleTheme) {
+    CouriaBubbleThemeOriginal = 0,
+    CouriaBubbleThemeOutline  = 1,
+    CouriaBubbleThemeCustom   = 2
+};
 
 @interface UIScrollView (CKUtilities)
 - (void)__ck_scrollToTop:(BOOL)animated;
@@ -366,10 +372,10 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 
 typedef NS_ENUM(SInt8, CKBalloonColor) {
     CKBalloonColorGray  = -1,
-    CKBalloonColorGreen = 0,
-    CKBalloonColorBlue  = 1,
-    CKBalloonColorWhite = 2,
-    CKBalloonColorRed   = 3
+    CKBalloonColorGreen =  0,
+    CKBalloonColorBlue  =  1,
+    CKBalloonColorWhite =  2,
+    CKBalloonColorRed   =  3
 };
 
 @interface CKColoredBalloonView : CKBalloonView
@@ -576,6 +582,7 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 
 @interface CKInlineReplyViewController (Couria)
 @property (retain, nonatomic, readonly) CPDistributedMessagingCenter *messagingCenter;
+@property (retain, nonatomic, readonly) NSUserDefaults *preferences;
 @property (retain, nonatomic, readonly) CouriaConversationViewController *conversationViewController;
 @property (retain, nonatomic, readonly) CouriaContactsViewController *contactsViewController;
 @property (retain, nonatomic, readonly) CouriaPhotosViewController *photosViewController;
@@ -729,6 +736,15 @@ extern void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest);
 extern void CouriaPresentViewController(NSString *application, NSString *user);
 extern void CouriaDismissViewController(void);
 
+CHInline void CouriaRegisterDefaults(NSUserDefaults *preferences, NSString *applicationIdentifier)
+{
+    [preferences registerDefaults:@{
+        [applicationIdentifier stringByAppendingString:EnabledSetting]: @(YES),
+        [applicationIdentifier stringByAppendingString:DisableOnLockScreenSetting]: @(NO),
+        [applicationIdentifier stringByAppendingString:BubbleThemeSetting]: @(CouriaBubbleThemeOutline)
+    }];
+}
+
 CHInline NSBundle *CouriaResourcesBundle(void)
 {
     return [NSBundle bundleWithPath:@"/Library/PreferenceBundles/CouriaPreferences.bundle"];
@@ -832,12 +848,14 @@ typedef enum PSCellType {
     PSSpecifier *_specifier;
 }
 @property (retain) PSSpecifier *specifier;
+- (id)readPreferenceValue:(PSSpecifier *)specifier;
+- (void)setPreferenceValue:(id)value specifier:(PSSpecifier *)specifier;
 @end
 
 @interface PSListController : PSViewController {
     NSArray *_specifiers;
 }
-@property (retain) NSArray *specifiers;
+@property (retain, nonatomic) NSArray *specifiers;
 - (NSArray *)loadSpecifiersFromPlistName:(NSString *)plistName target:(id)target;
 - (PSSpecifier *)specifierForID:(NSString *)identifier;
 - (PSSpecifier *)specifierAtIndex:(NSInteger)index;
