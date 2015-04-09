@@ -24,7 +24,7 @@ id<CouriaExtension> CouriaExtension(NSString *application)
 
 BOOL CouriaEnabled(NSString *application)
 {
-    return [application isEqualToString:MobileSMSIdentifier] || CouriaExtension(application);
+    return ([application isEqualToString:MobileSMSIdentifier] || CouriaExtension(application)) && [preferences boolForKey:[application stringByAppendingString:EnabledSetting]];
 }
 
 NSString *CouriaApplicationName(NSString *applicationIdentifier)
@@ -41,33 +41,36 @@ UIImage *CouriaApplicationIcon(NSString *applicationIdentifier, BOOL small)
 
 void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest)
 {
-    id<CouriaExtension> extension = CouriaExtension(bulletinRequest.sectionID);
-    [bulletinRequest setContextValue:bulletinRequest.sectionID forKey:CouriaIdentifier ApplicationDomain];
-    [bulletinRequest setContextValue:[extension getUserIdentifier:bulletinRequest] forKey:CouriaIdentifier UserDomain];
-    [bulletinRequest setContextValue:@{
-        CanSendPhotosOption: @([extension respondsToSelector:@selector(canSendPhotos)] ? extension.canSendPhotos : NO)
-    } forKey:CouriaIdentifier OptionsDomain];
-    if ([bulletinRequest.sectionID isEqualToString:MobileSMSIdentifier]) {
-        void (^ updateAction)(BBAction *, NSUInteger, BOOL *) = ^(BBAction *action, NSUInteger index, BOOL *stop) {
-            if ([action.remoteServiceBundleIdentifier isEqualToString:MessagesNotificationViewServiceIdentifier] && [action.remoteViewControllerClassName isEqualToString:@"CKInlineReplyViewController"]) {
+    NSString *applicationIdentifier = bulletinRequest.sectionID;
+    if (CouriaEnabled(applicationIdentifier)) {
+        id<CouriaExtension> extension = CouriaExtension(applicationIdentifier);
+        [bulletinRequest setContextValue:applicationIdentifier forKey:CouriaIdentifier ApplicationDomain];
+        [bulletinRequest setContextValue:[extension getUserIdentifier:bulletinRequest] forKey:CouriaIdentifier UserDomain];
+        [bulletinRequest setContextValue:@{
+            CanSendPhotosOption: @([extension respondsToSelector:@selector(canSendPhotos)] ? extension.canSendPhotos : NO)
+        } forKey:CouriaIdentifier OptionsDomain];
+        if ([applicationIdentifier isEqualToString:MobileSMSIdentifier]) {
+            void (^ updateAction)(BBAction *, NSUInteger, BOOL *) = ^(BBAction *action, NSUInteger index, BOOL *stop) {
+                if ([action.remoteServiceBundleIdentifier isEqualToString:MessagesNotificationViewServiceIdentifier] && [action.remoteViewControllerClassName isEqualToString:@"CKInlineReplyViewController"]) {
+                    action.remoteViewControllerClassName = @"CouriaInlineReplyViewController_MobileSMSApp";
+                }
+            };
+            [bulletinRequest.actions.allValues enumerateObjectsUsingBlock:updateAction];
+            [bulletinRequest.supplementaryActions enumerateObjectsUsingBlock:updateAction];
+            if (bulletinRequest.supplementaryActions.count == 0) {
+                BBAction *action = [BBAction actionWithIdentifier:CouriaIdentifier ActionDomain];
+                action.appearance = [BBAppearance appearanceWithTitle:CouriaLocalizedString(@"REPLY_NOTIFICATION_ACTION")];
+                action.remoteServiceBundleIdentifier = MessagesNotificationViewServiceIdentifier;
                 action.remoteViewControllerClassName = @"CouriaInlineReplyViewController_MobileSMSApp";
+                bulletinRequest.supplementaryActions = @[action];
             }
-        };
-        [bulletinRequest.actions.allValues enumerateObjectsUsingBlock:updateAction];
-        [bulletinRequest.supplementaryActions enumerateObjectsUsingBlock:updateAction];
-        if (bulletinRequest.supplementaryActions.count == 0) {
+        } else {
             BBAction *action = [BBAction actionWithIdentifier:CouriaIdentifier ActionDomain];
             action.appearance = [BBAppearance appearanceWithTitle:CouriaLocalizedString(@"REPLY_NOTIFICATION_ACTION")];
             action.remoteServiceBundleIdentifier = MessagesNotificationViewServiceIdentifier;
-            action.remoteViewControllerClassName = @"CouriaInlineReplyViewController_MobileSMSApp";
+            action.remoteViewControllerClassName = @"CouriaInlineReplyViewController_ThirdPartyApp";
             bulletinRequest.supplementaryActions = @[action];
         }
-    } else if (CouriaEnabled(bulletinRequest.sectionID)) {
-        BBAction *action = [BBAction actionWithIdentifier:CouriaIdentifier ActionDomain];
-        action.appearance = [BBAppearance appearanceWithTitle:CouriaLocalizedString(@"REPLY_NOTIFICATION_ACTION")];
-        action.remoteServiceBundleIdentifier = MessagesNotificationViewServiceIdentifier;
-        action.remoteViewControllerClassName = @"CouriaInlineReplyViewController_ThirdPartyApp";
-        bulletinRequest.supplementaryActions = @[action];
     }
 }
 
@@ -107,6 +110,7 @@ void CouriaDismissViewController(void)
         sharedInstance = [[self alloc]init];
         extensions = [NSMutableDictionary dictionary];
         preferences = [[NSUserDefaults alloc]initWithSuiteName:CouriaIdentifier];
+        CouriaRegisterDefaults(preferences, MobileSMSIdentifier);
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             applicationController = (SBApplicationController *)[NSClassFromString(@"SBApplicationController") sharedInstance];
             iconModel = ((SBIconViewMap *)[NSClassFromString(@"SBIconViewMap") homescreenMap]).iconModel;
@@ -122,6 +126,7 @@ void CouriaDismissViewController(void)
     if (extension != nil && applicationIdentifier != nil && ![applicationIdentifier isEqualToString:MobileSMSIdentifier]) {
         [extensions setObject:extension forKey:applicationIdentifier];
         [[CouriaExtras sharedInstance]registerExtrasForApplication:applicationIdentifier];
+        CouriaRegisterDefaults(preferences, applicationIdentifier);
     }
 }
 
