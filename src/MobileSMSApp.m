@@ -111,7 +111,6 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
             NSMutableDictionary *context = weakSelf.context.mutableCopy;
             context[CKBBUserInfoKeyChatIdentifierKey] = contact[IdentifierKey];
             weakSelf.context = context;
-            [weakSelf setupConversation];
             [weakSelf.conversationViewController refreshData];
             [weakSelf interactiveNotificationDidAppear];
             [weakSelf.messagingCenter sendNonBlockingMessageName:UpdateBannerMessage userInfo:@{
