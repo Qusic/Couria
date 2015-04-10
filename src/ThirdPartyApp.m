@@ -95,12 +95,6 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
     }
 }
 
-CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController_ThirdPartyApp, messageEntryViewDidChange, CKMessageEntryView *, entryView)
-{
-    CHSuper(1, CouriaInlineReplyViewController_ThirdPartyApp, messageEntryViewDidChange, entryView);
-    entryView.sendButton.enabled = entryView.composition.hasContent;
-}
-
 CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp, sendMessage)
 {
     CHSuper(0, CouriaInlineReplyViewController_ThirdPartyApp, sendMessage);
@@ -129,7 +123,6 @@ CHConstructor
             CHHook(0, CouriaInlineReplyViewController_ThirdPartyApp, setupConversation);
             CHHook(0, CouriaInlineReplyViewController_ThirdPartyApp, setupView);
             CHHook(0, CouriaInlineReplyViewController_ThirdPartyApp, interactiveNotificationDidAppear);
-            CHHook(1, CouriaInlineReplyViewController_ThirdPartyApp, messageEntryViewDidChange);
             CHHook(0, CouriaInlineReplyViewController_ThirdPartyApp, sendMessage);
         }
     }

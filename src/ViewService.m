@@ -147,6 +147,15 @@ CHOptimizedMethod(1, self, void, CKMessageEntryView, setShouldShowPhotoButton, B
     [self layoutIfNeeded];
 }
 
+CHOptimizedMethod(0, self, void, CKMessageEntryView, updateEntryView)
+{
+    CHSuper(0, CKMessageEntryView, updateEntryView);
+    if (self.conversation.chat == nil) {
+        self.sendButton.enabled = self.composition.hasContent;
+        self.photoButton.enabled = YES;
+    }
+}
+
 CHDeclareClass(CKUIBehavior)
 
 #define CHCKUIBehavior(type, name, value) \
@@ -212,6 +221,7 @@ CHConstructor
         CHLoadClass(CKMessageEntryView);
         CHHook(5, CKMessageEntryView, initWithFrame, shouldShowSendButton, shouldShowSubject, shouldShowPhotoButton, shouldShowCharacterCount);
         CHHook(1, CKMessageEntryView, setShouldShowPhotoButton);
+        CHHook(0, CKMessageEntryView, updateEntryView);
         CHLoadClass(CKUIBehavior);
         CHHook(0, CKUIBehavior, transcriptBackgroundColor);
         CHHook(0, CKUIBehavior, transcriptCanUseOpaqueMask);

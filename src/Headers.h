@@ -488,6 +488,7 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 @property (retain, nonatomic) UIButton *sendButton;
 @property (retain, nonatomic) UIButton *photoButton;
 - (instancetype)initWithFrame:(CGRect)frame shouldShowSendButton:(BOOL)sendButton shouldShowSubject:(BOOL)subject shouldShowPhotoButton:(BOOL)photoButton shouldShowCharacterCount:(BOOL)characterCount;
+- (void)updateEntryView;
 @end
 
 @protocol CKMessageEntryViewDelegate <NSObject>
