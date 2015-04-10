@@ -51,8 +51,6 @@ CHOptimizedMethod(0, self, void, CKInlineReplyViewController, setupConversation)
         CouriaColor([preferences stringForKey:[applicationIdentifier stringByAppendingString:CustomOthersBubbleColorSetting]]),
         CouriaColor([preferences stringForKey:[applicationIdentifier stringByAppendingString:CustomOthersBubbleTextColorSetting]])
     ] : nil;
-    [CHIvar(self.conversationViewController.collectionView, _cellReuseQueues, NSMutableDictionary * const) removeAllObjects];
-    [CHIvar(self.conversationViewController.collectionView, _supplementaryViewReuseQueues, NSMutableDictionary * const) removeAllObjects];
 }
 
 CHOptimizedMethod(0, self, void, CKInlineReplyViewController, setupView)

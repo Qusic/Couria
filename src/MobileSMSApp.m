@@ -57,7 +57,8 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
                                 }
                                 [groupName appendString:handle.name];
                             }];
-                        groupName;}),
+                            groupName;
+                        }),
                         AvatarKey: [CKEntity copyEntityForAddressString:chat.chatIdentifier].transcriptContactImage //TODO: group thumbnail
                     }];
                 }];
