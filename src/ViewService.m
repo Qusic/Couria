@@ -2,30 +2,30 @@
 
 static CPDistributedMessagingCenter *messagingCenter;
 static CKMediaObjectManager *mediaObjectManager;
+static NSUserDefaults *preferences;
+static NSMutableArray *customBubbleColors;
 
 CHDeclareClass(CKInlineReplyViewController)
-CHDeclareProperty(CKInlineReplyViewController, preferences)
-CHDeclareProperty(CKInlineReplyViewController, conversationViewController)
-CHDeclareProperty(CKInlineReplyViewController, contactsViewController)
-CHDeclareProperty(CKInlineReplyViewController, photosViewController)
+CHPropertyRetainNonatomic(CKInlineReplyViewController, CouriaConversationViewController *, conversationViewController, setConversationViewController)
+CHPropertyRetainNonatomic(CKInlineReplyViewController, CouriaContactsViewController *, contactsViewController, setContactsViewController)
+CHPropertyRetainNonatomic(CKInlineReplyViewController, CouriaPhotosViewController *, photosViewController, setPhotosViewController)
 
 CHOptimizedMethod(0, self, id, CKInlineReplyViewController, init)
 {
     self = CHSuper(0, CKInlineReplyViewController, init);
     if (self) {
-        CHPropertySetValue(CKInlineReplyViewController, preferences, [[NSUserDefaults alloc]initWithSuiteName:CouriaIdentifier], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        CHPropertySetValue(CKInlineReplyViewController, conversationViewController, ({
+        self.conversationViewController = ({
             CKUIBehavior *uiBehavior = [CKUIBehavior sharedBehaviors];
             CGFloat rightBalloonMaxWidth = [uiBehavior rightBalloonMaxWidthForEntryContentViewWidth:self.entryView.contentView.bounds.size.width];
             CGFloat leftBalloonMaxWidth = [uiBehavior leftBalloonMaxWidthForTranscriptWidth:self.view.bounds.size.width marginInsets:uiBehavior.transcriptMarginInsets];
             [[CouriaConversationViewController alloc]initWithConversation:nil rightBalloonMaxWidth:rightBalloonMaxWidth leftBalloonMaxWidth:leftBalloonMaxWidth];
-        }), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        CHPropertySetValue(CKInlineReplyViewController, contactsViewController, ({
+        });
+        self.contactsViewController = ({
             [[CouriaContactsViewController alloc]initWithStyle:UITableViewStylePlain];
-        }), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        CHPropertySetValue(CKInlineReplyViewController, photosViewController, ({
+        });
+        self.photosViewController = ({
             [[CouriaPhotosViewController alloc]initWithPresentationViewController:nil];
-        }), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        });
         [self addChildViewController:self.conversationViewController];
         [self addChildViewController:self.contactsViewController];
         [self addChildViewController:self.photosViewController];
@@ -38,30 +38,21 @@ CHPropertyGetter(CKInlineReplyViewController, messagingCenter, CPDistributedMess
     return messagingCenter;
 }
 
-CHPropertyGetter(CKInlineReplyViewController, preferences, NSUserDefaults *)
-{
-    return CHPropertyGetValue(CKInlineReplyViewController, preferences);
-}
-
-CHPropertyGetter(CKInlineReplyViewController, conversationViewController, CouriaConversationViewController *)
-{
-    return CHPropertyGetValue(CKInlineReplyViewController, conversationViewController);
-}
-
-CHPropertyGetter(CKInlineReplyViewController, contactsViewController, CouriaContactsViewController *)
-{
-    return CHPropertyGetValue(CKInlineReplyViewController, contactsViewController);
-}
-
-CHPropertyGetter(CKInlineReplyViewController, photosViewController, CouriaPhotosViewController *)
-{
-    return CHPropertyGetValue(CKInlineReplyViewController, photosViewController);
-}
-
-CHOptimizedMethod(0, super, void, CKInlineReplyViewController, setupConversation)
+CHOptimizedMethod(0, self, void, CKInlineReplyViewController, setupConversation)
 {
     CHSuper(0, CKInlineReplyViewController, setupConversation);
-    CouriaRegisterDefaults(self.preferences, self.context[CouriaIdentifier ApplicationDomain]);
+    NSString *applicationIdentifier = self.context[CouriaIdentifier ApplicationDomain];
+    CouriaRegisterDefaults(preferences, applicationIdentifier);
+    CouriaBubbleTheme bubbleTheme = [preferences integerForKey:[applicationIdentifier stringByAppendingString:BubbleThemeSetting]];
+    self.conversationViewController.bubbleTheme = bubbleTheme;
+    self.conversationViewController.bubbleColors = bubbleTheme == CouriaBubbleThemeCustom ? @[
+        CouriaColor([preferences stringForKey:[applicationIdentifier stringByAppendingString:CustomMyBubbleColorSetting]]),
+        CouriaColor([preferences stringForKey:[applicationIdentifier stringByAppendingString:CustomMyBubbleTextColorSetting]]),
+        CouriaColor([preferences stringForKey:[applicationIdentifier stringByAppendingString:CustomOthersBubbleColorSetting]]),
+        CouriaColor([preferences stringForKey:[applicationIdentifier stringByAppendingString:CustomOthersBubbleTextColorSetting]])
+    ] : nil;
+    [CHIvar(self.conversationViewController.collectionView, _cellReuseQueues, NSMutableDictionary * const) removeAllObjects];
+    [CHIvar(self.conversationViewController.collectionView, _supplementaryViewReuseQueues, NSMutableDictionary * const) removeAllObjects];
 }
 
 CHOptimizedMethod(0, self, void, CKInlineReplyViewController, setupView)
@@ -168,22 +159,49 @@ CHOptimizedMethod(0, self, type, CKUIBehavior, name) \
     }); \
     return name; \
 }
-
 CHCKUIBehavior(UIColor *, transcriptBackgroundColor, [UIColor clearColor])
+CHCKUIBehavior(BOOL, transcriptCanUseOpaqueMask, NO)
 CHCKUIBehavior(BOOL, photoPickerShouldZoomOnSelection, NO)
+
+CHOptimizedMethod(1, self, NSArray *, CKUIBehavior, balloonColorsForColorType, CKBalloonColor, colorType)
+{
+    return colorType >= CKBalloonColorCouria ? @[customBubbleColors[colorType - CKBalloonColorCouria]] : CHSuper(1, CKUIBehavior, balloonColorsForColorType, colorType);
+}
+
+CHOptimizedMethod(1, self, NSArray *, CKUIBehavior, balloonOverlayColorForColorType, CKBalloonColor, colorType)
+{
+    return colorType >= CKBalloonColorCouria ? customBubbleColors[colorType - CKBalloonColorCouria] : CHSuper(1, CKUIBehavior, balloonColorsForColorType, colorType);
+}
+
+CHOptimizedMethod(1, new, CKBalloonColor, CKUIBehavior, colorTypeForColor, UIColor *, color)
+{
+    NSUInteger index = [customBubbleColors indexOfObject:color];
+    if (index == NSNotFound) {
+        if (customBubbleColors.count >= (UINT8_MAX + 1 - 5)) {
+            [customBubbleColors removeObjectAtIndex:0];
+        }
+        [customBubbleColors addObject:color];
+        index = customBubbleColors.count - 1;
+    }
+    return CKBalloonColorCouria + index;
+}
 
 CHConstructor
 {
     @autoreleasepool {
         messagingCenter = [CPDistributedMessagingCenter centerNamed:CouriaIdentifier];
         mediaObjectManager = [CKMediaObjectManager sharedInstance];
+        preferences = [[NSUserDefaults alloc]initWithSuiteName:CouriaIdentifier];
+        customBubbleColors = [NSMutableArray array];
         CHLoadLateClass(CKInlineReplyViewController);
         CHHook(0, CKInlineReplyViewController, init);
         CHHook(0, CKInlineReplyViewController, messagingCenter);
-        CHHook(0, CKInlineReplyViewController, preferences);
         CHHook(0, CKInlineReplyViewController, conversationViewController);
+        CHHook(1, CKInlineReplyViewController, setConversationViewController);
         CHHook(0, CKInlineReplyViewController, contactsViewController);
+        CHHook(1, CKInlineReplyViewController, setContactsViewController);
         CHHook(0, CKInlineReplyViewController, photosViewController);
+        CHHook(1, CKInlineReplyViewController, setPhotosViewController);
         CHHook(0, CKInlineReplyViewController, setupConversation);
         CHHook(0, CKInlineReplyViewController, setupView);
         CHHook(0, CKInlineReplyViewController, preferredContentHeight);
@@ -196,6 +214,10 @@ CHConstructor
         CHHook(1, CKMessageEntryView, setShouldShowPhotoButton);
         CHLoadClass(CKUIBehavior);
         CHHook(0, CKUIBehavior, transcriptBackgroundColor);
+        CHHook(0, CKUIBehavior, transcriptCanUseOpaqueMask);
         CHHook(0, CKUIBehavior, photoPickerShouldZoomOnSelection);
+        CHHook(1, CKUIBehavior, balloonColorsForColorType);
+        CHHook(1, CKUIBehavior, balloonOverlayColorForColorType);
+        CHHook(1, CKUIBehavior, colorTypeForColor);
     }
 }
