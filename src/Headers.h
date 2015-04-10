@@ -48,7 +48,7 @@
 #define CanSendPhotosOption @"canSendPhotos"
 
 #define EnabledSetting @".enabled"
-#define DisableOnLockScreenSetting @".disableOnLockScreen"
+#define AuthenticationRequiredSetting @".authenticationRequired"
 #define BubbleThemeSetting @".bubbleTheme"
 #define CustomMyBubbleColorSetting @".customMyBubbleColor"
 #define CustomMyBubbleTextColorSetting @".customMyBubbleTextColor"
@@ -108,6 +108,9 @@ extern void BBDataProviderSetApplicationBadgeString(BBDataProvider *dataProvider
 @property (copy, nonatomic) NSURL *launchURL;
 @property (copy, nonatomic) NSString *remoteServiceBundleIdentifier;
 @property (copy, nonatomic) NSString *remoteViewControllerClassName;
+@property (assign, nonatomic) BOOL canBypassPinLock;
+@property (assign, nonatomic) BOOL launchCanBypassPinLock;
+@property (assign ,nonatomic, getter=isAuthenticationRequired) BOOL authenticationRequired;
 + (instancetype)action;
 + (instancetype)actionWithIdentifier:(NSString *)identifier;
 + (instancetype)actionWithLaunchBundleID:(NSString *)bundleID;
@@ -195,6 +198,7 @@ extern NSString *IMStripFormattingFromAddress(NSString *formattedAddress);
 @end
 
 @interface IMChatItem : NSObject
+- (IMItem *)_item;
 @end
 
 @interface IMTranscriptChatItem : IMChatItem
@@ -265,6 +269,7 @@ extern NSBundle *CKFrameworkBundle(void);
 @end
 
 @interface CKChatItem : NSObject
+@property (retain, nonatomic) IMTranscriptChatItem *IMChatItem;
 @end
 
 @interface CKMediaObject : NSObject
@@ -278,10 +283,20 @@ extern NSBundle *CKFrameworkBundle(void);
 - (CKMediaObject *)mediaObjectWithData:(NSData *)data UTIType:(NSString *)type filename:(NSString *)filename transcoderUserInfo:(NSDictionary *)transcoderUserInfo;
 @end
 
+typedef NS_ENUM(SInt8, CKBalloonColor) {
+    CKBalloonColorGray   = -1,
+    CKBalloonColorGreen  =  0,
+    CKBalloonColorBlue   =  1,
+    CKBalloonColorWhite  =  2,
+    CKBalloonColorRed    =  3,
+    CKBalloonColorCouria =  4,
+};
+
 @interface CKBalloonChatItem : CKChatItem
 @end
 
 @interface CKMessagePartChatItem : CKBalloonChatItem
+@property (nonatomic, readonly) CKBalloonColor color;
 @end
 
 @interface CKTextMessagePartChatItem : CKMessagePartChatItem
@@ -368,17 +383,10 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 @property (assign, nonatomic) BOOL canUseOpaqueMask;
 @property (assign, nonatomic) id<CKBalloonViewDelegate> delegate;
 - (void)prepareForReuse;
+- (void)prepareForDisplay;
 - (void)setNeedsPrepareForDisplay;
 - (void)prepareForDisplayIfNeeded;
 @end
-
-typedef NS_ENUM(SInt8, CKBalloonColor) {
-    CKBalloonColorGray  = -1,
-    CKBalloonColorGreen =  0,
-    CKBalloonColorBlue  =  1,
-    CKBalloonColorWhite =  2,
-    CKBalloonColorRed   =  3
-};
 
 @interface CKColoredBalloonView : CKBalloonView
 @property (assign, nonatomic) CKBalloonColor color;
@@ -413,6 +421,8 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 @interface CKTranscriptCollectionView : CKEditableCollectionView
 @end
 
+@class CKTranscriptCell;
+
 @interface CKTranscriptCollectionViewController : CKViewController <UICollectionViewDataSource, UICollectionViewDelegate, CKMovieBalloonViewDelegate, CKLocationShareBalloonViewDelegate>
 @property (retain, nonatomic) CKConversation *conversation;
 @property (copy, nonatomic) NSArray *chatItems;
@@ -421,9 +431,12 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 @property (nonatomic, readonly) CGFloat rightBalloonMaxWidth;
 - (instancetype)initWithConversation:(CKConversation *)conversation rightBalloonMaxWidth:(CGFloat)rightBalloonMaxWidth leftBalloonMaxWidth:(CGFloat)leftBalloonMaxWidth;
 - (CKChatItem *)chatItemWithIMChatItem:(IMChatItem *)imChatItem;
+- (void)configureCell:(CKTranscriptCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath;
 @end
 
 @interface CouriaConversationViewController : CKTranscriptCollectionViewController
+@property (assign, nonatomic) CouriaBubbleTheme bubbleTheme;
+@property (retain, nonatomic) NSArray *bubbleColors;
 - (void)refreshData;
 @end
 
@@ -584,10 +597,9 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 
 @interface CKInlineReplyViewController (Couria)
 @property (retain, nonatomic, readonly) CPDistributedMessagingCenter *messagingCenter;
-@property (retain, nonatomic, readonly) NSUserDefaults *preferences;
-@property (retain, nonatomic, readonly) CouriaConversationViewController *conversationViewController;
-@property (retain, nonatomic, readonly) CouriaContactsViewController *contactsViewController;
-@property (retain, nonatomic, readonly) CouriaPhotosViewController *photosViewController;
+@property (retain, nonatomic) CouriaConversationViewController *conversationViewController;
+@property (retain, nonatomic) CouriaContactsViewController *contactsViewController;
+@property (retain, nonatomic) CouriaPhotosViewController *photosViewController;
 - (void)photoButtonTapped:(UIButton *)button;
 @end
 
@@ -605,7 +617,22 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 - (CGFloat)rightBalloonMaxWidthForEntryContentViewWidth:(CGFloat)entryContentViewWidth;
 - (CGFloat)transcriptContactImageDiameter;
 - (UIColor *)transcriptBackgroundColor;
+- (BOOL)transcriptCanUseOpaqueMask;
 - (BOOL)photoPickerShouldZoomOnSelection;
+- (NSArray *)balloonColorsForColorType:(CKBalloonColor)colorType;
+- (UIColor *)unfilledBalloonColorForColorType:(CKBalloonColor)colorType;
+- (UIColor *)balloonTextColorForColorType:(CKBalloonColor)colorType;
+- (UIColor *)balloonTextLinkColorForColorType:(CKBalloonColor)colorType;
+- (UIColor *)balloonOverlayColorForColorType:(CKBalloonColor)colorType;
+- (UIColor *)chevronImageForColorType:(CKBalloonColor)colorType;
+- (UIColor *)waveformColorForColorType:(CKBalloonColor)colorType;
+- (UIColor *)progressViewColorForColorType:(CKBalloonColor)colorType;
+- (UIColor *)recipientTextColorForColorType:(CKBalloonColor)colorType;
+- (UIColor *)sendButtonColorForColorType:(CKBalloonColor)colorType;
+@end
+
+@interface CKUIBehavior (Couria)
+- (CKBalloonColor)colorTypeForColor:(UIColor *)color;
 @end
 
 @interface CKUIBehaviorPhone : CKUIBehavior
@@ -742,7 +769,7 @@ CHInline void CouriaRegisterDefaults(NSUserDefaults *preferences, NSString *appl
 {
     [preferences registerDefaults:@{
         [applicationIdentifier stringByAppendingString:EnabledSetting]: @(YES),
-        [applicationIdentifier stringByAppendingString:DisableOnLockScreenSetting]: @(NO),
+        [applicationIdentifier stringByAppendingString:AuthenticationRequiredSetting]: @(NO),
         [applicationIdentifier stringByAppendingString:BubbleThemeSetting]: @(CouriaBubbleThemeOutline)
     }];
 }
@@ -764,6 +791,23 @@ CHInline NSString *CouriaLocalizedString(NSString *key)
         string = [CouriaResourcesBundle() localizedStringForKey:key value:nil table:nil];
     }
     return string;
+}
+
+CHInline UIColor *CouriaColor(NSString *colorString)
+{
+    CGFloat red = 0, green = 0, blue = 0, alpha = 0;
+    if (colorString.length == 6) {
+        colorString = [colorString stringByAppendingString:@"FF"];
+    }
+    if (colorString.length == 8) {
+        unsigned int colorValue;
+        [[NSScanner scannerWithString:colorString]scanHexInt:&colorValue];
+        red = ((colorValue >> 24) & 0xff) / 255.f;
+        green = ((colorValue >> 16) & 0xff) / 255.f;
+        blue = ((colorValue >> 8) & 0xff) / 255.f;
+        alpha = ((colorValue >> 0) & 0xff) / 255.f;
+    }
+    return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
 }
 
 @interface CouriaMessage : NSObject <CouriaMessage>

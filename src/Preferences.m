@@ -177,8 +177,8 @@ static CPDistributedMessagingCenter *messagingCenter;
             [specifier setIdentifier:[self.specifier.identifier stringByAppendingString:EnabledSetting]];
             specifier;
         }), ({
-            PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"DISABLE_ON_LOCK_SCREEN") target:self set:@selector(setPreferenceValue:specifier:) get:@selector(readPreferenceValue:) detail:Nil cell:PSSwitchCell edit:Nil];
-            [specifier setIdentifier:[self.specifier.identifier stringByAppendingString:DisableOnLockScreenSetting]];
+            PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"AUTHENTICATION_REQUIRED") target:self set:@selector(setPreferenceValue:specifier:) get:@selector(readPreferenceValue:) detail:Nil cell:PSSwitchCell edit:Nil];
+            [specifier setIdentifier:[self.specifier.identifier stringByAppendingString:AuthenticationRequiredSetting]];
             specifier;
         })];
     }
@@ -196,18 +196,22 @@ static CPDistributedMessagingCenter *messagingCenter;
         }), ({
             PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"MY_BUBBLE_COLOR") target:self set:@selector(setPreferenceValue:specifier:) get:@selector(readPreferenceValue:) detail:Nil cell:PSEditTextCell edit:Nil];
             [specifier setIdentifier:[self.specifier.identifier stringByAppendingString:CustomMyBubbleColorSetting]];
+            [specifier setKeyboardType:UIKeyboardTypeASCIICapable autoCaps:UITextAutocapitalizationTypeNone autoCorrection:UITextAutocorrectionTypeNo];
             specifier;
         }), ({
             PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"MY_BUBBLE_TEXT_COLOR") target:self set:@selector(setPreferenceValue:specifier:) get:@selector(readPreferenceValue:) detail:Nil cell:PSEditTextCell edit:Nil];
             [specifier setIdentifier:[self.specifier.identifier stringByAppendingString:CustomMyBubbleTextColorSetting]];
+            [specifier setKeyboardType:UIKeyboardTypeASCIICapable autoCaps:UITextAutocapitalizationTypeNone autoCorrection:UITextAutocorrectionTypeNo];
             specifier;
         }), ({
             PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"OTHERS_BUBBLE_COLOR") target:self set:@selector(setPreferenceValue:specifier:) get:@selector(readPreferenceValue:) detail:Nil cell:PSEditTextCell edit:Nil];
             [specifier setIdentifier:[self.specifier.identifier stringByAppendingString:CustomOthersBubbleColorSetting]];
+            [specifier setKeyboardType:UIKeyboardTypeASCIICapable autoCaps:UITextAutocapitalizationTypeNone autoCorrection:UITextAutocorrectionTypeNo];
             specifier;
         }), ({
             PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"OTHERS_BUBBLE_TEXT_COLOR") target:self set:@selector(setPreferenceValue:specifier:) get:@selector(readPreferenceValue:) detail:Nil cell:PSEditTextCell edit:Nil];
             [specifier setIdentifier:[self.specifier.identifier stringByAppendingString:CustomOthersBubbleTextColorSetting]];
+            [specifier setKeyboardType:UIKeyboardTypeASCIICapable autoCaps:UITextAutocapitalizationTypeNone autoCorrection:UITextAutocorrectionTypeNo];
             specifier;
         })];
     }

@@ -53,6 +53,7 @@ void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest)
             void (^ updateAction)(BBAction *, NSUInteger, BOOL *) = ^(BBAction *action, NSUInteger index, BOOL *stop) {
                 if ([action.remoteServiceBundleIdentifier isEqualToString:MessagesNotificationViewServiceIdentifier] && [action.remoteViewControllerClassName isEqualToString:@"CKInlineReplyViewController"]) {
                     action.remoteViewControllerClassName = @"CouriaInlineReplyViewController_MobileSMSApp";
+                    action.authenticationRequired = [preferences boolForKey:[applicationIdentifier stringByAppendingString:AuthenticationRequiredSetting]];
                 }
             };
             [bulletinRequest.actions.allValues enumerateObjectsUsingBlock:updateAction];
@@ -62,6 +63,7 @@ void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest)
                 action.appearance = [BBAppearance appearanceWithTitle:CouriaLocalizedString(@"REPLY_NOTIFICATION_ACTION")];
                 action.remoteServiceBundleIdentifier = MessagesNotificationViewServiceIdentifier;
                 action.remoteViewControllerClassName = @"CouriaInlineReplyViewController_MobileSMSApp";
+                action.authenticationRequired = [preferences boolForKey:[applicationIdentifier stringByAppendingString:AuthenticationRequiredSetting]];
                 bulletinRequest.supplementaryActions = @[action];
             }
         } else {
@@ -69,6 +71,7 @@ void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest)
             action.appearance = [BBAppearance appearanceWithTitle:CouriaLocalizedString(@"REPLY_NOTIFICATION_ACTION")];
             action.remoteServiceBundleIdentifier = MessagesNotificationViewServiceIdentifier;
             action.remoteViewControllerClassName = @"CouriaInlineReplyViewController_ThirdPartyApp";
+            action.authenticationRequired = [preferences boolForKey:[applicationIdentifier stringByAppendingString:AuthenticationRequiredSetting]];
             bulletinRequest.supplementaryActions = @[action];
         }
     }

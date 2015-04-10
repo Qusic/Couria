@@ -36,10 +36,6 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
                     IMMessagePartAttributeName: @(1),
                     IMFileTransferGUIDAttributeName: mediaObject.transferGUID,
                     IMFilenameAttributeName: url.lastPathComponent,
-                    /* It seems not necessary.
-                    IMInlineMediaWidthAttributeName: @(image.size.width),
-                    IMInlineMediaHeightAttributeName: @(image.size.height),
-                     */
                     IMBaseWritingDirectionAttributeName: @(NSWritingDirectionNatural)
                 }];
             }

@@ -48,11 +48,9 @@
     tr = Aktif
     zh_CN = 启用
     zh_TW = 啟用
-  [DISABLE_ON_LOCK_SCREEN]
-    en = Disable on Lock Screen
-    ja = ロック画面でのアクセス
-    ru = Откл. при заблок. экране
-    zh_CN = 在锁屏禁用
+  [AUTHENTICATION_REQUIRED]
+    en = Authentication Required
+    zh_CN = 需要认证
   [BUBBLE_THEME]
     en = Bubble Theme
     zh_CN = 气泡主题
