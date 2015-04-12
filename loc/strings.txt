@@ -1,7 +1,7 @@
 [[PreferenceSections]]
   [EXTENSIONS]
     en = Extensions
-    ar = تمديدات
+    ar = إضافات
     da = Udvidelser
     de = Erweiterungen
     es = Extensiones
@@ -97,7 +97,7 @@
     zh_TW = 捐赠
   [TRANSLATION_CREDITS]
     en = Translation Credits
-    ar = ائتمانات الترجمة
+    ar = حقوق الترجمة
     da = Oversættelser
     de = Übersetzer
     es = Créditos de Traducción
@@ -114,7 +114,7 @@
 [[Messages]]
   [NO_INSTALLED_ITEMS]
     en = No Installed Items
-    ar = لا توجد عناصر المثبتة
+    ar = لا توجد عناصر مثبتة
     da = Ingen installerede artikler
     de = Keine installierten Gegenstände
     es = Elementos no instalados
@@ -149,7 +149,7 @@
     zh_TW = 啟動 Couria 以編寫訊息
   [SHARE_TEXT]
     en = I'm Loving #Couria, which brings a Centralized and Customizable Quick Reply and Quick Compose System to iOS.
-    ar = انا احب Couria#، الذي يجلب رد سريع و إنشاء سريع قابل للتخصيص لنظام الiOS
+    ar = انا استخدم اداة #Couria التى تعطيني القدرة على الرد السريع و الكتابة بشكل سريع للرسائل لنظام iOS
     da = Jeg elsker #Couria, som tilføjer et centralt og hurtigt besked system til iOS, til kan tilpasses med udvidelser.
     de = Ich liebe #Couria, welches ein aufgeräumtes und veränderbares schnell-Antworten und schnell-Verfassen System zu iOS hinzufügt.
     es = Me Encanta #Couria, me ofrece un sistema de respuesta y redacción rápida, centralizada y personalizada en iOS.
