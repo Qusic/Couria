@@ -40,7 +40,9 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
                 }];
             }
             messageItem.context = [IMMessage messageFromIMMessageItem:messageItem sender:nil subject:nil];
-            [chatItems addObject:[self.conversationViewController chatItemWithIMChatItem:messageItem._newChatItems]];
+            CKChatItem *chatItem = [self.conversationViewController chatItemWithIMChatItem:messageItem._newChatItems];
+            chatItem.transcriptDrawerText = [[NSAttributedString alloc] initWithString:messageItem.plainBody];
+            [chatItems addObject:chatItem];
         }];
         self.conversationViewController.chatItems = chatItems;
     } else {
