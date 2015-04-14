@@ -1,21 +1,26 @@
 TWEAK_NAME = Couria CouriaUI
 BUNDLE_NAME = CouriaPreferences
 
-Couria_FILES = src/Couria.m src/Service.m src/Extras.m src/Notifications.m src/Gestures.m
+Couria_FILES = $(wildcard src/Couria/*.m)
 Couria_FRAMEWORKS = UIKit
 Couria_PRIVATE_FRAMEWORKS = BulletinBoard AppSupport ChatKit
 Couria_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 
-CouriaUI_FILES = src/ViewService.m src/MobileSMSApp.m src/ThirdPartyApp.m src/ConversationView.m src/ContactsView.m src/PhotosView.m src/SearchAgent.m
+CouriaUI_FILES = $(wildcard src/CouriaUI/*.m)
 CouriaUI_FRAMEWORKS = UIKit CoreGraphics AddressBook MobileCoreServices
 CouriaUI_PRIVATE_FRAMEWORKS = ChatKit AppSupport IMCore IMFoundation Search
 CouriaUI_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 
-CouriaPreferences_FILES = src/Preferences.m
+CouriaPreferences_FILES = $(wildcard src/Preferences/*.m)
 CouriaPreferences_RESOURCE_DIRS = res
-CouriaPreferences_FRAMEWORKS = UIKit Social
+CouriaPreferences_FRAMEWORKS = UIKit CoreGraphics QuartzCore Social
 CouriaPreferences_PRIVATE_FRAMEWORKS = Preferences AppSupport ChatKit
 CouriaPreferences_INSTALL_PATH = /Library/PreferenceBundles
+
+Color-Picker-for-iOS_FILES = $(wildcard external/Color-Picker-for-iOS/ColorPicker/*.m)
+Color-Picker-for-iOS_CFLAGS = -include external/Color-Picker-for-iOS/Project/Hayashi311ColorPickerSample/Hayashi311ColorPickerSample-Prefix.pch
+CouriaPreferences_FILES += $(Color-Picker-for-iOS_FILES)
+$(foreach file, $(Color-Picker-for-iOS_FILES), $(eval $(file)_CFLAGS = $(Color-Picker-for-iOS_CFLAGS)))
 
 export TARGET = iphone:clang:8.1
 export ARCHS = armv7 arm64
@@ -28,8 +33,6 @@ include $(THEOS_MAKE_PATH)/bundle.mk
 
 internal-stage::
 	$(ECHO_NOTHING)prefs="$(THEOS_STAGING_DIR)/Library/PreferenceLoader/Preferences"; mkdir -p "$$prefs"; cp CouriaPreferences.plist "$$prefs/Couria.plist"$(ECHO_END)
-
-stage::
 	@(echo "Generating localization resources..."; loc/generate.sh "$(THEOS_STAGING_DIR)/$(CouriaPreferences_INSTALL_PATH)/CouriaPreferences.bundle")
 
 after-install::
