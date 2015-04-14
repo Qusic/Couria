@@ -1,0 +1,3 @@
+[submodule "external/Color-Picker-for-iOS"]
+	path = external/Color-Picker-for-iOS
+	url = https://github.com/hayashi311/Color-Picker-for-iOS
