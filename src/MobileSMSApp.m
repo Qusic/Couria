@@ -74,11 +74,13 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
                                 for (CFIndex index = 0, count = ABMultiValueGetCount(multiValue); index < count; index++) {
                                     NSString *label = CFBridgingRelease(ABMultiValueCopyLabelAtIndex(multiValue, index));
                                     NSString *value = CFBridgingRelease(ABMultiValueCopyValueAtIndex(multiValue, index));
-                                    [contacts addObject:@{
-                                        IdentifierKey: IMStripFormattingFromAddress(value),
-                                        NicknameKey: label ? [NSString stringWithFormat:@"%@ (%@)", name, CFBridgingRelease(ABAddressBookCopyLocalizedLabel((__bridge CFStringRef)label))] : name,
-                                        AvatarKey: [CKAddressBook transcriptContactImageOfDiameter:[CKUIBehavior sharedBehaviors].transcriptContactImageDiameter forRecordID:recordID]
-                                    }];
+                                    if (value.length > 0) {
+                                        [contacts addObject:@{
+                                            IdentifierKey: IMStripFormattingFromAddress(value),
+                                            NicknameKey: label ? [NSString stringWithFormat:@"%@ (%@)", name, CFBridgingRelease(ABAddressBookCopyLocalizedLabel((__bridge CFStringRef)label))] : [NSString stringWithFormat:@"%@", name],
+                                            AvatarKey: [CKAddressBook transcriptContactImageOfDiameter:[CKUIBehavior sharedBehaviors].transcriptContactImageDiameter forRecordID:recordID]
+                                        }];
+                                    }
                                 }
                                 CFRelease(multiValue);
                             };
