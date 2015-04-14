@@ -31,6 +31,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
         [conversation.chat.chatItems enumerateObjectsUsingBlock:^(IMChatItem *item, NSUInteger index, BOOL *stop) {
             [chatItems addObject:[self.conversationViewController chatItemWithIMChatItem:item]];
         }];
+        [conversation markAllMessagesAsRead];
         self.conversationViewController.conversation = conversation;
         self.conversationViewController.chatItems = chatItems;
         self.entryView.conversation = conversation;

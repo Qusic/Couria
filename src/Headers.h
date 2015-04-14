@@ -312,6 +312,7 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 @interface CKConversation : NSObject
 @property (retain, nonatomic) IMChat *chat;
 @property (assign, nonatomic) NSUInteger limitToLoad;
+- (void)markAllMessagesAsRead;
 @end
 
 @interface CKConversationList : NSObject
