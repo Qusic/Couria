@@ -1,4 +1,4 @@
-#include "Headers.h"
+#import "../Headers.h"
 
 @implementation CouriaPhotosViewController
 

@@ -1,4 +1,4 @@
-#import "Headers.h"
+#import "../Headers.h"
 
 static CKConversationList *conversationList;
 static IMChatRegistry *chatRegistry;

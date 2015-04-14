@@ -1,4 +1,4 @@
-#import "Headers.h"
+#import "../Headers.h"
 
 static LAActivator *activator;
 static FSSwitchPanel *flipswitch;
