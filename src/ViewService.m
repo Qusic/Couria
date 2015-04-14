@@ -175,7 +175,7 @@ CHOptimizedMethod(1, self, NSArray *, CKUIBehavior, balloonColorsForColorType, C
     return colorType >= CKBalloonColorCouria ? @[customBubbleColors[colorType - CKBalloonColorCouria]] : CHSuper(1, CKUIBehavior, balloonColorsForColorType, colorType);
 }
 
-CHOptimizedMethod(1, self, NSArray *, CKUIBehavior, balloonOverlayColorForColorType, CKBalloonColor, colorType)
+CHOptimizedMethod(1, self, UIColor *, CKUIBehavior, balloonOverlayColorForColorType, CKBalloonColor, colorType)
 {
     return colorType >= CKBalloonColorCouria ? customBubbleColors[colorType - CKBalloonColorCouria] : CHSuper(1, CKUIBehavior, balloonColorsForColorType, colorType);
 }
