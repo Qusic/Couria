@@ -46,6 +46,7 @@
 #define UpdateBannerMessage @"updateBanner"
 
 #define CanSendPhotosOption @"canSendPhotos"
+#define ColorSpecifierOption @"colorSpecifier"
 
 #define EnabledSetting @".enabled"
 #define AuthenticationRequiredSetting @".authenticationRequired"
@@ -800,7 +801,7 @@ CHInline UIColor *CouriaColor(NSString *colorString)
 {
     CGFloat red = 0, green = 0, blue = 0, alpha = 0;
     if (colorString.length == 6) {
-        colorString = [colorString stringByAppendingString:@"FF"];
+        colorString = [colorString stringByAppendingString:@"ff"];
     }
     if (colorString.length == 8) {
         unsigned int colorValue;
@@ -811,6 +812,13 @@ CHInline UIColor *CouriaColor(NSString *colorString)
         alpha = ((colorValue >> 0) & 0xff) / 255.f;
     }
     return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+}
+
+CHInline NSString *CouriaColorString(UIColor *color)
+{
+    CGFloat red = 0, green = 0, blue = 0, alpha = 0;
+    [color getRed:&red green:&green blue:&blue alpha:&alpha];
+    return [NSString stringWithFormat:@"%02x%02x%02x%02x", (unsigned int)(red * 255), (unsigned int)(green * 255), (unsigned int)(blue * 255), (unsigned int)(alpha * 255)];
 }
 
 @interface CouriaMessage : NSObject <CouriaMessage>
@@ -901,7 +909,7 @@ typedef enum PSCellType {
 - (void)setPreferenceValue:(id)value specifier:(PSSpecifier *)specifier;
 @end
 
-@interface PSListController : PSViewController {
+@interface PSListController : PSViewController <UITableViewDataSource, UITableViewDelegate> {
     NSArray *_specifiers;
 }
 @property (retain, nonatomic) NSArray *specifiers;

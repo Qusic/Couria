@@ -54,9 +54,6 @@
   [BUBBLE_THEME]
     en = Bubble Theme
     zh_CN = 气泡主题
-  [BUBBLE_THEME_DESCRIPTION]
-    en = Color settings are effective only when the bubble theme Custom is chosen. Colors are specified as an RGB triplet or an RGBa quadlet in hexadecimal format. For example, 'AABBCCDD' represents a color whose red/green/blue value and optional alpha value are respectively 0xAA, 0xBB, 0xCC and 0xDD.
-    zh_CN = 颜色设置只在选择了自定义气泡主题时才生效。颜色的格式为 3 组或 4 组十六进制数字，分别表示 RGB 或 RGBa 颜色。例如，‘AABBCCDD’ 表示一个 RGB 值和可选的 alpha 值分别为 0xAA，0xBB，0xCC，0xDD 的颜色。
   [BUBBLE_THEME_ORIGINAL]
     en = Original
     zh_CN = 原始

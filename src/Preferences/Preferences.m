@@ -1,4 +1,7 @@
 #import "../Headers.h"
+#import "../../external/Color-Picker-for-iOS/ColorPicker/HRColorPickerView.h"
+#import "../../external/Color-Picker-for-iOS/ColorPicker/HRColorMapView.h"
+#import "../../external/Color-Picker-for-iOS/ColorPicker/HRBrightnessSlider.h"
 
 static NSUserDefaults *preferences;
 static CPDistributedMessagingCenter *messagingCenter;
@@ -12,6 +15,12 @@ static CPDistributedMessagingCenter *messagingCenter;
 @interface CouriaExtensionPreferencesController : PSListController
 @property (retain, nonatomic) NSArray *mainSettingsSpecifiers;
 @property (retain, nonatomic) NSArray *themeSettingsSpecifiers;
+@end
+
+@interface CouriaColorPickerViewController : UIViewController
+@property (retain, nonatomic) HRColorPickerView *colorPickerView;
+@property (copy) void (^ resultCallback)(UIColor *color);
+- (void)showInViewController:(UIViewController *)viewController title:(NSString *)title initialColor:(UIColor *)color resultCallback:(void (^)(UIColor *))callback;
 @end
 
 @implementation CouriaPreferencesController
@@ -194,24 +203,24 @@ static CPDistributedMessagingCenter *messagingCenter;
             [specifier setValues:@[@(CouriaBubbleThemeOriginal), @(CouriaBubbleThemeOutline), @(CouriaBubbleThemeCustom)] titles:@[CouriaLocalizedString(@"BUBBLE_THEME_ORIGINAL"), CouriaLocalizedString(@"BUBBLE_THEME_OUTLINE"), CouriaLocalizedString(@"BUBBLE_THEME_CUSTOM")]];
             specifier;
         }), ({
-            PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"MY_BUBBLE_COLOR") target:self set:@selector(setPreferenceValue:specifier:) get:@selector(readPreferenceValue:) detail:Nil cell:PSEditTextCell edit:Nil];
+            PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"MY_BUBBLE_COLOR") target:self set:NULL get:NULL detail:Nil cell:PSTitleValueCell edit:Nil];
             [specifier setIdentifier:[self.specifier.identifier stringByAppendingString:CustomMyBubbleColorSetting]];
-            [specifier setKeyboardType:UIKeyboardTypeASCIICapable autoCaps:UITextAutocapitalizationTypeNone autoCorrection:UITextAutocorrectionTypeNo];
+            [specifier setProperty:@(YES) forKey:ColorSpecifierOption];
             specifier;
         }), ({
-            PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"MY_BUBBLE_TEXT_COLOR") target:self set:@selector(setPreferenceValue:specifier:) get:@selector(readPreferenceValue:) detail:Nil cell:PSEditTextCell edit:Nil];
+            PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"MY_BUBBLE_TEXT_COLOR") target:self set:NULL get:NULL detail:Nil cell:PSTitleValueCell edit:Nil];
             [specifier setIdentifier:[self.specifier.identifier stringByAppendingString:CustomMyBubbleTextColorSetting]];
-            [specifier setKeyboardType:UIKeyboardTypeASCIICapable autoCaps:UITextAutocapitalizationTypeNone autoCorrection:UITextAutocorrectionTypeNo];
+            [specifier setProperty:@(YES) forKey:ColorSpecifierOption];
             specifier;
         }), ({
-            PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"OTHERS_BUBBLE_COLOR") target:self set:@selector(setPreferenceValue:specifier:) get:@selector(readPreferenceValue:) detail:Nil cell:PSEditTextCell edit:Nil];
+            PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"OTHERS_BUBBLE_COLOR") target:self set:NULL get:NULL detail:Nil cell:PSTitleValueCell edit:Nil];
             [specifier setIdentifier:[self.specifier.identifier stringByAppendingString:CustomOthersBubbleColorSetting]];
-            [specifier setKeyboardType:UIKeyboardTypeASCIICapable autoCaps:UITextAutocapitalizationTypeNone autoCorrection:UITextAutocorrectionTypeNo];
+            [specifier setProperty:@(YES) forKey:ColorSpecifierOption];
             specifier;
         }), ({
-            PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"OTHERS_BUBBLE_TEXT_COLOR") target:self set:@selector(setPreferenceValue:specifier:) get:@selector(readPreferenceValue:) detail:Nil cell:PSEditTextCell edit:Nil];
+            PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"OTHERS_BUBBLE_TEXT_COLOR") target:self set:NULL get:NULL detail:Nil cell:PSTitleValueCell edit:Nil];
             [specifier setIdentifier:[self.specifier.identifier stringByAppendingString:CustomOthersBubbleTextColorSetting]];
-            [specifier setKeyboardType:UIKeyboardTypeASCIICapable autoCaps:UITextAutocapitalizationTypeNone autoCorrection:UITextAutocorrectionTypeNo];
+            [specifier setProperty:@(YES) forKey:ColorSpecifierOption];
             specifier;
         })];
     }
@@ -224,11 +233,7 @@ static CPDistributedMessagingCenter *messagingCenter;
         NSMutableArray *specifiers = [NSMutableArray array];
         [specifiers addObject:[PSSpecifier emptyGroupSpecifier]];
         [specifiers addObjectsFromArray:self.mainSettingsSpecifiers];
-        [specifiers addObject:({
-            PSSpecifier *specifier = [PSSpecifier groupSpecifierWithName:CouriaLocalizedString(@"BUBBLE_THEME")];
-            [specifier setProperty:CouriaLocalizedString(@"BUBBLE_THEME_DESCRIPTION") forKey:@"footerText"];
-            specifier;
-        })];
+        [specifiers addObject:[PSSpecifier groupSpecifierWithName:CouriaLocalizedString(@"BUBBLE_THEME")]];
         [specifiers addObjectsFromArray:self.themeSettingsSpecifiers];
         _specifiers = specifiers;
     }
@@ -243,6 +248,87 @@ static CPDistributedMessagingCenter *messagingCenter;
 - (void)setPreferenceValue:(id)value specifier:(PSSpecifier *)specifier
 {
     [preferences setObject:value forKey:specifier.identifier];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
+    PSSpecifier *specifier = [self specifierAtIndex:[self indexForRow:indexPath.row inGroup:indexPath.section]];
+    if ([[specifier propertyForKey:ColorSpecifierOption]boolValue]) {
+        NSString *colorString = [self readPreferenceValue:specifier];
+        UIColor *color = CouriaColor(colorString);
+        cell.detailTextLabel.attributedText = [[NSAttributedString alloc]initWithString:@"████" attributes:@{NSForegroundColorAttributeName: color}];
+        cell.accessoryType = UITableViewCellAccessoryDetailButton;
+    }
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
+{
+    [super tableView:tableView cellForRowAtIndexPath:indexPath];
+    PSSpecifier *specifier = [self specifierAtIndex:[self indexForRow:indexPath.row inGroup:indexPath.section]];
+    if ([[specifier propertyForKey:ColorSpecifierOption]boolValue]) {
+        NSString *colorString = [self readPreferenceValue:specifier];
+        UIColor *color = CouriaColor(colorString);
+        CouriaColorPickerViewController *colorPicker = [[CouriaColorPickerViewController alloc]init];
+        [colorPicker showInViewController:self title:specifier.name initialColor:color resultCallback:^(UIColor *newColor) {
+            [self setPreferenceValue:CouriaColorString(newColor) specifier:specifier];
+            [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        }];
+    }
+}
+
+@end
+
+@implementation CouriaColorPickerViewController
+
+- (HRColorPickerView *)colorPickerView
+{
+    if (_colorPickerView == nil) {
+        _colorPickerView = [[HRColorPickerView alloc]init];
+        _colorPickerView.colorMapView.saturationUpperLimit = @(1);
+        _colorPickerView.brightnessSlider.brightnessLowerLimit = @(0);
+    }
+    return _colorPickerView;
+}
+
+- (void)loadView
+{
+    self.view = self.colorPickerView;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.navigationController.navigationBar.translucent = NO;
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneAction:)];
+}
+
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+}
+
+- (void)showInViewController:(UIViewController *)viewController title:(NSString *)title initialColor:(UIColor *)color resultCallback:(void (^)(UIColor *))callback
+{
+    self.title = title;
+    self.colorPickerView.color = color;
+    self.resultCallback = callback;
+    [viewController presentViewController:[[UINavigationController alloc]initWithRootViewController:self] animated:YES completion:NULL];
+}
+
+- (void)cancelAction:(UIBarButtonItem *)buttonItem
+{
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)doneAction:(UIBarButtonItem *)buttonItem
+{
+    if (self.resultCallback) {
+        self.resultCallback(self.colorPickerView.color);
+    }
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
 }
 
 @end
