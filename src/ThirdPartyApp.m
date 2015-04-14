@@ -40,7 +40,11 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
                 }];
             }
             messageItem.context = [IMMessage messageFromIMMessageItem:messageItem sender:nil subject:nil];
-            [chatItems addObject:[self.conversationViewController chatItemWithIMChatItem:messageItem._newChatItems]];
+            CKChatItem *chatItem = [self.conversationViewController chatItemWithIMChatItem:messageItem._newChatItems];
+            if (chatItem.transcriptDrawerText == nil) {
+                chatItem.transcriptDrawerText = [[NSAttributedString alloc]initWithString:@""];
+            }
+            [chatItems addObject:chatItem];
         }];
         self.conversationViewController.chatItems = chatItems;
     } else {

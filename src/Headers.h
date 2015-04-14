@@ -270,6 +270,8 @@ extern NSBundle *CKFrameworkBundle(void);
 
 @interface CKChatItem : NSObject
 @property (retain, nonatomic) IMTranscriptChatItem *IMChatItem;
+@property (copy, nonatomic) NSAttributedString *transcriptText;
+@property (copy, nonatomic) NSAttributedString *transcriptDrawerText;
 @end
 
 @interface CKMediaObject : NSObject
