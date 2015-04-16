@@ -47,10 +47,6 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
             [chatItems addObject:chatItem];
         }];
         self.conversationViewController.chatItems = chatItems;
-        [self.messagingCenter sendNonBlockingMessageName:MarkReadMessage userInfo:@{
-            ApplicationKey: applicationIdentifier,
-            UserKey: userIdentifier
-        }];
     } else {
         __weak __typeof__(self) weakSelf = self;
         self.contactsViewController.keywordHandler = ^(NSString *keyword) {
@@ -84,10 +80,16 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
 CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp, interactiveNotificationDidAppear)
 {
     CHSuper(0, CouriaInlineReplyViewController_ThirdPartyApp, interactiveNotificationDidAppear);
-    if (self.context[CouriaIdentifier UserDomain] != nil) {
+    NSString *applicationIdentifier = self.context[CouriaIdentifier ApplicationDomain];
+    NSString *userIdentifier = self.context[CouriaIdentifier UserDomain];
+    if (userIdentifier != nil) {
         self.entryView.hidden = NO;
         self.conversationViewController.view.hidden = NO;
         self.contactsViewController.view.hidden = YES;
+        [self.messagingCenter sendNonBlockingMessageName:MarkReadMessage userInfo:@{
+            ApplicationKey: applicationIdentifier,
+            UserKey: userIdentifier
+        }];
     } else {
         self.entryView.hidden = YES;
         self.conversationViewController.view.hidden = YES;
