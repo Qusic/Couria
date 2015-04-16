@@ -56,6 +56,14 @@ void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest)
                     action.authenticationRequired = [preferences boolForKey:[applicationIdentifier stringByAppendingString:AuthenticationRequiredSetting]];
                 }
             }];
+            if (bulletinRequest._allSupplementaryActions.count == 0) {
+                BBAction *action = [BBAction actionWithIdentifier:CouriaIdentifier ActionDomain];
+                action.appearance = [BBAppearance appearanceWithTitle:CouriaLocalizedString(@"REPLY_NOTIFICATION_ACTION")];
+                action.remoteServiceBundleIdentifier = MessagesNotificationViewServiceIdentifier;
+                action.remoteViewControllerClassName = @"CouriaInlineReplyViewController_MobileSMSApp";
+                action.authenticationRequired = [preferences boolForKey:[applicationIdentifier stringByAppendingString:AuthenticationRequiredSetting]];
+                [bulletinRequest setSupplementaryActions:@[action]];
+            }
         } else {
             [bulletinRequest.supplementaryActionsByLayout.allKeys enumerateObjectsUsingBlock:^(NSNumber *layout, NSUInteger index, BOOL *stop) {
                 [bulletinRequest setSupplementaryActions:nil forLayout:layout.integerValue];
