@@ -131,11 +131,16 @@ extern void BBDataProviderSetApplicationBadgeString(BBDataProvider *dataProvider
 @property (copy, nonatomic) BBAction *defaultAction;
 @property (copy, nonatomic) BBAction *alternateAction;
 @property (copy, nonatomic) BBAction *acknowledgeAction;
+- (NSArray *)_allActions;
+- (NSArray *)_allSupplementaryActions;
+- (NSArray *)supplementaryActions;
+- (NSArray *)supplementaryActionsForLayout:(NSInteger)layout;
 @end
 
 @interface BBBulletinRequest : BBBulletin
-@property (copy, nonatomic) NSArray *supplementaryActions;
 - (void)setContextValue:(id)value forKey:(NSString *)key;
+- (void)setSupplementaryActions:(NSArray *)actions;
+- (void)setSupplementaryActions:(NSArray *)actions forLayout:(NSInteger)layout;
 - (void)generateNewBulletinID;
 @end
 
