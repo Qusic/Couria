@@ -31,7 +31,6 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
         [conversation.chat.chatItems enumerateObjectsUsingBlock:^(IMChatItem *item, NSUInteger index, BOOL *stop) {
             [chatItems addObject:[self.conversationViewController chatItemWithIMChatItem:item]];
         }];
-        [conversation markAllMessagesAsRead];
         self.conversationViewController.conversation = conversation;
         self.conversationViewController.chatItems = chatItems;
         self.entryView.conversation = conversation;
@@ -137,6 +136,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
         self.entryView.hidden = NO;
         self.conversationViewController.view.hidden = NO;
         self.contactsViewController.view.hidden = YES;
+        [self.conversationViewController.conversation markAllMessagesAsRead];
     } else {
         self.entryView.hidden = YES;
         self.conversationViewController.view.hidden = YES;
