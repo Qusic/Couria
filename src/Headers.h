@@ -111,6 +111,7 @@ extern void BBDataProviderSetApplicationBadgeString(BBDataProvider *dataProvider
 @property (copy, nonatomic) NSString *remoteViewControllerClassName;
 @property (assign, nonatomic) BOOL canBypassPinLock;
 @property (assign, nonatomic) BOOL launchCanBypassPinLock;
+@property (assign, nonatomic) NSUInteger activationMode;
 @property (assign ,nonatomic, getter=isAuthenticationRequired) BOOL authenticationRequired;
 + (instancetype)action;
 + (instancetype)actionWithIdentifier:(NSString *)identifier;

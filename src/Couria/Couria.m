@@ -58,10 +58,12 @@ void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest)
             }];
             if (bulletinRequest._allSupplementaryActions.count == 0) {
                 BBAction *action = [BBAction actionWithIdentifier:CouriaIdentifier ActionDomain];
+                action.actionType = 7;
                 action.appearance = [BBAppearance appearanceWithTitle:CouriaLocalizedString(@"REPLY_NOTIFICATION_ACTION")];
                 action.remoteServiceBundleIdentifier = MessagesNotificationViewServiceIdentifier;
                 action.remoteViewControllerClassName = @"CouriaInlineReplyViewController_MobileSMSApp";
                 action.authenticationRequired = [preferences boolForKey:[applicationIdentifier stringByAppendingString:AuthenticationRequiredSetting]];
+                action.activationMode = 1;
                 [bulletinRequest setSupplementaryActions:@[action]];
             }
         } else {
@@ -69,10 +71,12 @@ void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest)
                 [bulletinRequest setSupplementaryActions:nil forLayout:layout.integerValue];
             }];
             BBAction *action = [BBAction actionWithIdentifier:CouriaIdentifier ActionDomain];
+            action.actionType = 7;
             action.appearance = [BBAppearance appearanceWithTitle:CouriaLocalizedString(@"REPLY_NOTIFICATION_ACTION")];
             action.remoteServiceBundleIdentifier = MessagesNotificationViewServiceIdentifier;
             action.remoteViewControllerClassName = @"CouriaInlineReplyViewController_ThirdPartyApp";
             action.authenticationRequired = [preferences boolForKey:[applicationIdentifier stringByAppendingString:AuthenticationRequiredSetting]];
+            action.activationMode = 1;
             [bulletinRequest setSupplementaryActions:@[action]];
         }
     }
