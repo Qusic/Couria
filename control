@@ -7,10 +7,9 @@ Installed-Size: 0
 Depends: firmware (>= 8.0), mobilesubstrate, preferenceloader
 Priority: optional
 Architecture: iphoneos-arm
-Author: Qusic <QusicS@Me.com>
-Maintainer: Qusic <QusicS@Me.com>
-Sponsor: Qusic.me <http://Qusic.me>
+Author: Qusic <hi@qusic.me>
+Maintainer: Qusic <hi@qusic.me>
+Sponsor: Qusic <hi@qusic.me>
 Icon: file:///Library/PreferenceBundles/CouriaPreferences.bundle/Couria.png
-Homepage: http://Qusic.me/Couria
-Depiction: http://Cydia.Qusic.me/htmls/couria.html
+Homepage: http://qusic.me/
 Tag: purpose::extension
