@@ -26,6 +26,7 @@ export TARGET = iphone:clang
 export ARCHS = armv7 arm64
 export TARGET_IPHONEOS_DEPLOYMENT_VERSION = 8.0
 export ADDITIONAL_OBJCFLAGS = -fobjc-arc -fvisibility=hidden
+export INSTALL_TARGET_PROCESSES = SpringBoard MessagesNotificationViewService
 
 include theos/makefiles/common.mk
 include $(THEOS_MAKE_PATH)/tweak.mk
@@ -34,6 +35,3 @@ include $(THEOS_MAKE_PATH)/bundle.mk
 internal-stage::
 	$(ECHO_NOTHING)prefs="$(THEOS_STAGING_DIR)/Library/PreferenceLoader/Preferences"; mkdir -p "$$prefs"; cp CouriaPreferences.plist "$$prefs/Couria.plist"$(ECHO_END)
 	@(echo "Generating localization resources..."; loc/generate.sh "$(THEOS_STAGING_DIR)/$(CouriaPreferences_INSTALL_PATH)/CouriaPreferences.bundle")
-
-after-install::
-	install.exec "killall -9 SpringBoard"
