@@ -186,38 +186,38 @@ CHOptimizedMethod(1, new, CKBalloonColor, CKUIBehavior, colorTypeForColor, UICol
     return CKBalloonColorCouria + index;
 }
 
-CHConstructor
+void CouriaUIViewServiceInit(void)
 {
-    @autoreleasepool {
-        messagingCenter = [CPDistributedMessagingCenter centerNamed:CouriaIdentifier];
-        preferences = [[NSUserDefaults alloc]initWithSuiteName:CouriaIdentifier];
-        customBubbleColors = [NSMutableArray array];
-        CHLoadLateClass(CKInlineReplyViewController);
-        CHLoadClass(CKMessageEntryView);
-        CHLoadClass(CKUIBehavior);
-        CHHook(0, CKInlineReplyViewController, init);
-        CHHook(0, CKInlineReplyViewController, messagingCenter);
-        CHHook(0, CKInlineReplyViewController, conversationViewController);
-        CHHook(1, CKInlineReplyViewController, setConversationViewController);
-        CHHook(0, CKInlineReplyViewController, contactsViewController);
-        CHHook(1, CKInlineReplyViewController, setContactsViewController);
-        CHHook(0, CKInlineReplyViewController, photosViewController);
-        CHHook(1, CKInlineReplyViewController, setPhotosViewController);
-        CHHook(0, CKInlineReplyViewController, setupConversation);
-        CHHook(0, CKInlineReplyViewController, setupView);
-        CHHook(0, CKInlineReplyViewController, preferredContentHeight);
-        CHHook(0, CKInlineReplyViewController, viewDidLayoutSubviews);
-        CHHook(1, CKInlineReplyViewController, messageEntryViewDidChange);
-        CHHook(0, CKInlineReplyViewController, sendMessage);
-        CHHook(1, CKInlineReplyViewController, photoButtonTapped);
-        CHHook(5, CKMessageEntryView, initWithFrame, shouldShowSendButton, shouldShowSubject, shouldShowPhotoButton, shouldShowCharacterCount);
-        CHHook(1, CKMessageEntryView, setShouldShowPhotoButton);
-        CHHook(0, CKMessageEntryView, updateEntryView);
-        CHHook(0, CKUIBehavior, transcriptBackgroundColor);
-        CHHook(0, CKUIBehavior, transcriptCanUseOpaqueMask);
-        CHHook(0, CKUIBehavior, photoPickerShouldZoomOnSelection);
-        CHHook(1, CKUIBehavior, balloonColorsForColorType);
-        CHHook(1, CKUIBehavior, balloonOverlayColorForColorType);
-        CHHook(1, CKUIBehavior, colorTypeForColor);
+    messagingCenter = [CPDistributedMessagingCenter centerNamed:CouriaIdentifier];
+    preferences = [[NSUserDefaults alloc]initWithSuiteName:CouriaIdentifier];
+    customBubbleColors = [NSMutableArray array];
+    CHLoadLateClass(CKInlineReplyViewController);
+    CHRegisterClass(CouriaInlineReplyViewController, CKInlineReplyViewController) {
+        CHHook(0, CouriaInlineReplyViewController, init);
+        CHHook(0, CouriaInlineReplyViewController, messagingCenter);
+        CHHook(0, CouriaInlineReplyViewController, conversationViewController);
+        CHHook(1, CouriaInlineReplyViewController, setConversationViewController);
+        CHHook(0, CouriaInlineReplyViewController, contactsViewController);
+        CHHook(1, CouriaInlineReplyViewController, setContactsViewController);
+        CHHook(0, CouriaInlineReplyViewController, photosViewController);
+        CHHook(1, CouriaInlineReplyViewController, setPhotosViewController);
+        CHHook(0, CouriaInlineReplyViewController, setupConversation);
+        CHHook(0, CouriaInlineReplyViewController, setupView);
+        CHHook(0, CouriaInlineReplyViewController, preferredContentHeight);
+        CHHook(0, CouriaInlineReplyViewController, viewDidLayoutSubviews);
+        CHHook(1, CouriaInlineReplyViewController, messageEntryViewDidChange);
+        CHHook(0, CouriaInlineReplyViewController, sendMessage);
+        CHHook(1, CouriaInlineReplyViewController, photoButtonTapped);
     }
+    CHLoadClass(CKMessageEntryView);
+    CHLoadClass(CKUIBehavior);
+    CHHook(5, CKMessageEntryView, initWithFrame, shouldShowSendButton, shouldShowSubject, shouldShowPhotoButton, shouldShowCharacterCount);
+    CHHook(1, CKMessageEntryView, setShouldShowPhotoButton);
+    CHHook(0, CKMessageEntryView, updateEntryView);
+    CHHook(0, CKUIBehavior, transcriptBackgroundColor);
+    CHHook(0, CKUIBehavior, transcriptCanUseOpaqueMask);
+    CHHook(0, CKUIBehavior, photoPickerShouldZoomOnSelection);
+    CHHook(1, CKUIBehavior, balloonColorsForColorType);
+    CHHook(1, CKUIBehavior, balloonOverlayColorForColorType);
+    CHHook(1, CKUIBehavior, colorTypeForColor);
 }

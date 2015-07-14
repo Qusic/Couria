@@ -118,16 +118,14 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
     }
 }
 
-CHConstructor
+void CouriaUIThirdPartyAppInit(void)
 {
-    @autoreleasepool {
-        mediaObjectManager = [CKMediaObjectManager sharedInstance];
-        CHLoadLateClass(CKInlineReplyViewController);
-        CHRegisterClass(CouriaInlineReplyViewController_ThirdPartyApp, CKInlineReplyViewController) {
-            CHHook(0, CouriaInlineReplyViewController_ThirdPartyApp, setupConversation);
-            CHHook(0, CouriaInlineReplyViewController_ThirdPartyApp, setupView);
-            CHHook(0, CouriaInlineReplyViewController_ThirdPartyApp, interactiveNotificationDidAppear);
-            CHHook(0, CouriaInlineReplyViewController_ThirdPartyApp, sendMessage);
-        }
+    mediaObjectManager = [CKMediaObjectManager sharedInstance];
+    CHLoadLateClass(CouriaInlineReplyViewController);
+    CHRegisterClass(CouriaInlineReplyViewController_ThirdPartyApp, CouriaInlineReplyViewController) {
+        CHHook(0, CouriaInlineReplyViewController_ThirdPartyApp, setupConversation);
+        CHHook(0, CouriaInlineReplyViewController_ThirdPartyApp, setupView);
+        CHHook(0, CouriaInlineReplyViewController_ThirdPartyApp, interactiveNotificationDidAppear);
+        CHHook(0, CouriaInlineReplyViewController_ThirdPartyApp, sendMessage);
     }
 }

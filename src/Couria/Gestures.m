@@ -9,10 +9,8 @@ CHOptimizedMethod(4, self, void, SBBannerController, _handleGestureState, NSInte
     }
 }
 
-CHConstructor
+void CouriaGesturesInit(void)
 {
-    @autoreleasepool {
-        CHLoadLateClass(SBBannerController);
-        CHHook(4, SBBannerController, _handleGestureState, location, displacement, velocity);
-    }
+    CHLoadLateClass(SBBannerController);
+    CHHook(4, SBBannerController, _handleGestureState, location, displacement, velocity);
 }

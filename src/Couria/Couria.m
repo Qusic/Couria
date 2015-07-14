@@ -167,5 +167,7 @@ CHConstructor
         [Couria sharedInstance];
         [[CouriaService sharedInstance]run];
         [[CouriaExtras sharedInstance]registerExtrasForApplication:MobileSMSIdentifier];
+        CouriaNotificationsInit();
+        CouriaGesturesInit();
     }
 }

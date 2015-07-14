@@ -128,19 +128,17 @@ CHOptimizedMethod(1, self, void, CKPhotoPickerCollectionViewController, setColle
     }
 }
 
-CHConstructor
+void CouriaUIPhotosViewInit(void)
 {
-    @autoreleasepool {
-        mediaObjectManager = [CKMediaObjectManager sharedInstance];
-        CHLoadLateClass(CKPhotoPickerSheetViewController);
-        CHLoadClass(CKPhotoPickerCollectionViewController);
-        CHHook(1, CKPhotoPickerSheetViewController, setPhotosCollectionView);
-        CHHook(1, CKPhotoPickerCollectionViewController, setCollectionView);
-        if (CHClass(CKPhotoPickerSheetViewController)) {
-            version = 1;
-        }
-        if (CHClass(CKPhotoPickerCollectionViewController)) {
-            version = 2;
-        }
+    mediaObjectManager = [CKMediaObjectManager sharedInstance];
+    CHLoadLateClass(CKPhotoPickerSheetViewController);
+    CHLoadClass(CKPhotoPickerCollectionViewController);
+    CHHook(1, CKPhotoPickerSheetViewController, setPhotosCollectionView);
+    CHHook(1, CKPhotoPickerCollectionViewController, setCollectionView);
+    if (CHClass(CKPhotoPickerSheetViewController)) {
+        version = 1;
+    }
+    if (CHClass(CKPhotoPickerCollectionViewController)) {
+        version = 2;
     }
 }

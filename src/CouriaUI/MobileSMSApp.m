@@ -153,21 +153,19 @@ CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
     [self updateSendButton];
 }
 
-CHConstructor
+void CouriaUIMobileSMSAppInit(void)
 {
-    @autoreleasepool {
-        conversationList = [CKConversationList sharedConversationList];
-        chatRegistry = [IMChatRegistry sharedInstance];
-        preferredServiceManager = [IMPreferredServiceManager sharedPreferredServiceManager];
-        accountController = [IMAccountController sharedInstance];
-        searchAgent = [[CouriaSearchAgent alloc]init];
-        addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
-        CHLoadLateClass(CKInlineReplyViewController);
-        CHRegisterClass(CouriaInlineReplyViewController_MobileSMSApp, CKInlineReplyViewController) {
-            CHHook(0, CouriaInlineReplyViewController_MobileSMSApp, setupConversation);
-            CHHook(0, CouriaInlineReplyViewController_MobileSMSApp, setupView);
-            CHHook(0, CouriaInlineReplyViewController_MobileSMSApp, interactiveNotificationDidAppear);
-            CHHook(1, CouriaInlineReplyViewController_MobileSMSApp, messageEntryViewDidChange);
-        }
+    conversationList = [CKConversationList sharedConversationList];
+    chatRegistry = [IMChatRegistry sharedInstance];
+    preferredServiceManager = [IMPreferredServiceManager sharedPreferredServiceManager];
+    accountController = [IMAccountController sharedInstance];
+    searchAgent = [[CouriaSearchAgent alloc]init];
+    addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
+    CHLoadLateClass(CouriaInlineReplyViewController);
+    CHRegisterClass(CouriaInlineReplyViewController_MobileSMSApp, CouriaInlineReplyViewController) {
+        CHHook(0, CouriaInlineReplyViewController_MobileSMSApp, setupConversation);
+        CHHook(0, CouriaInlineReplyViewController_MobileSMSApp, setupView);
+        CHHook(0, CouriaInlineReplyViewController_MobileSMSApp, interactiveNotificationDidAppear);
+        CHHook(1, CouriaInlineReplyViewController_MobileSMSApp, messageEntryViewDidChange);
     }
 }

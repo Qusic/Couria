@@ -27,13 +27,11 @@ CHOptimizedMethod(3, self, void, BBServer, publishBulletinRequest, BBBulletinReq
     CHSuper(3, BBServer, publishBulletinRequest, bulletinRequest, destinations, destinations, alwaysToLockScreen, alwaysToLockScreen);
 }
 
-CHConstructor
+void CouriaNotificationsInit(void)
 {
-    @autoreleasepool {
-        CHLoadClass(BBServer);
-        CHHook(0, BBServer, sharedInstance);
-        CHHook(0, BBServer, init);
-        CHHook(4, BBServer, _publishBulletinRequest, forSectionID, forDestinations, alwaysToLockScreen);
-        CHHook(3, BBServer, publishBulletinRequest, destinations, alwaysToLockScreen);
-    }
+    CHLoadClass(BBServer);
+    CHHook(0, BBServer, sharedInstance);
+    CHHook(0, BBServer, init);
+    CHHook(4, BBServer, _publishBulletinRequest, forSectionID, forDestinations, alwaysToLockScreen);
+    CHHook(3, BBServer, publishBulletinRequest, destinations, alwaysToLockScreen);
 }

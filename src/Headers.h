@@ -788,6 +788,13 @@ extern void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest);
 extern void CouriaPresentViewController(NSString *application, NSString *user);
 extern void CouriaDismissViewController(void);
 
+extern void CouriaNotificationsInit(void);
+extern void CouriaGesturesInit(void);
+extern void CouriaUIViewServiceInit(void);
+extern void CouriaUIMobileSMSAppInit(void);
+extern void CouriaUIThirdPartyAppInit(void);
+extern void CouriaUIPhotosViewInit(void);
+
 CHInline void CouriaRegisterDefaults(NSUserDefaults *preferences, NSString *applicationIdentifier)
 {
     [preferences registerDefaults:@{
