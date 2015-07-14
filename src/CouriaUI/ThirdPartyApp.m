@@ -2,7 +2,7 @@
 
 static CKMediaObjectManager *mediaObjectManager;
 
-CHDeclareClass(CKInlineReplyViewController)
+CHDeclareClass(CouriaInlineReplyViewController)
 CHDeclareClass(CouriaInlineReplyViewController_ThirdPartyApp)
 
 CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp, setupConversation)

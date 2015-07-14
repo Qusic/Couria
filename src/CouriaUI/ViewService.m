@@ -5,15 +5,16 @@ static NSUserDefaults *preferences;
 static NSMutableArray *customBubbleColors;
 
 CHDeclareClass(CKInlineReplyViewController)
+CHDeclareClass(CouriaInlineReplyViewController)
 CHDeclareClass(CKMessageEntryView)
 CHDeclareClass(CKUIBehavior)
-CHPropertyRetainNonatomic(CKInlineReplyViewController, CouriaConversationViewController *, conversationViewController, setConversationViewController)
-CHPropertyRetainNonatomic(CKInlineReplyViewController, CouriaContactsViewController *, contactsViewController, setContactsViewController)
-CHPropertyRetainNonatomic(CKInlineReplyViewController, CouriaPhotosViewController *, photosViewController, setPhotosViewController)
+CHPropertyRetainNonatomic(CouriaInlineReplyViewController, CouriaConversationViewController *, conversationViewController, setConversationViewController)
+CHPropertyRetainNonatomic(CouriaInlineReplyViewController, CouriaContactsViewController *, contactsViewController, setContactsViewController)
+CHPropertyRetainNonatomic(CouriaInlineReplyViewController, CouriaPhotosViewController *, photosViewController, setPhotosViewController)
 
-CHOptimizedMethod(0, self, id, CKInlineReplyViewController, init)
+CHOptimizedMethod(0, super, id, CouriaInlineReplyViewController, init)
 {
-    self = CHSuper(0, CKInlineReplyViewController, init);
+    self = CHSuper(0, CouriaInlineReplyViewController, init);
     if (self) {
         self.conversationViewController = ({
             CKUIBehavior *uiBehavior = [CKUIBehavior sharedBehaviors];
@@ -34,14 +35,14 @@ CHOptimizedMethod(0, self, id, CKInlineReplyViewController, init)
     return self;
 }
 
-CHPropertyGetter(CKInlineReplyViewController, messagingCenter, CPDistributedMessagingCenter *)
+CHPropertyGetter(CouriaInlineReplyViewController, messagingCenter, CPDistributedMessagingCenter *)
 {
     return messagingCenter;
 }
 
-CHOptimizedMethod(0, self, void, CKInlineReplyViewController, setupConversation)
+CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController, setupConversation)
 {
-    CHSuper(0, CKInlineReplyViewController, setupConversation);
+    CHSuper(0, CouriaInlineReplyViewController, setupConversation);
     NSString *applicationIdentifier = self.context[CouriaIdentifier ApplicationDomain];
     CouriaRegisterDefaults(preferences, applicationIdentifier);
     CouriaBubbleTheme bubbleTheme = [preferences integerForKey:[applicationIdentifier stringByAppendingString:BubbleThemeSetting]];
@@ -54,9 +55,9 @@ CHOptimizedMethod(0, self, void, CKInlineReplyViewController, setupConversation)
     ] : nil;
 }
 
-CHOptimizedMethod(0, self, void, CKInlineReplyViewController, setupView)
+CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController, setupView)
 {
-    CHSuper(0, CKInlineReplyViewController, setupView);
+    CHSuper(0, CouriaInlineReplyViewController, setupView);
     [self.view addSubview:self.conversationViewController.view];
     [self.view addSubview:self.contactsViewController.view];
     [self.photosViewController.viewController loadView];
@@ -66,14 +67,14 @@ CHOptimizedMethod(0, self, void, CKInlineReplyViewController, setupView)
     self.entryView.hidden = YES;
 }
 
-CHOptimizedMethod(0, self, CGFloat, CKInlineReplyViewController, preferredContentHeight)
+CHOptimizedMethod(0, super, CGFloat, CouriaInlineReplyViewController, preferredContentHeight)
 {
-    return self.maximumHeight ?: CHSuper(0, CKInlineReplyViewController, preferredContentHeight);
+    return self.maximumHeight ?: CHSuper(0, CouriaInlineReplyViewController, preferredContentHeight);
 }
 
-CHOptimizedMethod(0, self, void, CKInlineReplyViewController, viewDidLayoutSubviews)
+CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController, viewDidLayoutSubviews)
 {
-    CHSuper(0, CKInlineReplyViewController, viewDidLayoutSubviews);
+    CHSuper(0, CouriaInlineReplyViewController, viewDidLayoutSubviews);
     CGFloat contentHeight = self.preferredContentHeight;
     if (self.view.bounds.size.height != contentHeight) {
         [self requestPreferredContentHeight:contentHeight];
@@ -95,21 +96,21 @@ CHOptimizedMethod(0, self, void, CKInlineReplyViewController, viewDidLayoutSubvi
     }
 }
 
-CHOptimizedMethod(1, self, void, CKInlineReplyViewController, messageEntryViewDidChange, CKMessageEntryView *, entryView)
+CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController, messageEntryViewDidChange, CKMessageEntryView *, entryView)
 {
     [self.view setNeedsLayout];
     [self.view layoutIfNeeded];
 }
 
-CHOptimizedMethod(0, self, void, CKInlineReplyViewController, sendMessage)
+CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController, sendMessage)
 {
     if (self.photosViewController.view.superview == self.view) {
         [self photoButtonTapped:nil];
     }
-    CHSuper(0, CKInlineReplyViewController, sendMessage);
+    CHSuper(0, CouriaInlineReplyViewController, sendMessage);
 }
 
-CHOptimizedMethod(1, new, void, CKInlineReplyViewController, photoButtonTapped, UIButton *, button)
+CHOptimizedMethod(1, new, void, CouriaInlineReplyViewController, photoButtonTapped, UIButton *, button)
 {
     if (self.photosViewController.view.superview != self.view) {
         [self.view addSubview:self.photosViewController.view];

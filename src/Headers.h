@@ -614,7 +614,7 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 - (void)sendMessage;
 @end
 
-@interface CKInlineReplyViewController (Couria)
+@interface CouriaInlineReplyViewController : CKInlineReplyViewController
 @property (retain, nonatomic, readonly) CPDistributedMessagingCenter *messagingCenter;
 @property (retain, nonatomic) CouriaConversationViewController *conversationViewController;
 @property (retain, nonatomic) CouriaContactsViewController *contactsViewController;
@@ -622,10 +622,10 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 - (void)photoButtonTapped:(UIButton *)button;
 @end
 
-@interface CouriaInlineReplyViewController_MobileSMSApp : CKInlineReplyViewController
+@interface CouriaInlineReplyViewController_MobileSMSApp : CouriaInlineReplyViewController
 @end
 
-@interface CouriaInlineReplyViewController_ThirdPartyApp : CKInlineReplyViewController
+@interface CouriaInlineReplyViewController_ThirdPartyApp : CouriaInlineReplyViewController
 @end
 
 @interface CKUIBehavior : NSObject

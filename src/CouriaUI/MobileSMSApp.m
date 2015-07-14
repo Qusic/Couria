@@ -7,7 +7,7 @@ static IMAccountController *accountController;
 static CouriaSearchAgent *searchAgent;
 static ABAddressBookRef addressBook;
 
-CHDeclareClass(CKInlineReplyViewController)
+CHDeclareClass(CouriaInlineReplyViewController)
 CHDeclareClass(CouriaInlineReplyViewController_MobileSMSApp)
 
 CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, setupConversation)
