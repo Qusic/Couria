@@ -3,7 +3,6 @@ Name: Couria
 Version: 0.8.3
 Description: Centralized Quick Reply System
 Section: Tweaks
-Installed-Size: 0
 Depends: firmware (>= 8.0), mobilesubstrate, preferenceloader
 Priority: optional
 Architecture: iphoneos-arm
