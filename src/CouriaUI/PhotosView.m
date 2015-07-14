@@ -1,25 +1,146 @@
 #import "../Headers.h"
 
+static CKMediaObjectManager *mediaObjectManager;
+static NSInteger version;
+
+CHDeclareClass(CKPhotoPickerSheetViewController)
+CHDeclareClass(CKPhotoPickerCollectionViewController)
+
+@interface CouriaPhotosViewController ()
+@property (retain, nonatomic) CKPhotoPickerSheetViewController *sheetViewController; // iOS 8.0+
+@property (retain, nonatomic) CKPhotoPickerCollectionViewController *collectionViewController; // iOS 8.3+
+@end
+
 @implementation CouriaPhotosViewController
 
-- (void)setPhotosCollectionView:(CKPhotoPickerCollectionView *)photosCollectionView
+- (instancetype)init
 {
-    if (photosCollectionView != nil) {
-        photosCollectionView.backgroundColor = [UIColor clearColor];
-        [super setPhotosCollectionView:photosCollectionView];
+    self = [super init];
+    if (self) {
+        switch (version) {
+            case 1:
+                self.sheetViewController = [[CHClass(CKPhotoPickerSheetViewController) alloc]initWithPresentationViewController:nil];
+                break;
+            case 2:
+                self.collectionViewController = [[CKPhotoPickerCollectionViewController alloc]initWithNibName:nil bundle:nil];
+                break;
+        }
     }
+    return self;
 }
 
-- (NSArray *)fetchAndClearSelectedAssets
+- (UIViewController *)viewController
 {
-    NSArray *allAssets = CHIvar(self, _assets, NSArray * const);
-    NSMutableArray *selectedAssets = [NSMutableArray array];
-    [self.photosCollectionView.indexPathsForSelectedItems enumerateObjectsUsingBlock:^(NSIndexPath *indexPath, NSUInteger index, BOOL *stop) {
-        [selectedAssets addObject:allAssets[indexPath.item]];
-        [self.photosCollectionView deselectItemAtIndexPath:indexPath animated:NO];
-        [self.photosCollectionView.delegate collectionView:self.photosCollectionView didDeselectItemAtIndexPath:indexPath];
-    }];
-    return selectedAssets;
+    UIViewController *viewController = nil;
+    switch (version) {
+        case 1:
+            viewController = self.sheetViewController;
+            break;
+        case 2:
+            viewController = self.collectionViewController;
+            break;
+    }
+    return viewController;
+}
+
+- (UIView *)view
+{
+    UIView *view = nil;
+    switch (version) {
+        case 1:
+            view = self.sheetViewController.photosCollectionView;
+            break;
+        case 2:
+            view = self.collectionViewController.collectionView;
+            break;
+    }
+    return view;
+}
+
+- (NSArray *)fetchAndClearSelectedPhotos
+{
+    NSMutableArray *photos = [NSMutableArray array];
+    switch (version) {
+        case 1: {
+            CKPhotoPickerSheetViewController *viewController = self.sheetViewController;
+            CKPhotoPickerCollectionView *view = viewController.photosCollectionView;
+            NSArray *assets = CHIvar(viewController, _assets, NSArray * const);
+            [view.indexPathsForSelectedItems enumerateObjectsUsingBlock:^(NSIndexPath *indexPath, NSUInteger index, BOOL *stop) {
+                ALAsset *asset = assets[indexPath.item];
+                ALAssetRepresentation *representation = asset.defaultRepresentation;
+                NSDictionary *transcoderUserInfo = nil;
+                if (representation.url != nil) {
+                    transcoderUserInfo = @{IMFileTransferAVTranscodeOptionAssetURI: representation.url.absoluteString};
+                }
+                CKMediaObject *mediaObject = [mediaObjectManager mediaObjectWithData:UIImageJPEGRepresentation([UIImage imageWithCGImage:representation.fullResolutionImage scale:1 orientation:(UIImageOrientation)representation.orientation], 0.8) UTIType:(__bridge NSString *)kUTTypeJPEG filename:nil transcoderUserInfo:transcoderUserInfo];
+                [photos addObject:mediaObject];
+                [view deselectItemAtIndexPath:indexPath animated:NO];
+                [view.delegate collectionView:view didDeselectItemAtIndexPath:indexPath];
+            }];
+            break;
+        }
+        case 2: {
+            CKPhotoPickerCollectionViewController *viewController = self.collectionViewController;
+            UICollectionView *view = self.collectionViewController.collectionView;
+            NSArray *items = viewController.assetsToSend;
+            [items enumerateObjectsUsingBlock:^(CKPhotoPickerItemForSending *item, NSUInteger index, BOOL *stop) {
+                [item waitForOutstandingWork];
+                NSURL *assetURL = item.assetURL;
+                NSURL *localURL = item.localURL;
+                NSURL *fileURL = nil;
+                NSDictionary *transcoderUserInfo = nil;
+                if (PUTIsPersistentURL(assetURL)) {
+                    fileURL = [NSURL fileURLWithPath:PUTCreatePathForPersistentURL(assetURL) isDirectory:NO];
+                    transcoderUserInfo = @{IMFileTransferAVTranscodeOptionAssetURI: assetURL.absoluteString};
+                } else if (localURL.isFileURL) {
+                    fileURL = localURL;
+                }
+                if (fileURL != nil) {
+                    CKMediaObject *mediaObject = [mediaObjectManager mediaObjectWithFileURL:fileURL filename:nil transcoderUserInfo:transcoderUserInfo];
+                    [photos addObject:mediaObject];
+                }
+            }];
+            [view.indexPathsForSelectedItems enumerateObjectsUsingBlock:^(NSIndexPath *indexPath, NSUInteger index, BOOL *stop) {
+                [view deselectItemAtIndexPath:indexPath animated:NO];
+                [view.delegate collectionView:view didDeselectItemAtIndexPath:indexPath];
+            }];
+            break;
+        }
+    }
+    return photos;
 }
 
 @end
+
+CHOptimizedMethod(1, self, void, CKPhotoPickerSheetViewController, setPhotosCollectionView, CKPhotoPickerCollectionView *, photosCollectionView)
+{
+    if (photosCollectionView != nil) {
+        photosCollectionView.backgroundColor = [UIColor clearColor];
+        CHSuper(1, CKPhotoPickerSheetViewController, setPhotosCollectionView, photosCollectionView);
+    }
+}
+
+CHOptimizedMethod(1, self, void, CKPhotoPickerCollectionViewController, setCollectionView, UICollectionView *, collectionView)
+{
+    if (collectionView != nil) {
+        collectionView.backgroundColor = [UIColor clearColor];
+        CHSuper(1, CKPhotoPickerCollectionViewController, setCollectionView, collectionView);
+    }
+}
+
+CHConstructor
+{
+    @autoreleasepool {
+        mediaObjectManager = [CKMediaObjectManager sharedInstance];
+        CHLoadLateClass(CKPhotoPickerSheetViewController);
+        CHLoadClass(CKPhotoPickerCollectionViewController);
+        CHHook(1, CKPhotoPickerSheetViewController, setPhotosCollectionView);
+        CHHook(1, CKPhotoPickerCollectionViewController, setCollectionView);
+        if (CHClass(CKPhotoPickerSheetViewController)) {
+            version = 1;
+        }
+        if (CHClass(CKPhotoPickerCollectionViewController)) {
+            version = 2;
+        }
+    }
+}

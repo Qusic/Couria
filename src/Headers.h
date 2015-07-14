@@ -3,6 +3,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AddressBook/AddressBook.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import <Photos/Photos.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <Social/Social.h>
 #import <CaptainHook.h>
@@ -524,30 +525,37 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 @interface CKScheduledUpdater : CKManualUpdater
 @end
 
-@class CKPhotoPickerSheetViewController;
-
-@protocol CKCameraSheetViewControllerDelegate <NSObject>
-@required
-- (void)ckPhotoPickerViewControllerProceedToTakeAPicture:(CKPhotoPickerSheetViewController *)pickerController;
-- (void)ckPhotoPickerViewControllerProceedToChooseExisting:(CKPhotoPickerSheetViewController *)pickerController;
-- (void)ckPhotoPickerViewControllerCancel:(CKPhotoPickerSheetViewController *)pickerController;
-- (void)ckPhotoPickerViewController:(CKPhotoPickerSheetViewController *)pickerController selectedAssets:(NSArray *)assets shouldSend:(BOOL)send;
-- (void)ckPhotoPickerViewController:(CKPhotoPickerSheetViewController *)pickerController resizeToSize:(CGSize)size;
-@end
-
 @interface CKPhotoPickerCollectionView : UICollectionView
 @end
 
-@interface CKPhotoPickerSheetViewController : UIViewController {
+@interface CKPhotoPickerSheetViewController : UIViewController { // iOS 8.0+
     NSArray *_assets;
 }
 @property (retain, nonatomic) CKPhotoPickerCollectionView *photosCollectionView;
-@property (assign, nonatomic) id<CKCameraSheetViewControllerDelegate> delegate;
 - (instancetype)initWithPresentationViewController:(UIViewController *)viewController;
 @end
 
-@interface CouriaPhotosViewController : CKPhotoPickerSheetViewController
-- (NSArray *)fetchAndClearSelectedAssets;
+@interface CKPhotoPickerItemForSending : NSObject
+@property (retain, nonatomic, readonly) NSURL *assetURL;
+@property (retain, nonatomic, readonly) NSURL *localURL;
+@property (retain) UIImage *thumbnail;
+- (void)waitForOutstandingWork;
+@end
+
+@interface CKPhotoPickerCollectionViewController : CKViewController <UICollectionViewDataSource, UICollectionViewDelegate>
+@property (retain, nonatomic) PHFetchResult *assets;
+@property (retain, nonatomic, readonly) NSArray *assetsToSend;
+@property (retain, nonatomic) UICollectionView *collectionView;
+@end
+
+@interface CKPhotoPickerController : UIViewController // iOS 8.3+
+@property (retain, nonatomic) CKPhotoPickerCollectionViewController *photosCollectionView;
+@end
+
+@interface CouriaPhotosViewController : NSObject
+- (UIViewController *)viewController;
+- (UIView *)view;
+- (NSArray *)fetchAndClearSelectedPhotos;
 @end
 
 @protocol NCInteractiveNotificationHostInterface
@@ -629,6 +637,7 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 - (CGFloat)transcriptContactImageDiameter;
 - (UIColor *)transcriptBackgroundColor;
 - (BOOL)transcriptCanUseOpaqueMask;
+- (CGFloat)photoPickerMaxPhotoHeight;
 - (BOOL)photoPickerShouldZoomOnSelection;
 - (NSArray *)balloonColorsForColorType:(CKBalloonColor)colorType;
 - (UIColor *)unfilledBalloonColorForColorType:(CKBalloonColor)colorType;
@@ -657,6 +666,9 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 
 @interface CKUIBehaviorHUDPad : CKUIBehavior
 @end
+
+extern BOOL PUTIsPersistentURL(NSURL *url);
+extern NSString *PUTCreatePathForPersistentURL(NSURL *url);
 
 @interface SPSearchResult : NSObject
 @property (nonatomic) NSUInteger identifier;

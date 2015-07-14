@@ -1,11 +1,12 @@
 #import "../Headers.h"
 
 static CPDistributedMessagingCenter *messagingCenter;
-static CKMediaObjectManager *mediaObjectManager;
 static NSUserDefaults *preferences;
 static NSMutableArray *customBubbleColors;
 
 CHDeclareClass(CKInlineReplyViewController)
+CHDeclareClass(CKMessageEntryView)
+CHDeclareClass(CKUIBehavior)
 CHPropertyRetainNonatomic(CKInlineReplyViewController, CouriaConversationViewController *, conversationViewController, setConversationViewController)
 CHPropertyRetainNonatomic(CKInlineReplyViewController, CouriaContactsViewController *, contactsViewController, setContactsViewController)
 CHPropertyRetainNonatomic(CKInlineReplyViewController, CouriaPhotosViewController *, photosViewController, setPhotosViewController)
@@ -24,11 +25,11 @@ CHOptimizedMethod(0, self, id, CKInlineReplyViewController, init)
             [[CouriaContactsViewController alloc]initWithStyle:UITableViewStylePlain];
         });
         self.photosViewController = ({
-            [[CouriaPhotosViewController alloc]initWithPresentationViewController:nil];
+            [[CouriaPhotosViewController alloc]init];
         });
         [self addChildViewController:self.conversationViewController];
         [self addChildViewController:self.contactsViewController];
-        [self addChildViewController:self.photosViewController];
+        [self addChildViewController:self.photosViewController.viewController];
     }
     return self;
 }
@@ -58,7 +59,7 @@ CHOptimizedMethod(0, self, void, CKInlineReplyViewController, setupView)
     CHSuper(0, CKInlineReplyViewController, setupView);
     [self.view addSubview:self.conversationViewController.view];
     [self.view addSubview:self.contactsViewController.view];
-    [self.photosViewController loadView];
+    [self.photosViewController.viewController loadView];
     [self.entryView.photoButton addTarget:self action:@selector(photoButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     self.conversationViewController.view.hidden = YES;
     self.contactsViewController.view.hidden = YES;
@@ -78,13 +79,13 @@ CHOptimizedMethod(0, self, void, CKInlineReplyViewController, viewDidLayoutSubvi
         [self requestPreferredContentHeight:contentHeight];
     }
     CGSize size = self.view.bounds.size;
-    BOOL photoShowing = self.photosViewController.photosCollectionView.superview == self.view;
-    CGFloat photoHeight = self.photosViewController.photosCollectionView.bounds.size.height;
+    BOOL photoShowing = self.photosViewController.view.superview == self.view;
+    CGFloat photoHeight = [CKUIBehavior sharedBehaviors].photoPickerMaxPhotoHeight;
     CGFloat entryHeight = MIN([self.entryView sizeThatFits:size].height, size.height - photoHeight * photoShowing);
     CGFloat conversationHeight = size.height - entryHeight - photoHeight * photoShowing;
     self.conversationViewController.view.frame = CGRectMake(0, 0, size.width, conversationHeight);
     self.contactsViewController.view.frame = CGRectMake(0, 0, size.width, size.height);
-    self.photosViewController.photosCollectionView.frame = CGRectMake(0, conversationHeight, size.width, photoHeight);
+    self.photosViewController.view.frame = CGRectMake(0, conversationHeight, size.width, photoHeight);
     self.entryView.frame = CGRectMake(0, conversationHeight + photoHeight * photoShowing, size.width, entryHeight);
     if (!self.conversationViewController.collectionView.__ck_isScrolledToBottom) {
         [self.conversationViewController.collectionView __ck_scrollToBottom:NO];
@@ -102,7 +103,7 @@ CHOptimizedMethod(1, self, void, CKInlineReplyViewController, messageEntryViewDi
 
 CHOptimizedMethod(0, self, void, CKInlineReplyViewController, sendMessage)
 {
-    if (self.photosViewController.photosCollectionView.superview == self.view) {
+    if (self.photosViewController.view.superview == self.view) {
         [self photoButtonTapped:nil];
     }
     CHSuper(0, CKInlineReplyViewController, sendMessage);
@@ -110,22 +111,15 @@ CHOptimizedMethod(0, self, void, CKInlineReplyViewController, sendMessage)
 
 CHOptimizedMethod(1, new, void, CKInlineReplyViewController, photoButtonTapped, UIButton *, button)
 {
-    if (self.photosViewController.photosCollectionView.superview != self.view) {
-        [self.view addSubview:self.photosViewController.photosCollectionView];
+    if (self.photosViewController.view.superview != self.view) {
+        [self.view addSubview:self.photosViewController.view];
     } else {
-        NSMutableArray *mediaObjects = [NSMutableArray array];
-        [self.photosViewController.fetchAndClearSelectedAssets enumerateObjectsUsingBlock:^(ALAsset *asset, NSUInteger index, BOOL *stop) {
-            ALAssetRepresentation *representation = asset.defaultRepresentation;
-            CKMediaObject *mediaObject = [mediaObjectManager mediaObjectWithData:UIImageJPEGRepresentation([UIImage imageWithCGImage:representation.fullResolutionImage scale:1 orientation:(UIImageOrientation)representation.orientation], 0.8) UTIType:(__bridge NSString *)kUTTypeJPEG filename:nil transcoderUserInfo:@{IMFileTransferAVTranscodeOptionAssetURI: asset.defaultRepresentation.url.absoluteString}];
-            [mediaObjects addObject:mediaObject];
-        }];
+        NSArray *mediaObjects = self.photosViewController.fetchAndClearSelectedPhotos;
         CKComposition *photosComposition = [CKComposition photoPickerCompositionWithMediaObjects:mediaObjects];
         self.entryView.composition = [self.entryView.composition compositionByAppendingComposition:photosComposition];
-        [self.photosViewController.photosCollectionView removeFromSuperview];
+        [self.photosViewController.view removeFromSuperview];
     }
 }
-
-CHDeclareClass(CKMessageEntryView)
 
 CHOptimizedMethod(5, self, id, CKMessageEntryView, initWithFrame, CGRect, frame, shouldShowSendButton, BOOL, sendButton, shouldShowSubject, BOOL, subject, shouldShowPhotoButton, BOOL, photoButton, shouldShowCharacterCount, BOOL, characterCount)
 {
@@ -153,8 +147,6 @@ CHOptimizedMethod(0, self, void, CKMessageEntryView, updateEntryView)
         self.photoButton.enabled = YES;
     }
 }
-
-CHDeclareClass(CKUIBehavior)
 
 #define CHCKUIBehavior(type, name, value) \
 CHOptimizedMethod(0, self, type, CKUIBehavior, name) \
@@ -197,10 +189,11 @@ CHConstructor
 {
     @autoreleasepool {
         messagingCenter = [CPDistributedMessagingCenter centerNamed:CouriaIdentifier];
-        mediaObjectManager = [CKMediaObjectManager sharedInstance];
         preferences = [[NSUserDefaults alloc]initWithSuiteName:CouriaIdentifier];
         customBubbleColors = [NSMutableArray array];
         CHLoadLateClass(CKInlineReplyViewController);
+        CHLoadClass(CKMessageEntryView);
+        CHLoadClass(CKUIBehavior);
         CHHook(0, CKInlineReplyViewController, init);
         CHHook(0, CKInlineReplyViewController, messagingCenter);
         CHHook(0, CKInlineReplyViewController, conversationViewController);
@@ -216,11 +209,9 @@ CHConstructor
         CHHook(1, CKInlineReplyViewController, messageEntryViewDidChange);
         CHHook(0, CKInlineReplyViewController, sendMessage);
         CHHook(1, CKInlineReplyViewController, photoButtonTapped);
-        CHLoadClass(CKMessageEntryView);
         CHHook(5, CKMessageEntryView, initWithFrame, shouldShowSendButton, shouldShowSubject, shouldShowPhotoButton, shouldShowCharacterCount);
         CHHook(1, CKMessageEntryView, setShouldShowPhotoButton);
         CHHook(0, CKMessageEntryView, updateEntryView);
-        CHLoadClass(CKUIBehavior);
         CHHook(0, CKUIBehavior, transcriptBackgroundColor);
         CHHook(0, CKUIBehavior, transcriptCanUseOpaqueMask);
         CHHook(0, CKUIBehavior, photoPickerShouldZoomOnSelection);
