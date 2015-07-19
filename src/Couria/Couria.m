@@ -119,7 +119,7 @@ void CouriaDismissViewController(void)
         extensions = [NSMutableDictionary dictionary];
         preferences = [[NSUserDefaults alloc]initWithSuiteName:CouriaIdentifier];
         CouriaRegisterDefaults(preferences, MobileSMSIdentifier);
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             applicationController = (SBApplicationController *)[NSClassFromString(@"SBApplicationController") sharedInstance];
             iconModel = ((SBIconViewMap *)[NSClassFromString(@"SBIconViewMap") homescreenMap]).iconModel;
             bulletinBannerController = (SBBulletinBannerController *)[NSClassFromString(@"SBBulletinBannerController") sharedInstance];

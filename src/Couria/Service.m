@@ -13,7 +13,7 @@ static BBServer *bbServer;
     dispatch_once(&onceToken, ^{
         sharedInstance = [[self alloc]init];
         messagingCenter = [CPDistributedMessagingCenter centerNamed:CouriaIdentifier];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             bannerController = (SBBannerController *)[NSClassFromString(@"SBBannerController") sharedInstance];
             bbServer = [BBServer sharedInstance];
         });
