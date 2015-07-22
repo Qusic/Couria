@@ -22,7 +22,7 @@ CHDeclareClass(CKPhotoPickerCollectionViewController)
                 self.sheetViewController = [[CHClass(CKPhotoPickerSheetViewController) alloc]initWithPresentationViewController:nil];
                 break;
             case 2:
-                self.collectionViewController = [[CKPhotoPickerCollectionViewController alloc]initWithNibName:nil bundle:nil];
+                self.collectionViewController = [[CHClass(CKPhotoPickerCollectionViewController) alloc]initWithNibName:nil bundle:nil];
                 break;
         }
     }
