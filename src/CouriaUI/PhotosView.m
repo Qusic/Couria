@@ -132,7 +132,7 @@ void CouriaUIPhotosViewInit(void)
 {
     mediaObjectManager = [CKMediaObjectManager sharedInstance];
     CHLoadLateClass(CKPhotoPickerSheetViewController);
-    CHLoadClass(CKPhotoPickerCollectionViewController);
+    CHLoadLateClass(CKPhotoPickerCollectionViewController);
     if (CHClass(CKPhotoPickerSheetViewController)) {
         version = 1;
         CHHook(1, CKPhotoPickerSheetViewController, setPhotosCollectionView);
