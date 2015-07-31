@@ -731,7 +731,7 @@ extern NSString *PUTCreatePathForPersistentURL(NSURL *url);
 
 @interface SBIconViewMap : SBReusableViewMap
 @property (retain, nonatomic, readonly) SBIconModel *iconModel;
-+ (SBIconModel *)homescreenMap;
++ (SBIconViewMap *)homescreenMap;
 @end
 
 @interface SBUIBannerItem : NSObject
