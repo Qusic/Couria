@@ -2,10 +2,11 @@
 
 static NSMutableDictionary *extensions;
 static NSUserDefaults *preferences;
-static SBApplicationController *applicationController;
-static SBIconModel *iconModel;
-static SBBulletinBannerController *bulletinBannerController;
-static SBBannerController *bannerController;
+
+CHDeclareClass(SBApplicationController)
+CHDeclareClass(SBIconViewMap)
+CHDeclareClass(SBBulletinBannerController)
+CHDeclareClass(SBBannerController)
 
 NSDictionary *CouriaExtensions(void)
 {
@@ -29,13 +30,13 @@ BOOL CouriaEnabled(NSString *application)
 
 NSString *CouriaApplicationName(NSString *applicationIdentifier)
 {
-    SBApplication *application = [applicationController applicationWithBundleIdentifier:applicationIdentifier];
+    SBApplication *application = [CHSharedInstance(SBApplicationController) applicationWithBundleIdentifier:applicationIdentifier];
     return application.displayName;
 }
 
 UIImage *CouriaApplicationIcon(NSString *applicationIdentifier, BOOL small)
 {
-    SBApplicationIcon *icon = [iconModel applicationIconForBundleIdentifier:applicationIdentifier];
+    SBApplicationIcon *icon = [[CHClass(SBIconViewMap) homescreenMap].iconModel applicationIconForBundleIdentifier:applicationIdentifier];
     return [icon getIconImage:small ? 0 : 2];
 }
 
@@ -84,7 +85,7 @@ void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest)
 
 void CouriaPresentViewController(NSString *application, NSString *user)
 {
-    if (CouriaEnabled(application) && bannerController._bannerContext == nil) {
+    if (CouriaEnabled(application) && CHSharedInstance(SBBannerController)._bannerContext == nil) {
         BBBulletinRequest *bulletin = [[BBBulletinRequest alloc]init];
         [bulletin generateNewBulletinID];
         bulletin.sectionID = application;
@@ -94,13 +95,14 @@ void CouriaPresentViewController(NSString *application, NSString *user)
         [bulletin setContextValue:user forKey:[application isEqualToString:MobileSMSIdentifier] ? CKBBUserInfoKeyChatIdentifierKey : CouriaIdentifier UserDomain];
         BBAction *action = bulletin.supplementaryActions.firstObject;
         dispatch_async(dispatch_get_main_queue(), ^{
-            [bulletinBannerController modallyPresentBannerForBulletin:bulletin action:action];
+            [CHSharedInstance(SBBulletinBannerController) modallyPresentBannerForBulletin:bulletin action:action];
         });
     }
 }
 
 void CouriaDismissViewController(void)
 {
+    SBBannerController *bannerController = CHSharedInstance(SBBannerController);
     if (bannerController._bannerContext != nil) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [bannerController dismissBannerWithAnimation:YES reason:1];
@@ -119,12 +121,10 @@ void CouriaDismissViewController(void)
         extensions = [NSMutableDictionary dictionary];
         preferences = [[NSUserDefaults alloc]initWithSuiteName:CouriaIdentifier];
         CouriaRegisterDefaults(preferences, MobileSMSIdentifier);
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            applicationController = (SBApplicationController *)[NSClassFromString(@"SBApplicationController") sharedInstance];
-            iconModel = ((SBIconViewMap *)[NSClassFromString(@"SBIconViewMap") homescreenMap]).iconModel;
-            bulletinBannerController = (SBBulletinBannerController *)[NSClassFromString(@"SBBulletinBannerController") sharedInstance];
-            bannerController = (SBBannerController *)[NSClassFromString(@"SBBannerController") sharedInstance];
-        });
+        CHLoadLateClass(SBApplicationController);
+        CHLoadLateClass(SBIconViewMap);
+        CHLoadLateClass(SBBulletinBannerController);
+        CHLoadLateClass(SBBannerController);
     });
     return sharedInstance;
 }

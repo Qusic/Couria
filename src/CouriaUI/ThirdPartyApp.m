@@ -1,7 +1,5 @@
 #import "../Headers.h"
 
-static CKMediaObjectManager *mediaObjectManager;
-
 CHDeclareClass(CouriaInlineReplyViewController)
 CHDeclareClass(CouriaInlineReplyViewController_ThirdPartyApp)
 
@@ -31,7 +29,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
                 messageItem.plainBody = string;
             } else if ([content isKindOfClass:NSURL.class]) {
                 NSURL *url = content;
-                CKMediaObject *mediaObject = [mediaObjectManager mediaObjectWithFileURL:url filename:url.lastPathComponent transcoderUserInfo:nil];
+                CKMediaObject *mediaObject = [[CKMediaObjectManager sharedInstance]mediaObjectWithFileURL:url filename:url.lastPathComponent transcoderUserInfo:nil];
                 messageItem.body = [[NSAttributedString alloc]initWithString:IMAttachmentCharacterString attributes:@{
                     IMMessagePartAttributeName: @(1),
                     IMFileTransferGUIDAttributeName: mediaObject.transferGUID,
@@ -120,7 +118,6 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
 
 void CouriaUIThirdPartyAppInit(void)
 {
-    mediaObjectManager = [CKMediaObjectManager sharedInstance];
     CHLoadLateClass(CouriaInlineReplyViewController);
     CHRegisterClass(CouriaInlineReplyViewController_ThirdPartyApp, CouriaInlineReplyViewController) {
         CHHook(0, CouriaInlineReplyViewController_ThirdPartyApp, setupConversation);

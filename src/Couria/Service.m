@@ -1,8 +1,9 @@
 #import "../Headers.h"
 
 static CPDistributedMessagingCenter *messagingCenter;
-static SBBannerController *bannerController;
-static BBServer *bbServer;
+
+CHDeclareClass(SBBannerController)
+CHDeclareClass(BBServer)
 
 @implementation CouriaService
 
@@ -13,10 +14,8 @@ static BBServer *bbServer;
     dispatch_once(&onceToken, ^{
         sharedInstance = [[self alloc]init];
         messagingCenter = [CPDistributedMessagingCenter centerNamed:CouriaIdentifier];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            bannerController = (SBBannerController *)[NSClassFromString(@"SBBannerController") sharedInstance];
-            bbServer = [BBServer sharedInstance];
-        });
+        CHLoadLateClass(SBBannerController);
+        CHLoadClass(BBServer);
     });
     return sharedInstance;
 }
@@ -98,6 +97,7 @@ static BBServer *bbServer;
             }
             if ([extension respondsToSelector:@selector(shouldClearNotifications)] ? extension.shouldClearNotifications : NO) {
                 dispatch_sync(__BBServerQueue, ^{
+                    BBServer *bbServer = CHSharedInstance(BBServer);
                     BBDataProvider *dataProvider = [bbServer dataProviderForSectionID:application];
                     NSSet *bulletins = [bbServer bulletinsRequestsForBulletinIDs:[bbServer allBulletinIDsForSectionID:application]];
                     NSInteger remainingCount = 0;
@@ -132,7 +132,7 @@ static BBServer *bbServer;
         }];
         response = @{ExtensionsKey: [NSKeyedArchiver archivedDataWithRootObject:result]};
     } else if ([request isEqualToString:UpdateBannerMessage]) {
-        SBBannerContextView *bannerView = bannerController._bannerView;
+        SBBannerContextView *bannerView = CHSharedInstance(SBBannerController)._bannerView;
         if (bannerView != nil) {
             SBDefaultBannerView * const *contentViewRef = CHIvarRef(bannerView, _contentView, SBDefaultBannerView * const);
             if (contentViewRef != NULL && *contentViewRef != nil) {

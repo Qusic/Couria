@@ -1,6 +1,5 @@
 #import "../Headers.h"
 
-static CKMediaObjectManager *mediaObjectManager;
 static NSInteger version;
 
 CHDeclareClass(CKPhotoPickerSheetViewController)
@@ -19,10 +18,10 @@ CHDeclareClass(CKPhotoPickerCollectionViewController)
     if (self) {
         switch (version) {
             case 1:
-                self.sheetViewController = [[CHClass(CKPhotoPickerSheetViewController) alloc]initWithPresentationViewController:nil];
+                self.sheetViewController = [CHAlloc(CKPhotoPickerSheetViewController) initWithPresentationViewController:nil];
                 break;
             case 2:
-                self.collectionViewController = [[CHClass(CKPhotoPickerCollectionViewController) alloc]initWithNibName:nil bundle:nil];
+                self.collectionViewController = [CHAlloc(CKPhotoPickerCollectionViewController) initWithNibName:nil bundle:nil];
                 break;
         }
     }
@@ -72,7 +71,7 @@ CHDeclareClass(CKPhotoPickerCollectionViewController)
                 if (representation.url != nil) {
                     transcoderUserInfo = @{IMFileTransferAVTranscodeOptionAssetURI: representation.url.absoluteString};
                 }
-                CKMediaObject *mediaObject = [mediaObjectManager mediaObjectWithData:UIImageJPEGRepresentation([UIImage imageWithCGImage:representation.fullResolutionImage scale:1 orientation:(UIImageOrientation)representation.orientation], 0.8) UTIType:(__bridge NSString *)kUTTypeJPEG filename:nil transcoderUserInfo:transcoderUserInfo];
+                CKMediaObject *mediaObject = [[CKMediaObjectManager sharedInstance]mediaObjectWithData:UIImageJPEGRepresentation([UIImage imageWithCGImage:representation.fullResolutionImage scale:1 orientation:(UIImageOrientation)representation.orientation], 0.8) UTIType:(__bridge NSString *)kUTTypeJPEG filename:nil transcoderUserInfo:transcoderUserInfo];
                 [photos addObject:mediaObject];
                 [view deselectItemAtIndexPath:indexPath animated:NO];
                 [view.delegate collectionView:view didDeselectItemAtIndexPath:indexPath];
@@ -96,7 +95,7 @@ CHDeclareClass(CKPhotoPickerCollectionViewController)
                     fileURL = localURL;
                 }
                 if (fileURL != nil) {
-                    CKMediaObject *mediaObject = [mediaObjectManager mediaObjectWithFileURL:fileURL filename:nil transcoderUserInfo:transcoderUserInfo];
+                    CKMediaObject *mediaObject = [[CKMediaObjectManager sharedInstance]mediaObjectWithFileURL:fileURL filename:nil transcoderUserInfo:transcoderUserInfo];
                     [photos addObject:mediaObject];
                 }
             }];
@@ -130,7 +129,6 @@ CHOptimizedMethod(1, self, void, CKPhotoPickerCollectionViewController, setColle
 
 void CouriaUIPhotosViewInit(void)
 {
-    mediaObjectManager = [CKMediaObjectManager sharedInstance];
     CHLoadLateClass(CKPhotoPickerSheetViewController);
     CHLoadLateClass(CKPhotoPickerCollectionViewController);
     if (CHClass(CKPhotoPickerSheetViewController)) {

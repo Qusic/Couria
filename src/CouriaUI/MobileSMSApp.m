@@ -1,9 +1,5 @@
 #import "../Headers.h"
 
-static CKConversationList *conversationList;
-static IMChatRegistry *chatRegistry;
-static IMPreferredServiceManager *preferredServiceManager;
-static IMAccountController *accountController;
 static CouriaSearchAgent *searchAgent;
 static ABAddressBookRef addressBook;
 
@@ -15,11 +11,12 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
     NSString *chatIdentifier = self.context[CKBBUserInfoKeyChatIdentifierKey];
     if (chatIdentifier != nil) {
         CHSuper(0, CouriaInlineReplyViewController_MobileSMSApp, setupConversation);
+        CKConversationList *conversationList = [CKConversationList sharedConversationList];
         CKConversation *conversation = [conversationList conversationForExistingChatWithGroupID:chatIdentifier];
         if (conversation == nil) {
             CKEntity *entity = [CKEntity copyEntityForAddressString:chatIdentifier];
-            IMService *service = [preferredServiceManager preferredServiceForHandles:@[entity.defaultIMHandle] newComposition:YES error:NULL serverCheckCompletionBlock:NULL];
-            IMAccount *account = [accountController __ck_defaultAccountForService:service];
+            IMService *service = [[IMPreferredServiceManager sharedPreferredServiceManager]preferredServiceForHandles:@[entity.defaultIMHandle] newComposition:YES error:NULL serverCheckCompletionBlock:NULL];
+            IMAccount *account = [[IMAccountController sharedInstance]__ck_defaultAccountForService:service];
             NSArray *handles = [account __ck_handlesFromAddressStrings:@[chatIdentifier]];
             conversation = [conversationList conversationForHandles:handles create:YES];
         }
@@ -46,7 +43,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
             NSMutableArray *contacts = [NSMutableArray array];
             NSString *queryString = searchAgent.queryString;
             if (queryString.length == 0) {
-                [[chatRegistry.allExistingChats sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastFinishedMessage.time" ascending:NO], [NSSortDescriptor sortDescriptorWithKey:@"__ck_watermarkMessageID" ascending:NO]]] enumerateObjectsUsingBlock:^(IMChat *chat, NSUInteger index, BOOL *stop) {
+                [[[IMChatRegistry sharedInstance].allExistingChats sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastFinishedMessage.time" ascending:NO], [NSSortDescriptor sortDescriptorWithKey:@"__ck_watermarkMessageID" ascending:NO]]] enumerateObjectsUsingBlock:^(IMChat *chat, NSUInteger index, BOOL *stop) {
                     [contacts addObject:@{
                         IdentifierKey: chat.chatIdentifier,
                         NicknameKey: chat.participants.count == 1 ? chat.recipient.name : ({
@@ -155,10 +152,6 @@ CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
 
 void CouriaUIMobileSMSAppInit(void)
 {
-    conversationList = [CKConversationList sharedConversationList];
-    chatRegistry = [IMChatRegistry sharedInstance];
-    preferredServiceManager = [IMPreferredServiceManager sharedPreferredServiceManager];
-    accountController = [IMAccountController sharedInstance];
     searchAgent = [[CouriaSearchAgent alloc]init];
     addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
     CHLoadLateClass(CouriaInlineReplyViewController);
