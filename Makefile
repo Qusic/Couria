@@ -33,5 +33,5 @@ include $(THEOS_MAKE_PATH)/tweak.mk
 include $(THEOS_MAKE_PATH)/bundle.mk
 
 internal-stage::
-	$(ECHO_NOTHING)prefs="$(THEOS_STAGING_DIR)/Library/PreferenceLoader/Preferences"; mkdir -p "$$prefs"; cp CouriaPreferences.plist "$$prefs/Couria.plist"$(ECHO_END)
-	@(echo "Generating localization resources..."; loc/generate.sh "$(THEOS_STAGING_DIR)/$(CouriaPreferences_INSTALL_PATH)/CouriaPreferences.bundle")
+	$(ECHO_NOTHING)pref="$(THEOS_STAGING_DIR)/Library/PreferenceLoader/Preferences"; mkdir -p "$$pref"; cp CouriaPreferences.plist "$$pref/Couria.plist"$(ECHO_END)
+	@(echo "Generating localization resources..."; twine generate-all-string-files loc/strings.txt "$(THEOS_STAGING_DIR)/$(CouriaPreferences_INSTALL_PATH)/CouriaPreferences.bundle" --create-folders --format apple)
