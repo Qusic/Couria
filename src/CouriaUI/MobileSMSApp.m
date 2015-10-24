@@ -6,8 +6,7 @@ static ABAddressBookRef addressBook;
 CHDeclareClass(CouriaInlineReplyViewController)
 CHDeclareClass(CouriaInlineReplyViewController_MobileSMSApp)
 
-CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, setupConversation)
-{
+CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, setupConversation) {
     NSString *chatIdentifier = self.context[CKBBUserInfoKeyChatIdentifierKey];
     if (chatIdentifier != nil) {
         CHSuper(0, CouriaInlineReplyViewController_MobileSMSApp, setupConversation);
@@ -120,14 +119,12 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
     }
 }
 
-CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, setupView)
-{
+CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, setupView) {
     CHSuper(0, CouriaInlineReplyViewController_MobileSMSApp, setupView);
     self.entryView.shouldShowPhotoButton = YES;
 }
 
-CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, interactiveNotificationDidAppear)
-{
+CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, interactiveNotificationDidAppear) {
     CHSuper(0, CouriaInlineReplyViewController_MobileSMSApp, interactiveNotificationDidAppear);
     if (self.context[CKBBUserInfoKeyChatIdentifierKey] != nil) {
         self.entryView.hidden = NO;
@@ -139,19 +136,17 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
         self.conversationViewController.view.hidden = YES;
         self.contactsViewController.view.hidden = NO;
         [self.contactsViewController.searchBar becomeFirstResponder];
-        [self.contactsViewController searchBar:self.contactsViewController.searchBar textDidChange:nil];
+        [self.contactsViewController searchBar:self.contactsViewController.searchBar textDidChange:self.contactsViewController.searchBar.text];
     }
 }
 
-CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController_MobileSMSApp, messageEntryViewDidChange, CKMessageEntryView *, entryView)
-{
+CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController_MobileSMSApp, messageEntryViewDidChange, CKMessageEntryView *, entryView) {
     CHSuper(1, CouriaInlineReplyViewController_MobileSMSApp, messageEntryViewDidChange, entryView);
     [self.typingUpdater setNeedsUpdate];
     [self updateSendButton];
 }
 
-void CouriaUIMobileSMSAppInit(void)
-{
+void CouriaUIMobileSMSAppInit(void) {
     searchAgent = [[CouriaSearchAgent alloc]init];
     addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
     CHLoadLateClass(CouriaInlineReplyViewController);

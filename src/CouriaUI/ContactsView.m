@@ -2,8 +2,7 @@
 
 @implementation CouriaContactsViewController
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor clearColor];
     self.tableView.separatorColor = [[UIColor whiteColor]colorWithAlphaComponent:0.1];
@@ -17,13 +16,11 @@
     self.tableView.tableHeaderView = self.searchBar;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.contacts.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *contact = indexPath.row < self.contacts.count ? self.contacts[indexPath.row] : nil;
     static NSString * const cellReuseIdentifier = @"CouriaContactCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellReuseIdentifier];
@@ -41,8 +38,7 @@
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *contact = self.contacts[indexPath.row];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (self.selectionHandler) {
@@ -52,8 +48,7 @@
     }
 }
 
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
-{
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     if (self.keywordHandler) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.keywordHandler(searchText);
@@ -61,8 +56,7 @@
     }
 }
 
-- (void)refreshData
-{
+- (void)refreshData {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
     });

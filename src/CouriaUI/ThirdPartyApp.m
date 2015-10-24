@@ -3,8 +3,7 @@
 CHDeclareClass(CouriaInlineReplyViewController)
 CHDeclareClass(CouriaInlineReplyViewController_ThirdPartyApp)
 
-CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp, setupConversation)
-{
+CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp, setupConversation) {
     NSString *applicationIdentifier = self.context[CouriaIdentifier ApplicationDomain];
     NSString *userIdentifier = self.context[CouriaIdentifier UserDomain];
     if (userIdentifier != nil) {
@@ -68,15 +67,13 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
     }
 }
 
-CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp, setupView)
-{
+CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp, setupView) {
     CHSuper(0, CouriaInlineReplyViewController_ThirdPartyApp, setupView);
     self.entryView.shouldShowCharacterCount = NO;
     self.entryView.shouldShowPhotoButton = [self.context[CouriaIdentifier OptionsDomain][CanSendPhotosOption] boolValue];
 }
 
-CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp, interactiveNotificationDidAppear)
-{
+CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp, interactiveNotificationDidAppear) {
     CHSuper(0, CouriaInlineReplyViewController_ThirdPartyApp, interactiveNotificationDidAppear);
     NSString *applicationIdentifier = self.context[CouriaIdentifier ApplicationDomain];
     NSString *userIdentifier = self.context[CouriaIdentifier UserDomain];
@@ -93,12 +90,11 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
         self.conversationViewController.view.hidden = YES;
         self.contactsViewController.view.hidden = NO;
         [self.contactsViewController.searchBar becomeFirstResponder];
-        [self.contactsViewController searchBar:self.contactsViewController.searchBar textDidChange:nil];
+        [self.contactsViewController searchBar:self.contactsViewController.searchBar textDidChange:self.contactsViewController.searchBar.text];
     }
 }
 
-CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp, sendMessage)
-{
+CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp, sendMessage) {
     CHSuper(0, CouriaInlineReplyViewController_ThirdPartyApp, sendMessage);
     NSString *applicationIdentifier = self.context[CouriaIdentifier ApplicationDomain];
     NSString *userIdentifier = self.context[CouriaIdentifier UserDomain];
@@ -116,8 +112,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
     }
 }
 
-void CouriaUIThirdPartyAppInit(void)
-{
+void CouriaUIThirdPartyAppInit(void) {
     CHLoadLateClass(CouriaInlineReplyViewController);
     CHRegisterClass(CouriaInlineReplyViewController_ThirdPartyApp, CouriaInlineReplyViewController) {
         CHHook(0, CouriaInlineReplyViewController_ThirdPartyApp, setupConversation);

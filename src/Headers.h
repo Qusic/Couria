@@ -795,8 +795,7 @@ extern void CouriaUIMobileSMSAppInit(void);
 extern void CouriaUIThirdPartyAppInit(void);
 extern void CouriaUIPhotosViewInit(void);
 
-CHInline void CouriaRegisterDefaults(NSUserDefaults *preferences, NSString *applicationIdentifier)
-{
+CHInline void CouriaRegisterDefaults(NSUserDefaults *preferences, NSString *applicationIdentifier) {
     [preferences registerDefaults:@{
         [applicationIdentifier stringByAppendingString:EnabledSetting]: @(YES),
         [applicationIdentifier stringByAppendingString:AuthenticationRequiredSetting]: @(NO),
@@ -804,18 +803,15 @@ CHInline void CouriaRegisterDefaults(NSUserDefaults *preferences, NSString *appl
     }];
 }
 
-CHInline NSBundle *CouriaResourcesBundle(void)
-{
+CHInline NSBundle *CouriaResourcesBundle(void) {
     return [NSBundle bundleWithPath:@"/Library/PreferenceBundles/CouriaPreferences.bundle"];
 }
 
-CHInline UIImage *CouriaImage(NSString *name)
-{
+CHInline UIImage *CouriaImage(NSString *name) {
     return [UIImage imageNamed:name inBundle:CouriaResourcesBundle() compatibleWithTraitCollection:nil];
 }
 
-CHInline NSString *CouriaLocalizedString(NSString *key)
-{
+CHInline NSString *CouriaLocalizedString(NSString *key) {
     NSString *string = [CKFrameworkBundle() localizedStringForKey:key value:nil table:@"ChatKit"];
     if ([string isEqualToString:key]) {
         string = [CouriaResourcesBundle() localizedStringForKey:key value:nil table:nil];
@@ -823,8 +819,7 @@ CHInline NSString *CouriaLocalizedString(NSString *key)
     return string;
 }
 
-CHInline UIColor *CouriaColor(NSString *colorString)
-{
+CHInline UIColor *CouriaColor(NSString *colorString) {
     CGFloat red = 0, green = 0, blue = 0, alpha = 0;
     if (colorString.length == 6) {
         colorString = [colorString stringByAppendingString:@"ff"];
@@ -840,8 +835,7 @@ CHInline UIColor *CouriaColor(NSString *colorString)
     return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
 }
 
-CHInline NSString *CouriaColorString(UIColor *color)
-{
+CHInline NSString *CouriaColorString(UIColor *color) {
     CGFloat red = 0, green = 0, blue = 0, alpha = 0;
     [color getRed:&red green:&green blue:&blue alpha:&alpha];
     return [NSString stringWithFormat:@"%02x%02x%02x%02x", (unsigned int)(red * 255), (unsigned int)(green * 255), (unsigned int)(blue * 255), (unsigned int)(alpha * 255)];

@@ -2,8 +2,7 @@
 
 @implementation CouriaSearchAgent
 
-- (instancetype)init
-{
+- (instancetype)init {
     self = [super init];
     if (self) {
         self.searchDomains = @[@2];
@@ -12,8 +11,7 @@
     return self;
 }
 
-- (void)searchAgentUpdatedResults:(SPSearchAgent *)agent
-{
+- (void)searchAgentUpdatedResults:(SPSearchAgent *)agent {
     if (self.updateHandler) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.updateHandler();
@@ -21,8 +19,7 @@
     }
 }
 
-- (void)searchAgentClearedResults:(SPSearchAgent *)agent
-{
+- (void)searchAgentClearedResults:(SPSearchAgent *)agent {
     if (self.updateHandler) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.updateHandler();

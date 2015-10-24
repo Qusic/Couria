@@ -1,7 +1,6 @@
 #import "../Headers.h"
 
-CHConstructor
-{
+CHConstructor {
     @autoreleasepool {
         CouriaUIViewServiceInit();
         CouriaUIMobileSMSAppInit();

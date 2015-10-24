@@ -12,8 +12,7 @@ CHDeclareClass(CKPhotoPickerCollectionViewController)
 
 @implementation CouriaPhotosViewController
 
-- (instancetype)init
-{
+- (instancetype)init {
     self = [super init];
     if (self) {
         switch (version) {
@@ -28,8 +27,7 @@ CHDeclareClass(CKPhotoPickerCollectionViewController)
     return self;
 }
 
-- (UIViewController *)viewController
-{
+- (UIViewController *)viewController {
     UIViewController *viewController = nil;
     switch (version) {
         case 1:
@@ -42,8 +40,7 @@ CHDeclareClass(CKPhotoPickerCollectionViewController)
     return viewController;
 }
 
-- (UIView *)view
-{
+- (UIView *)view {
     UIView *view = nil;
     switch (version) {
         case 1:
@@ -56,8 +53,7 @@ CHDeclareClass(CKPhotoPickerCollectionViewController)
     return view;
 }
 
-- (NSArray *)fetchAndClearSelectedPhotos
-{
+- (NSArray *)fetchAndClearSelectedPhotos {
     NSMutableArray *photos = [NSMutableArray array];
     switch (version) {
         case 1: {
@@ -111,24 +107,21 @@ CHDeclareClass(CKPhotoPickerCollectionViewController)
 
 @end
 
-CHOptimizedMethod(1, self, void, CKPhotoPickerSheetViewController, setPhotosCollectionView, CKPhotoPickerCollectionView *, photosCollectionView)
-{
+CHOptimizedMethod(1, self, void, CKPhotoPickerSheetViewController, setPhotosCollectionView, CKPhotoPickerCollectionView *, photosCollectionView) {
     if (photosCollectionView != nil) {
         photosCollectionView.backgroundColor = [UIColor clearColor];
         CHSuper(1, CKPhotoPickerSheetViewController, setPhotosCollectionView, photosCollectionView);
     }
 }
 
-CHOptimizedMethod(1, self, void, CKPhotoPickerCollectionViewController, setCollectionView, UICollectionView *, collectionView)
-{
+CHOptimizedMethod(1, self, void, CKPhotoPickerCollectionViewController, setCollectionView, UICollectionView *, collectionView) {
     if (collectionView != nil) {
         collectionView.backgroundColor = [UIColor clearColor];
         CHSuper(1, CKPhotoPickerCollectionViewController, setCollectionView, collectionView);
     }
 }
 
-void CouriaUIPhotosViewInit(void)
-{
+void CouriaUIPhotosViewInit(void) {
     CHLoadLateClass(CKPhotoPickerSheetViewController);
     CHLoadLateClass(CKPhotoPickerCollectionViewController);
     if (CHClass(CKPhotoPickerSheetViewController)) {

@@ -8,40 +8,33 @@ CHDeclareClass(SBIconViewMap)
 CHDeclareClass(SBBulletinBannerController)
 CHDeclareClass(SBBannerController)
 
-NSDictionary *CouriaExtensions(void)
-{
+NSDictionary *CouriaExtensions(void) {
     return extensions;
 }
 
-NSUserDefaults *CouriaPreferences(void)
-{
+NSUserDefaults *CouriaPreferences(void) {
     return preferences;
 }
 
-id<CouriaExtension> CouriaExtension(NSString *application)
-{
+id<CouriaExtension> CouriaExtension(NSString *application) {
     return extensions[application];
 }
 
-BOOL CouriaEnabled(NSString *application)
-{
+BOOL CouriaEnabled(NSString *application) {
     return ([application isEqualToString:MobileSMSIdentifier] || CouriaExtension(application)) && [preferences boolForKey:[application stringByAppendingString:EnabledSetting]];
 }
 
-NSString *CouriaApplicationName(NSString *applicationIdentifier)
-{
+NSString *CouriaApplicationName(NSString *applicationIdentifier) {
     SBApplication *application = [CHSharedInstance(SBApplicationController) applicationWithBundleIdentifier:applicationIdentifier];
     return application.displayName;
 }
 
-UIImage *CouriaApplicationIcon(NSString *applicationIdentifier, BOOL small)
-{
+UIImage *CouriaApplicationIcon(NSString *applicationIdentifier, BOOL small) {
     SBApplicationIcon *icon = [[CHClass(SBIconViewMap) homescreenMap].iconModel applicationIconForBundleIdentifier:applicationIdentifier];
     return [icon getIconImage:small ? 0 : 2];
 }
 
-void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest)
-{
+void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest) {
     NSString *applicationIdentifier = bulletinRequest.sectionID;
     if (CouriaEnabled(applicationIdentifier)) {
         id<CouriaExtension> extension = CouriaExtension(applicationIdentifier);
@@ -83,8 +76,7 @@ void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest)
     }
 }
 
-void CouriaPresentViewController(NSString *application, NSString *user)
-{
+void CouriaPresentViewController(NSString *application, NSString *user) {
     if (CouriaEnabled(application) && CHSharedInstance(SBBannerController)._bannerContext == nil) {
         BBBulletinRequest *bulletin = [[BBBulletinRequest alloc]init];
         [bulletin generateNewBulletinID];
@@ -100,8 +92,7 @@ void CouriaPresentViewController(NSString *application, NSString *user)
     }
 }
 
-void CouriaDismissViewController(void)
-{
+void CouriaDismissViewController(void) {
     SBBannerController *bannerController = CHSharedInstance(SBBannerController);
     if (bannerController._bannerContext != nil) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -112,8 +103,7 @@ void CouriaDismissViewController(void)
 
 @implementation Couria
 
-+ (instancetype)sharedInstance
-{
++ (instancetype)sharedInstance {
     static id sharedInstance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -129,8 +119,7 @@ void CouriaDismissViewController(void)
     return sharedInstance;
 }
 
-- (void)registerExtension:(id<CouriaExtension>)extension forApplication:(NSString *)applicationIdentifier
-{
+- (void)registerExtension:(id<CouriaExtension>)extension forApplication:(NSString *)applicationIdentifier {
     if (extension != nil && applicationIdentifier != nil && ![applicationIdentifier isEqualToString:MobileSMSIdentifier]) {
         [extensions setObject:extension forKey:applicationIdentifier];
         [[CouriaExtras sharedInstance]registerExtrasForApplication:applicationIdentifier];
@@ -138,21 +127,18 @@ void CouriaDismissViewController(void)
     }
 }
 
-- (void)unregisterExtensionForApplication:(NSString *)applicationIdentifier
-{
+- (void)unregisterExtensionForApplication:(NSString *)applicationIdentifier {
     if (applicationIdentifier != nil && ![applicationIdentifier isEqualToString:MobileSMSIdentifier]) {
         [extensions removeObjectForKey:applicationIdentifier];
         [[CouriaExtras sharedInstance]unregisterExtrasForApplication:applicationIdentifier];
     }
 }
 
-- (void)presentControllerForApplication:(NSString *)applicationIdentifier user:(NSString *)userIdentifier
-{
+- (void)presentControllerForApplication:(NSString *)applicationIdentifier user:(NSString *)userIdentifier {
     CouriaPresentViewController(applicationIdentifier, userIdentifier);
 }
 
-- (void)handleBulletin:(BBBulletin *)bulletin
-{
+- (void)handleBulletin:(BBBulletin *)bulletin {
     CouriaPresentViewController(bulletin.sectionID, [CouriaExtension(bulletin.sectionID) getUserIdentifier:bulletin]);
 }
 
@@ -161,8 +147,7 @@ void CouriaDismissViewController(void)
 @implementation CouriaMessage
 @end
 
-CHConstructor
-{
+CHConstructor {
     @autoreleasepool {
         [Couria sharedInstance];
         [[CouriaService sharedInstance]run];

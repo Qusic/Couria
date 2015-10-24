@@ -25,8 +25,7 @@ static CPDistributedMessagingCenter *messagingCenter;
 
 @implementation CouriaPreferencesController
 
-- (NSArray *)extensionsSpecifiers
-{
+- (NSArray *)extensionsSpecifiers {
     if (_extensionsSpecifiers == nil) {
         NSMutableArray *specifiers = [NSMutableArray array];
         NSArray *extensions = [NSKeyedUnarchiver unarchiveObjectWithData:[messagingCenter sendMessageAndReceiveReplyName:ListExtensionsMessage userInfo:nil error:NULL][ExtensionsKey]];
@@ -48,8 +47,7 @@ static CPDistributedMessagingCenter *messagingCenter;
     return _extensionsSpecifiers;
 }
 
-- (NSArray *)aboutSpecifiers
-{
+- (NSArray *)aboutSpecifiers {
     if (_aboutSpecifiers == nil) {
         _aboutSpecifiers = @[({
             PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:@"@QusicS" target:self set:NULL get:NULL detail:Nil cell:PSButtonCell edit:Nil];
@@ -80,8 +78,7 @@ static CPDistributedMessagingCenter *messagingCenter;
     return _aboutSpecifiers;
 }
 
-- (NSArray *)translationCreditsSpecifiers
-{
+- (NSArray *)translationCreditsSpecifiers {
     if (_translationCreditsSpecifiers == nil) {
         NSMutableArray *specifiers = [NSMutableArray array];
         [[self.translationCreditsData.allKeys sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]enumerateObjectsUsingBlock:^(NSString *language, NSUInteger index, BOOL *stop) {
@@ -96,8 +93,7 @@ static CPDistributedMessagingCenter *messagingCenter;
     return _translationCreditsSpecifiers;
 }
 
-- (NSArray *)specifiers
-{
+- (NSArray *)specifiers {
     if (_specifiers == nil) {
         NSMutableArray *specifiers = [NSMutableArray array];
         [specifiers addObject:[PSSpecifier groupSpecifierWithName:CouriaLocalizedString(@"EXTENSIONS")]];
@@ -113,8 +109,7 @@ static CPDistributedMessagingCenter *messagingCenter;
     return _specifiers;
 }
 
-- (NSDictionary *)translationCreditsData
-{
+- (NSDictionary *)translationCreditsData {
     return @{@"Dansk": @"Felix E. Drud",
              @"Deutsch": @"Tim Klute",
              @"Español": @"MXNMike",
@@ -130,19 +125,16 @@ static CPDistributedMessagingCenter *messagingCenter;
              @"العربية": @"Mohamed El Fawal"};
 }
 
-- (id)getValueForTranslationCreditsSpecifier:(PSSpecifier *)specifier
-{
+- (id)getValueForTranslationCreditsSpecifier:(PSSpecifier *)specifier {
     return self.translationCreditsData[specifier.identifier];
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"😘" style:UIBarButtonItemStylePlain target:self action:@selector(shareAction:)];
 }
 
-- (void)actionForSpecifier:(PSSpecifier *)specifier
-{
+- (void)actionForSpecifier:(PSSpecifier *)specifier {
     NSString *identifier = specifier.identifier;
     if ([identifier isEqualToString:@"twitter"]) {
         [[UIApplication sharedApplication]openURL:[NSURL URLWithString:@"https://twitter.com/QusicS"]];
@@ -161,8 +153,7 @@ static CPDistributedMessagingCenter *messagingCenter;
     }
 }
 
-- (void)shareAction:(UIBarButtonItem *)buttonItem
-{
+- (void)shareAction:(UIBarButtonItem *)buttonItem {
     NSString *serviceType = nil;
     if ([[NSLocale preferredLanguages][0]isEqualToString:@"zh-Hans"]) {
         serviceType = SLServiceTypeSinaWeibo;
@@ -178,8 +169,7 @@ static CPDistributedMessagingCenter *messagingCenter;
 
 @implementation CouriaExtensionPreferencesController
 
-- (NSArray *)mainSettingsSpecifiers
-{
+- (NSArray *)mainSettingsSpecifiers {
     if (_mainSettingsSpecifiers == nil) {
         _mainSettingsSpecifiers = @[({
             PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"ENABLED") target:self set:@selector(setPreferenceValue:specifier:) get:@selector(readPreferenceValue:) detail:Nil cell:PSSwitchCell edit:Nil];
@@ -194,8 +184,7 @@ static CPDistributedMessagingCenter *messagingCenter;
     return _mainSettingsSpecifiers;
 }
 
-- (NSArray *)themeSettingsSpecifiers
-{
+- (NSArray *)themeSettingsSpecifiers {
     if (_themeSettingsSpecifiers == nil) {
         _themeSettingsSpecifiers = @[({
             PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"BUBBLE_THEME") target:self set:@selector(setPreferenceValue:specifier:) get:@selector(readPreferenceValue:) detail:Nil cell:PSSegmentCell edit:Nil];
@@ -227,8 +216,7 @@ static CPDistributedMessagingCenter *messagingCenter;
     return _themeSettingsSpecifiers;
 }
 
-- (NSArray *)specifiers
-{
+- (NSArray *)specifiers {
     if (_specifiers == nil) {
         NSMutableArray *specifiers = [NSMutableArray array];
         [specifiers addObject:[PSSpecifier emptyGroupSpecifier]];
@@ -240,18 +228,15 @@ static CPDistributedMessagingCenter *messagingCenter;
     return _specifiers;
 }
 
-- (id)readPreferenceValue:(PSSpecifier *)specifier
-{
+- (id)readPreferenceValue:(PSSpecifier *)specifier {
     return [preferences objectForKey:specifier.identifier];
 }
 
-- (void)setPreferenceValue:(id)value specifier:(PSSpecifier *)specifier
-{
+- (void)setPreferenceValue:(id)value specifier:(PSSpecifier *)specifier {
     [preferences setObject:value forKey:specifier.identifier];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
     PSSpecifier *specifier = [self specifierAtIndex:[self indexForRow:indexPath.row inGroup:indexPath.section]];
     if ([[specifier propertyForKey:ColorSpecifierOption]boolValue]) {
@@ -263,8 +248,7 @@ static CPDistributedMessagingCenter *messagingCenter;
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
     [super tableView:tableView cellForRowAtIndexPath:indexPath];
     PSSpecifier *specifier = [self specifierAtIndex:[self indexForRow:indexPath.row inGroup:indexPath.section]];
     if ([[specifier propertyForKey:ColorSpecifierOption]boolValue]) {
@@ -282,8 +266,7 @@ static CPDistributedMessagingCenter *messagingCenter;
 
 @implementation CouriaColorPickerViewController
 
-- (HRColorPickerView *)colorPickerView
-{
+- (HRColorPickerView *)colorPickerView {
     if (_colorPickerView == nil) {
         _colorPickerView = [[HRColorPickerView alloc]init];
         _colorPickerView.colorMapView.saturationUpperLimit = @(1);
@@ -292,39 +275,33 @@ static CPDistributedMessagingCenter *messagingCenter;
     return _colorPickerView;
 }
 
-- (void)loadView
-{
+- (void)loadView {
     self.view = self.colorPickerView;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationController.navigationBar.translucent = NO;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction:)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneAction:)];
 }
 
-- (void)viewDidLayoutSubviews
-{
+- (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
 }
 
-- (void)showInViewController:(UIViewController *)viewController title:(NSString *)title initialColor:(UIColor *)color resultCallback:(void (^)(UIColor *))callback
-{
+- (void)showInViewController:(UIViewController *)viewController title:(NSString *)title initialColor:(UIColor *)color resultCallback:(void (^)(UIColor *))callback {
     self.title = title;
     self.colorPickerView.color = color;
     self.resultCallback = callback;
     [viewController presentViewController:[[UINavigationController alloc]initWithRootViewController:self] animated:YES completion:NULL];
 }
 
-- (void)cancelAction:(UIBarButtonItem *)buttonItem
-{
+- (void)cancelAction:(UIBarButtonItem *)buttonItem {
     [self.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
 }
 
-- (void)doneAction:(UIBarButtonItem *)buttonItem
-{
+- (void)doneAction:(UIBarButtonItem *)buttonItem {
     if (self.resultCallback) {
         self.resultCallback(self.colorPickerView.color);
     }
@@ -333,8 +310,7 @@ static CPDistributedMessagingCenter *messagingCenter;
 
 @end
 
-CHConstructor
-{
+CHConstructor {
     @autoreleasepool {
         preferences = [[NSUserDefaults alloc]initWithSuiteName:CouriaIdentifier];
         messagingCenter = [CPDistributedMessagingCenter centerNamed:CouriaIdentifier];

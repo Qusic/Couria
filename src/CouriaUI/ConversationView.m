@@ -2,8 +2,7 @@
 
 @implementation CouriaConversationViewController
 
-- (void)configureCell:(CKTranscriptCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)configureCell:(CKTranscriptCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     [super configureCell:cell forItemAtIndexPath:indexPath];
     if ([cell isKindOfClass:CKTranscriptMessageCell.class]) {
         CKTranscriptMessageCell *messageCell = (CKTranscriptMessageCell *)cell;
@@ -54,15 +53,13 @@
     }
 }
 
-- (void)refreshData
-{
+- (void)refreshData {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.collectionView reloadData];
     });
 }
 
-- (BOOL)balloonView:(CKBalloonView *)balloonView canPerformAction:(SEL)action withSender:(id)sender
-{
+- (BOOL)balloonView:(CKBalloonView *)balloonView canPerformAction:(SEL)action withSender:(id)sender {
     return sel_isEqual(action, @selector(copy:)) ? [super balloonView:balloonView canPerformAction:action withSender:sender] : NO;
 }
 

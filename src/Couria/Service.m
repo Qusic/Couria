@@ -7,8 +7,7 @@ CHDeclareClass(BBServer)
 
 @implementation CouriaService
 
-+ (instancetype)sharedInstance
-{
++ (instancetype)sharedInstance {
     static id sharedInstance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -20,8 +19,7 @@ CHDeclareClass(BBServer)
     return sharedInstance;
 }
 
-- (void)run
-{
+- (void)run {
     [messagingCenter runServerOnCurrentThread];
     [messagingCenter registerForMessageName:GetMessagesMessage target:self selector:@selector(processExtensionRequest:data:)];
     [messagingCenter registerForMessageName:GetContactsMessage target:self selector:@selector(processExtensionRequest:data:)];
@@ -31,8 +29,7 @@ CHDeclareClass(BBServer)
     [messagingCenter registerForMessageName:UpdateBannerMessage target:self selector:@selector(processMiscellaneousRequest:data:)];
 }
 
-- (NSDictionary *)processExtensionRequest:(NSString *)request data:(NSDictionary *)data
-{
+- (NSDictionary *)processExtensionRequest:(NSString *)request data:(NSDictionary *)data {
     id<CouriaExtension> extension; NSString *application; NSString *user; NSDictionary *response;
     for (BOOL _valid = ({
         BOOL valid = NO;
@@ -116,8 +113,7 @@ CHDeclareClass(BBServer)
     return response;
 }
 
-- (NSDictionary *)processMiscellaneousRequest:(NSString *)request data:(NSDictionary *)data
-{
+- (NSDictionary *)processMiscellaneousRequest:(NSString *)request data:(NSDictionary *)data {
     NSDictionary *response;
     if ([request isEqualToString:ListExtensionsMessage]) {
         NSMutableArray *result = [NSMutableArray array];

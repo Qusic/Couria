@@ -12,8 +12,7 @@ CHPropertyRetainNonatomic(CouriaInlineReplyViewController, CouriaConversationVie
 CHPropertyRetainNonatomic(CouriaInlineReplyViewController, CouriaContactsViewController *, contactsViewController, setContactsViewController)
 CHPropertyRetainNonatomic(CouriaInlineReplyViewController, CouriaPhotosViewController *, photosViewController, setPhotosViewController)
 
-CHOptimizedMethod(0, super, id, CouriaInlineReplyViewController, init)
-{
+CHOptimizedMethod(0, super, id, CouriaInlineReplyViewController, init) {
     self = CHSuper(0, CouriaInlineReplyViewController, init);
     if (self) {
         self.conversationViewController = ({
@@ -35,13 +34,11 @@ CHOptimizedMethod(0, super, id, CouriaInlineReplyViewController, init)
     return self;
 }
 
-CHPropertyGetter(CouriaInlineReplyViewController, messagingCenter, CPDistributedMessagingCenter *)
-{
+CHPropertyGetter(CouriaInlineReplyViewController, messagingCenter, CPDistributedMessagingCenter *) {
     return messagingCenter;
 }
 
-CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController, setupConversation)
-{
+CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController, setupConversation) {
     CHSuper(0, CouriaInlineReplyViewController, setupConversation);
     NSString *applicationIdentifier = self.context[CouriaIdentifier ApplicationDomain];
     CouriaRegisterDefaults(preferences, applicationIdentifier);
@@ -55,8 +52,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController, setupConversa
     ] : nil;
 }
 
-CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController, setupView)
-{
+CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController, setupView) {
     CHSuper(0, CouriaInlineReplyViewController, setupView);
     [self.view addSubview:self.conversationViewController.view];
     [self.view addSubview:self.contactsViewController.view];
@@ -67,13 +63,11 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController, setupView)
     self.entryView.hidden = YES;
 }
 
-CHOptimizedMethod(0, super, CGFloat, CouriaInlineReplyViewController, preferredContentHeight)
-{
+CHOptimizedMethod(0, super, CGFloat, CouriaInlineReplyViewController, preferredContentHeight) {
     return self.maximumHeight ?: CHSuper(0, CouriaInlineReplyViewController, preferredContentHeight);
 }
 
-CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController, viewDidLayoutSubviews)
-{
+CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController, viewDidLayoutSubviews) {
     CHSuper(0, CouriaInlineReplyViewController, viewDidLayoutSubviews);
     CGFloat contentHeight = self.preferredContentHeight;
     if (self.view.bounds.size.height != contentHeight) {
@@ -96,22 +90,19 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController, viewDidLayout
     }
 }
 
-CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController, messageEntryViewDidChange, CKMessageEntryView *, entryView)
-{
+CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController, messageEntryViewDidChange, CKMessageEntryView *, entryView) {
     [self.view setNeedsLayout];
     [self.view layoutIfNeeded];
 }
 
-CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController, sendMessage)
-{
+CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController, sendMessage) {
     if (self.photosViewController.view.superview == self.view) {
         [self photoButtonTapped:nil];
     }
     CHSuper(0, CouriaInlineReplyViewController, sendMessage);
 }
 
-CHOptimizedMethod(1, new, void, CouriaInlineReplyViewController, photoButtonTapped, UIButton *, button)
-{
+CHOptimizedMethod(1, new, void, CouriaInlineReplyViewController, photoButtonTapped, UIButton *, button) {
     if (self.photosViewController.view.superview != self.view) {
         [self.view addSubview:self.photosViewController.view];
     } else {
@@ -122,8 +113,7 @@ CHOptimizedMethod(1, new, void, CouriaInlineReplyViewController, photoButtonTapp
     }
 }
 
-CHOptimizedMethod(5, self, id, CKMessageEntryView, initWithFrame, CGRect, frame, shouldShowSendButton, BOOL, sendButton, shouldShowSubject, BOOL, subject, shouldShowPhotoButton, BOOL, photoButton, shouldShowCharacterCount, BOOL, characterCount)
-{
+CHOptimizedMethod(5, self, id, CKMessageEntryView, initWithFrame, CGRect, frame, shouldShowSendButton, BOOL, sendButton, shouldShowSubject, BOOL, subject, shouldShowPhotoButton, BOOL, photoButton, shouldShowCharacterCount, BOOL, characterCount) {
     photoButton = YES;
     self = CHSuper(5, CKMessageEntryView, initWithFrame, frame, shouldShowSendButton, sendButton, shouldShowSubject, subject, shouldShowPhotoButton, photoButton, shouldShowCharacterCount, characterCount);
     if (self) {
@@ -132,16 +122,14 @@ CHOptimizedMethod(5, self, id, CKMessageEntryView, initWithFrame, CGRect, frame,
     return self;
 }
 
-CHOptimizedMethod(1, self, void, CKMessageEntryView, setShouldShowPhotoButton, BOOL, shouldShowPhotoButton)
-{
+CHOptimizedMethod(1, self, void, CKMessageEntryView, setShouldShowPhotoButton, BOOL, shouldShowPhotoButton) {
     CHSuper(1, CKMessageEntryView, setShouldShowPhotoButton, shouldShowPhotoButton);
     self.photoButton.hidden = !shouldShowPhotoButton;
     [self setNeedsLayout];
     [self layoutIfNeeded];
 }
 
-CHOptimizedMethod(0, self, void, CKMessageEntryView, updateEntryView)
-{
+CHOptimizedMethod(0, self, void, CKMessageEntryView, updateEntryView) {
     CHSuper(0, CKMessageEntryView, updateEntryView);
     if (self.conversation.chat == nil) {
         self.sendButton.enabled = self.composition.hasContent;
@@ -150,8 +138,7 @@ CHOptimizedMethod(0, self, void, CKMessageEntryView, updateEntryView)
 }
 
 #define CHCKUIBehavior(type, name, value) \
-CHOptimizedMethod(0, self, type, CKUIBehavior, name) \
-{ \
+CHOptimizedMethod(0, self, type, CKUIBehavior, name) { \
     static type name; \
     static dispatch_once_t onceToken; \
     dispatch_once(&onceToken, ^{ \
@@ -163,18 +150,15 @@ CHCKUIBehavior(UIColor *, transcriptBackgroundColor, [UIColor clearColor])
 CHCKUIBehavior(BOOL, transcriptCanUseOpaqueMask, NO)
 CHCKUIBehavior(BOOL, photoPickerShouldZoomOnSelection, NO)
 
-CHOptimizedMethod(1, self, NSArray *, CKUIBehavior, balloonColorsForColorType, CKBalloonColor, colorType)
-{
+CHOptimizedMethod(1, self, NSArray *, CKUIBehavior, balloonColorsForColorType, CKBalloonColor, colorType) {
     return colorType >= CKBalloonColorCouria ? @[customBubbleColors[colorType - CKBalloonColorCouria]] : CHSuper(1, CKUIBehavior, balloonColorsForColorType, colorType);
 }
 
-CHOptimizedMethod(1, self, UIColor *, CKUIBehavior, balloonOverlayColorForColorType, CKBalloonColor, colorType)
-{
+CHOptimizedMethod(1, self, UIColor *, CKUIBehavior, balloonOverlayColorForColorType, CKBalloonColor, colorType) {
     return colorType >= CKBalloonColorCouria ? [UIColor colorWithWhite:0 alpha:0.1] : CHSuper(1, CKUIBehavior, balloonOverlayColorForColorType, colorType);
 }
 
-CHOptimizedMethod(1, new, CKBalloonColor, CKUIBehavior, colorTypeForColor, UIColor *, color)
-{
+CHOptimizedMethod(1, new, CKBalloonColor, CKUIBehavior, colorTypeForColor, UIColor *, color) {
     NSUInteger index = [customBubbleColors indexOfObject:color];
     if (index == NSNotFound) {
         if (customBubbleColors.count >= (UINT8_MAX + 1 - 5)) {
@@ -186,8 +170,7 @@ CHOptimizedMethod(1, new, CKBalloonColor, CKUIBehavior, colorTypeForColor, UICol
     return CKBalloonColorCouria + index;
 }
 
-void CouriaUIViewServiceInit(void)
-{
+void CouriaUIViewServiceInit(void) {
     messagingCenter = [CPDistributedMessagingCenter centerNamed:CouriaIdentifier];
     preferences = [[NSUserDefaults alloc]initWithSuiteName:CouriaIdentifier];
     customBubbleColors = [NSMutableArray array];
