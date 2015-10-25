@@ -58,7 +58,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
                         AvatarKey: [CKEntity copyEntityForAddressString:chat.chatIdentifier].transcriptContactImage //TODO: group thumbnail
                     }];
                 }];
-            } else if (searchAgent.resultCount > 0) {
+            } else if (searchAgent.hasResults) {
                 if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
                     [[searchAgent sectionAtIndex:0].results enumerateObjectsUsingBlock:^(SPSearchResult *agentResult, NSUInteger index, BOOL *stop) {
                         ABRecordID recordID = (ABRecordID)agentResult.identifier;
@@ -104,7 +104,25 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
         };
         __weak __typeof__(self) weakSelf = self;
         self.contactsViewController.keywordHandler = ^(NSString *keyword) {
-            searchAgent.queryString = keyword;
+            if ([searchAgent respondsToSelector:@selector(setQueryString:keyboardLanguage:keyboardPrimaryLanguage:levelZKW:allowInternet:)]) {
+                static NSString * (^ const inputTypeForInputMode)(UITextInputMode *) = ^(UITextInputMode *inputMode) {
+                    NSString *inputType = nil;
+                    if ([inputMode isKindOfClass:UITextInputMode.class]) {
+                        if ([inputMode.identifier isEqualToString:@"dictation"]) {
+                            inputType = @"dictation";
+                        } else if (inputMode.extension != nil) {
+                            inputType = @"custom";
+                        } else {
+                            inputType = inputMode.normalizedIdentifierLevels.firstObject;
+                        }
+                    }
+                    return inputType;
+                };
+                UITextInputMode *inputMode = weakSelf.contactsViewController.searchBar.textInputMode;
+                [searchAgent setQueryString:keyword keyboardLanguage:inputTypeForInputMode(inputMode) keyboardPrimaryLanguage:inputMode.primaryLanguage levelZKW:0 allowInternet:NO];
+            } else if ([searchAgent respondsToSelector:@selector(setQueryString:)]) {
+                [searchAgent setQueryString:keyword];
+            }
         };
         self.contactsViewController.selectionHandler = ^(NSDictionary *contact) {
             NSMutableDictionary *context = weakSelf.context.mutableCopy;
@@ -143,7 +161,9 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
 CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController_MobileSMSApp, messageEntryViewDidChange, CKMessageEntryView *, entryView) {
     CHSuper(1, CouriaInlineReplyViewController_MobileSMSApp, messageEntryViewDidChange, entryView);
     [self.typingUpdater setNeedsUpdate];
-    [self updateSendButton];
+    if ([self respondsToSelector:@selector(updateSendButton)]) {
+        [self updateSendButton];
+    }
 }
 
 void CouriaUIMobileSMSAppInit(void) {

@@ -16,10 +16,22 @@ CHOptimizedMethod(0, super, id, CouriaInlineReplyViewController, init) {
     self = CHSuper(0, CouriaInlineReplyViewController, init);
     if (self) {
         self.conversationViewController = ({
+            CouriaConversationViewController *controller = nil;
             CKUIBehavior *uiBehavior = [CKUIBehavior sharedBehaviors];
-            CGFloat rightBalloonMaxWidth = [uiBehavior rightBalloonMaxWidthForEntryContentViewWidth:self.entryView.contentView.bounds.size.width];
-            CGFloat leftBalloonMaxWidth = [uiBehavior leftBalloonMaxWidthForTranscriptWidth:self.view.bounds.size.width marginInsets:uiBehavior.transcriptMarginInsets];
-            [[CouriaConversationViewController alloc]initWithConversation:nil rightBalloonMaxWidth:rightBalloonMaxWidth leftBalloonMaxWidth:leftBalloonMaxWidth];
+            if ([CouriaConversationViewController instancesRespondToSelector:@selector(initWithConversation:balloonMaxWidth:marginInsets:)]) {
+                CGFloat transcriptWidth = self.view.bounds.size.width;
+                UIEdgeInsets marginInsets = self.view.layoutMargins;
+                CGFloat balloonMaxWidth = [uiBehavior balloonMaxWidthForTranscriptWidth:transcriptWidth marginInsets:marginInsets shouldShowPhotoButton:YES shouldShowCharacterCount:NO];
+                controller = [[CouriaConversationViewController alloc]initWithConversation:nil balloonMaxWidth:balloonMaxWidth marginInsets:marginInsets];
+            } else if ([CouriaConversationViewController instancesRespondToSelector:@selector(initWithConversation:rightBalloonMaxWidth:leftBalloonMaxWidth:)]) {
+                CGFloat transcriptWidth = self.view.bounds.size.width;
+                CGFloat entryContentViewWidth = self.entryView.contentView.bounds.size.width;
+                UIEdgeInsets marginInsets = uiBehavior.transcriptMarginInsets;
+                CGFloat rightBalloonMaxWidth = [uiBehavior rightBalloonMaxWidthForEntryContentViewWidth:entryContentViewWidth];
+                CGFloat leftBalloonMaxWidth = [uiBehavior leftBalloonMaxWidthForTranscriptWidth:transcriptWidth marginInsets:marginInsets];
+                controller = [[CouriaConversationViewController alloc]initWithConversation:nil rightBalloonMaxWidth:rightBalloonMaxWidth leftBalloonMaxWidth:leftBalloonMaxWidth];
+            }
+            controller;
         });
         self.contactsViewController = ({
             [[CouriaContactsViewController alloc]initWithStyle:UITableViewStylePlain];

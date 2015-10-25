@@ -77,6 +77,12 @@ typedef NS_ENUM(NSInteger, CouriaBubbleTheme) {
 - (UIView *)_backgroundView;
 @end
 
+@interface UITextInputMode (Private)
+- (NSString *)identifier;
+- (NSString *)extension;
+- (NSArray *)normalizedIdentifierLevels;
+@end
+
 @class BBDataProvider, BBBulletinRequest;
 
 extern dispatch_queue_t __BBServerQueue;
@@ -440,7 +446,8 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 @property (retain, nonatomic) CKTranscriptCollectionView *collectionView;
 @property (nonatomic, readonly) CGFloat leftBalloonMaxWidth;
 @property (nonatomic, readonly) CGFloat rightBalloonMaxWidth;
-- (instancetype)initWithConversation:(CKConversation *)conversation rightBalloonMaxWidth:(CGFloat)rightBalloonMaxWidth leftBalloonMaxWidth:(CGFloat)leftBalloonMaxWidth;
+- (instancetype)initWithConversation:(CKConversation *)conversation balloonMaxWidth:(CGFloat)balloonMaxWidth marginInsets:(UIEdgeInsets)marginInsets; // iOS 9
+- (instancetype)initWithConversation:(CKConversation *)conversation rightBalloonMaxWidth:(CGFloat)rightBalloonMaxWidth leftBalloonMaxWidth:(CGFloat)leftBalloonMaxWidth; // iOS 8
 - (CKChatItem *)chatItemWithIMChatItem:(IMChatItem *)imChatItem;
 - (void)configureCell:(CKTranscriptCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath;
 @end
@@ -609,7 +616,7 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 - (void)setupConversation;
 - (void)setupView;
 - (void)interactiveNotificationDidAppear;
-- (void)updateSendButton;
+- (void)updateSendButton; // iOS 8
 - (void)updateTyping;
 - (void)sendMessage;
 @end
@@ -630,12 +637,15 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 
 @interface CKUIBehavior : NSObject
 + (instancetype)sharedBehaviors;
-- (UIEdgeInsets)transcriptMarginInsets;
+- (UIEdgeInsets)transcriptMarginInsets; // iOS 8
 - (UIEdgeInsets)balloonTranscriptInsets;
-- (CGFloat)leftBalloonMaxWidthForTranscriptWidth:(CGFloat)transcriptWidth marginInsets:(UIEdgeInsets)marginInsets;
-- (CGFloat)rightBalloonMaxWidthForEntryContentViewWidth:(CGFloat)entryContentViewWidth;
+- (CGFloat)balloonMaxWidthForTranscriptWidth:(CGFloat)transcriptWidth marginInsets:(UIEdgeInsets)marginInsets shouldShowPhotoButton:(BOOL)shouldShowPhotoButton shouldShowCharacterCount:(BOOL)shouldShowCharacterCount; // iOS 9
+- (CGFloat)leftBalloonMaxWidthForTranscriptWidth:(CGFloat)transcriptWidth marginInsets:(UIEdgeInsets)marginInsets; // iOS 8
+- (CGFloat)rightBalloonMaxWidthForEntryContentViewWidth:(CGFloat)entryContentViewWidth; // iOS 8
 - (CGFloat)transcriptContactImageDiameter;
 - (UIColor *)transcriptBackgroundColor;
+- (BOOL)shouldShowPhotoButton;
+- (BOOL)shouldShowCharacterCount;
 - (BOOL)transcriptCanUseOpaqueMask;
 - (CGFloat)photoPickerMaxPhotoHeight;
 - (BOOL)photoPickerShouldZoomOnSelection;
@@ -691,16 +701,22 @@ extern NSString *PUTCreatePathForPersistentURL(NSURL *url);
 
 @interface SPSearchAgent : NSObject
 @property (retain, nonatomic) NSArray *searchDomains;
-@property (readonly, nonatomic) BOOL queryComplete;
-@property (readonly, nonatomic) NSUInteger resultCount;
+@property (nonatomic, readonly) BOOL queryComplete;
 @property (assign, nonatomic) id<SPSearchAgentDelegate> delegate;
 - (SPSearchResultSection *)sectionAtIndex:(NSUInteger)index;
+- (BOOL)hasResults; // iOS 9
+- (NSUInteger)sectionCount; // iOS 9
+- (NSUInteger)resultCount; // iOS 8
 - (NSString *)queryString;
-- (BOOL)setQueryString:(NSString *)queryString;
+- (BOOL)setQueryString:(NSString *)queryString withResponse:(NSDictionary *)response keyboardLanguage:(NSString *)keyboardLanguage keyboardPrimaryLanguage:(NSString *)keyboardPrimaryLanguage isStable:(BOOL)isStable levelZKW:(int)levelZKW allowInternet:(BOOL)allowInternet; // iOS 9
+- (BOOL)setQueryString:(NSString *)queryString keyboardLanguage:(NSString *)keyboardLanguage keyboardPrimaryLanguage:(NSString *)keyboardPrimaryLanguage levelZKW:(int)levelZKW allowInternet:(BOOL)allowInternet;
+- (BOOL)setQueryString:(NSString *)queryString keyboardLanguage:(NSString *)keyboardLanguage withResponse:(NSDictionary *)response isStable:(BOOL)isStable;
+- (BOOL)setQueryString:(NSString *)queryString; // iOS 8
 @end
 
 @interface CouriaSearchAgent : SPSearchAgent <SPSearchAgentDelegate>
 @property (copy) void (^ updateHandler)(void);
+- (BOOL)hasResults;
 @end
 
 @interface SBApplication : NSObject

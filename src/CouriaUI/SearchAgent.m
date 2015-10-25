@@ -27,4 +27,14 @@
     }
 }
 
+- (BOOL)hasResults {
+    if ([super respondsToSelector:@selector(hasResults)]) {
+        return [super hasResults];
+    } else if ([super respondsToSelector:@selector(resultCount)]) {
+        return super.resultCount > 0;
+    } else {
+        return NO;
+    }
+}
+
 @end

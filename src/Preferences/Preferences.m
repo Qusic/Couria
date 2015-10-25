@@ -100,7 +100,7 @@ static CPDistributedMessagingCenter *messagingCenter;
         [specifiers addObjectsFromArray:self.extensionsSpecifiers];
         [specifiers addObject:({
             PSSpecifier *specifier = [PSSpecifier groupSpecifierWithName:CouriaLocalizedString(@"ABOUT")];
-            [specifier setProperty:@"Couria © 2015 Qusic" forKey:@"footerText"];
+            [specifier setProperty:@"Couria © Qusic" forKey:@"footerText"];
             specifier;
         })];
         [specifiers addObjectsFromArray:self.aboutSpecifiers];
