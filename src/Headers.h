@@ -246,7 +246,6 @@ extern NSString *IMStripFormattingFromAddress(NSString *formattedAddress);
 @property (nonatomic, readonly) NSArray *participants;
 @property (nonatomic, readonly) NSArray *chatItems;
 @property (assign, nonatomic) NSUInteger numberOfMessagesToKeepLoaded;
-- (NSInteger)__ck_watermarkMessageID;
 - (NSString *)loadMessagesBeforeDate:(NSDate *)date limit:(NSUInteger)limit loadImmediately:(BOOL)immediately;
 @end
 
@@ -330,8 +329,13 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 
 @interface CKConversationList : NSObject
 + (instancetype)sharedConversationList;
+- (NSArray *)conversations;
+- (NSArray *)activeConversations;
 - (CKConversation *)conversationForExistingChatWithGroupID:(NSString *)groupID;
 - (CKConversation *)conversationForHandles:(NSArray *)handled create:(BOOL)create;
+- (void)setNeedsReload;
+- (void)resort;
+- (void)resetCaches;
 @end
 
 @interface CKComposition : NSObject
