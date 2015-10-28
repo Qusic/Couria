@@ -1,11 +1,13 @@
 #import "../Headers.h"
 
+static NSUInteger const contactsSearchDomain = 2;
+
 @implementation CouriaSearchAgent
 
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.searchDomains = @[@2];
+        self.searchDomains = @[@(contactsSearchDomain)];
         self.delegate = self;
     }
     return self;
@@ -35,6 +37,12 @@
     } else {
         return NO;
     }
+}
+
+- (SPSearchResultSection *)contactsSection {
+    return [self.sections filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(SPSearchResultSection *section, NSDictionary *bindings) {
+        return section.domain == contactsSearchDomain;
+    }]].firstObject;
 }
 
 @end

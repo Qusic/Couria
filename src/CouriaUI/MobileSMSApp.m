@@ -75,7 +75,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
                 }];
             } else if (searchAgent.hasResults) {
                 if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
-                    [[searchAgent sectionAtIndex:0].results enumerateObjectsUsingBlock:^(SPSearchResult *agentResult, NSUInteger index, BOOL *stop) {
+                    [searchAgent.contactsSection.results enumerateObjectsUsingBlock:^(SPSearchResult *agentResult, NSUInteger index, BOOL *stop) {
                         ABRecordID recordID = (ABRecordID)agentResult.identifier;
                         ABRecordRef record = ABAddressBookGetPersonWithRecordID(addressBook, recordID);
                         if (record != NULL) {

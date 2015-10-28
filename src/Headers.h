@@ -738,6 +738,7 @@ extern NSString *PUTCreatePathForPersistentURL(NSURL *url);
 @end
 
 @interface SPSearchResultSection : NSObject
+@property (nonatomic) NSUInteger domain;
 @property (retain, nonatomic) NSString *displayIdentifier;
 @property (retain, nonatomic) NSMutableArray *results;
 - (SPSearchResult *)resultsAtIndex:(NSUInteger)index;
@@ -755,6 +756,7 @@ extern NSString *PUTCreatePathForPersistentURL(NSURL *url);
 @property (retain, nonatomic) NSArray *searchDomains;
 @property (nonatomic, readonly) BOOL queryComplete;
 @property (assign, nonatomic) id<SPSearchAgentDelegate> delegate;
+@property (readonly) NSArray *sections;
 - (SPSearchResultSection *)sectionAtIndex:(NSUInteger)index;
 - (BOOL)hasResults; // iOS 9
 - (NSUInteger)sectionCount; // iOS 9
@@ -769,6 +771,7 @@ extern NSString *PUTCreatePathForPersistentURL(NSURL *url);
 @interface CouriaSearchAgent : SPSearchAgent <SPSearchAgentDelegate>
 @property (copy) void (^ updateHandler)(void);
 - (BOOL)hasResults;
+- (SPSearchResultSection *)contactsSection;
 @end
 
 @interface SBApplication : NSObject
