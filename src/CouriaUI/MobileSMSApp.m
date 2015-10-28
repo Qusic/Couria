@@ -5,6 +5,8 @@ static ABAddressBookRef addressBook;
 
 CHDeclareClass(CouriaInlineReplyViewController)
 CHDeclareClass(CouriaInlineReplyViewController_MobileSMSApp)
+CHDeclareClass(IMDaemonController)
+CHDeclareClass(CNAvatarView)
 
 CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, setupConversation) {
     NSString *chatIdentifier = self.context[CKBBUserInfoKeyChatIdentifierKey];
@@ -42,20 +44,30 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
             NSMutableArray *contacts = [NSMutableArray array];
             NSString *queryString = searchAgent.queryString;
             if (queryString.length == 0) {
-                [[[IMChatRegistry sharedInstance].allExistingChats sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastFinishedMessage.time" ascending:NO], [NSSortDescriptor sortDescriptorWithKey:@"__ck_watermarkMessageID" ascending:NO]]] enumerateObjectsUsingBlock:^(IMChat *chat, NSUInteger index, BOOL *stop) {
+                CKConversationList *conversationList = [CKConversationList sharedConversationList];
+                [conversationList setNeedsReload];
+                [conversationList resort];
+                [conversationList.activeConversations enumerateObjectsUsingBlock:^(CKConversation *conversation, NSUInteger index, BOOL *stop) {
                     [contacts addObject:@{
-                        IdentifierKey: chat.chatIdentifier,
-                        NicknameKey: chat.participants.count == 1 ? chat.recipient.name : ({
-                            NSMutableString *groupName = [NSMutableString string];
-                            [chat.participants enumerateObjectsUsingBlock:^(IMHandle *handle, NSUInteger index, BOOL *stop) {
-                                if (index > 0) {
-                                    [groupName appendString:index == chat.participants.count - 1 ? @" & " : @", "];
-                                }
-                                [groupName appendString:handle.name];
-                            }];
-                            groupName;
-                        }),
-                        AvatarKey: [CKEntity copyEntityForAddressString:chat.chatIdentifier].transcriptContactImage //TODO: group thumbnail
+                        IdentifierKey: conversation.groupID,
+                        NicknameKey: conversation.hasDisplayName ? conversation.displayName : conversation.name,
+                        AvatarKey: ({
+                            UIImage *image = nil;
+                            if (CHClass(CNAvatarView)) {
+                                static CNAvatarView *avatarView;
+                                static dispatch_once_t onceToken;
+                                dispatch_once(&onceToken, ^{
+                                    CGFloat size = [CKUIBehavior sharedBehaviors].transcriptContactImageDiameter;
+                                    avatarView = [CHAlloc(CNAvatarView)initWithFrame:CGRectMake(0, 0, size, size)];
+                                });
+                                avatarView.contacts = conversation.orderedContactsForAvatarView;
+                                [avatarView _updateAvatarView];
+                                image = avatarView.contentImage;
+                            } else {
+                                image = [CKEntity copyEntityForAddressString:conversation.groupID].transcriptContactImage;
+                            }
+                            image;
+                        })
                     }];
                 }];
             } else if (searchAgent.hasResults) {
@@ -166,6 +178,22 @@ CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
     }
 }
 
+CHOptimizedMethod(2, self, void, IMDaemonController, addListenerID, NSString *, listenerID, capabilities, FZListenerCapability, capabilities) {
+    CHSuper(2, IMDaemonController, addListenerID, listenerID, capabilities, capabilities & ~kFZListenerCapOnDemandChatRegistry);
+}
+
+FHFunction(0, BOOL, CKIsRunningInFullCKClient) {
+    return YES;
+}
+
+FHFunction(0, BOOL, CKIsRunningInMessages) {
+    return YES;
+}
+
+FHFunction(0, BOOL, CKIsRunningInMessagesOrSpringBoard) {
+    return YES;
+}
+
 void CouriaUIMobileSMSAppInit(void) {
     searchAgent = [[CouriaSearchAgent alloc]init];
     addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
@@ -176,4 +204,10 @@ void CouriaUIMobileSMSAppInit(void) {
         CHHook(0, CouriaInlineReplyViewController_MobileSMSApp, interactiveNotificationDidAppear);
         CHHook(1, CouriaInlineReplyViewController_MobileSMSApp, messageEntryViewDidChange);
     }
+    CHLoadClass(IMDaemonController);
+    CHLoadLateClass(CNAvatarView);
+    CHHook(2, IMDaemonController, addListenerID, capabilities);
+    FHHook(CKIsRunningInFullCKClient);
+    FHHook(CKIsRunningInMessages);
+    FHHook(CKIsRunningInMessagesOrSpringBoard);
 }

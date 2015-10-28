@@ -7,6 +7,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <Social/Social.h>
 #import <CaptainHook.h>
+#import <FunctionHook.h>
 #import <Activator/libactivator.h>
 #import <Flipswitch/Flipswitch.h>
 #import <dlfcn.h>
@@ -166,6 +167,9 @@ extern void BBDataProviderSetApplicationBadgeString(BBDataProvider *dataProvider
 + (instancetype)sharedInstance;
 @end
 
+typedef unsigned int FZListenerCapability;
+
+extern FZListenerCapability kFZListenerCapOnDemandChatRegistry;
 extern NSString *IMAttachmentCharacterString;
 extern NSString *IMMessagePartAttributeName;
 extern NSString *IMFileTransferGUIDAttributeName;
@@ -269,8 +273,33 @@ extern NSString *IMStripFormattingFromAddress(NSString *formattedAddress);
 - (NSArray *)allExistingChats;
 @end
 
+@interface IMDaemonListener : NSObject
+@property (nonatomic, readonly) NSArray *allServices;
+@property (nonatomic, readonly) NSArray *handlers;
+- (void)addHandler:(id)handler;
+@end
+
+@interface IMDaemonController : NSObject
+@property (nonatomic, readonly) FZListenerCapability capabilities;
+@property (nonatomic, readonly) IMDaemonListener *listener;
+@property (nonatomic, readonly) BOOL isConnected;
+@property (nonatomic, readonly) BOOL isConnecting;
++ (instancetype)sharedInstance;
+- (BOOL)connectToDaemon;
+- (BOOL)connectToDaemonWithLaunch:(BOOL)launch;
+- (BOOL)connectToDaemonWithLaunch:(BOOL)launch capabilities:(FZListenerCapability)capabilities blockUntilConnected:(BOOL)block;
+- (BOOL)addListenerID:(NSString *)listenerID capabilities:(FZListenerCapability)capabilities;
+- (FZListenerCapability)capabilitiesForListenerID:(NSString *)listenerID;
+- (BOOL)setCapabilities:(FZListenerCapability)capabilities forListenerID:(NSString *)listenerID;
+@end
+
 #define CKBBUserInfoKeyChatIdentifierKey @"CKBBUserInfoKeyChatIdentifier"
 extern NSBundle *CKFrameworkBundle(void);
+extern FZListenerCapability CKListenerCapabilities(void);
+extern FZListenerCapability CKListenerPaginatedChatRegistryCapabilities(void);
+extern BOOL CKIsRunningInFullCKClient(void);
+extern BOOL CKIsRunningInMessages(void);
+extern BOOL CKIsRunningInMessagesOrSpringBoard(void);
 
 @interface CKEntity : NSObject
 @property (copy, nonatomic, readonly) NSString *name;
@@ -323,7 +352,18 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 
 @interface CKConversation : NSObject
 @property (retain, nonatomic) IMChat *chat;
+@property (nonatomic, readonly, retain) NSString *groupID;
+@property (retain, nonatomic, readonly) NSString *name;
+@property (nonatomic) NSString *displayName;
+@property (nonatomic, readonly) BOOL hasDisplayName;
+@property (nonatomic, readonly, retain) CKEntity *recipient;
+@property (retain, nonatomic) NSArray *recipients;
+@property (nonatomic, readonly) unsigned int recipientCount;
+@property (getter=isGroupConversation, nonatomic, readonly) BOOL groupConversation;
+@property (retain, nonatomic, readonly) NSString *previewText;
+@property (nonatomic, readonly) BOOL isPreviewTextForAttachment;
 @property (assign, nonatomic) NSUInteger limitToLoad;
+- (NSArray *)orderedContactsForAvatarView;
 - (void)markAllMessagesAsRead;
 @end
 
@@ -646,7 +686,9 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 - (CGFloat)balloonMaxWidthForTranscriptWidth:(CGFloat)transcriptWidth marginInsets:(UIEdgeInsets)marginInsets shouldShowPhotoButton:(BOOL)shouldShowPhotoButton shouldShowCharacterCount:(BOOL)shouldShowCharacterCount; // iOS 9
 - (CGFloat)leftBalloonMaxWidthForTranscriptWidth:(CGFloat)transcriptWidth marginInsets:(UIEdgeInsets)marginInsets; // iOS 8
 - (CGFloat)rightBalloonMaxWidthForEntryContentViewWidth:(CGFloat)entryContentViewWidth; // iOS 8
+- (CGFloat)conversationListContactImageDiameter;
 - (CGFloat)transcriptContactImageDiameter;
+- (CGFloat)transcriptDrawerContactImageDiameter;
 - (UIColor *)transcriptBackgroundColor;
 - (BOOL)shouldShowPhotoButton;
 - (BOOL)shouldShowCharacterCount;
@@ -679,6 +721,12 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 @end
 
 @interface CKUIBehaviorHUDPad : CKUIBehavior
+@end
+
+@interface CNAvatarView : UIControl
+@property (nonatomic, retain) NSArray *contacts;
+@property (nonatomic, readonly) UIImage *contentImage;
+- (void)_updateAvatarView;
 @end
 
 extern BOOL PUTIsPersistentURL(NSURL *url);
