@@ -1,16 +1,18 @@
 #import "../Headers.h"
 
+static NSString * const daemonListenerID = @"MessagesNotificationViewService";
+
 static CouriaSearchAgent *searchAgent;
 static ABAddressBookRef addressBook;
 
 CHDeclareClass(CouriaInlineReplyViewController)
 CHDeclareClass(CouriaInlineReplyViewController_MobileSMSApp)
-CHDeclareClass(IMDaemonController)
 CHDeclareClass(CNAvatarView)
 
 CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, setupConversation) {
     NSString *chatIdentifier = self.context[CKBBUserInfoKeyChatIdentifierKey];
     if (chatIdentifier != nil) {
+        [[IMDaemonController sharedInstance]setCapabilities:CKListenerPaginatedChatRegistryCapabilities() forListenerID:daemonListenerID];
         CHSuper(0, CouriaInlineReplyViewController_MobileSMSApp, setupConversation);
         CKConversationList *conversationList = [CKConversationList sharedConversationList];
         CKConversation *conversation = [conversationList conversationForExistingChatWithGroupID:chatIdentifier];
@@ -33,6 +35,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
         self.conversationViewController.chatItems = chatItems;
         self.entryView.conversation = conversation;
     } else {
+        [[IMDaemonController sharedInstance]setCapabilities:CKListenerCapabilities() forListenerID:daemonListenerID];
         searchAgent.updateHandler = ^(void) {
             if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
                 dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
@@ -178,10 +181,6 @@ CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
     }
 }
 
-CHOptimizedMethod(2, self, void, IMDaemonController, addListenerID, NSString *, listenerID, capabilities, FZListenerCapability, capabilities) {
-    CHSuper(2, IMDaemonController, addListenerID, listenerID, capabilities, capabilities & ~kFZListenerCapOnDemandChatRegistry);
-}
-
 FHFunction(0, BOOL, CKIsRunningInFullCKClient) {
     return YES;
 }
@@ -204,9 +203,7 @@ void CouriaUIMobileSMSAppInit(void) {
         CHHook(0, CouriaInlineReplyViewController_MobileSMSApp, interactiveNotificationDidAppear);
         CHHook(1, CouriaInlineReplyViewController_MobileSMSApp, messageEntryViewDidChange);
     }
-    CHLoadClass(IMDaemonController);
     CHLoadLateClass(CNAvatarView);
-    CHHook(2, IMDaemonController, addListenerID, capabilities);
     FHHook(CKIsRunningInFullCKClient);
     FHHook(CKIsRunningInMessages);
     FHHook(CKIsRunningInMessagesOrSpringBoard);
