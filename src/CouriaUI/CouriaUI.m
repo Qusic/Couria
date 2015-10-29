@@ -3,8 +3,8 @@
 CHConstructor {
     @autoreleasepool {
         CouriaUIViewServiceInit();
+        CouriaUIPhotosViewInit();
         CouriaUIMobileSMSAppInit();
         CouriaUIThirdPartyAppInit();
-        CouriaUIPhotosViewInit();
     }
 }

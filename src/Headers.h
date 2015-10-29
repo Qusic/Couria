@@ -1,6 +1,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import <Contacts/Contacts.h>
+#import <ContactsUI/ContactsUI.h>
 #import <AddressBook/AddressBook.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <Photos/Photos.h>
@@ -726,14 +728,47 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 @interface CNAvatarView : UIControl
 @property (nonatomic, retain) NSArray *contacts;
 @property (nonatomic, readonly) UIImage *contentImage;
++ (id<CNKeyDescriptor>)descriptorForRequiredKeys;
 - (void)_updateAvatarView;
 @end
 
 extern BOOL PUTIsPersistentURL(NSURL *url);
 extern NSString *PUTCreatePathForPersistentURL(NSURL *url);
 
+typedef NS_ENUM(UInt32, SPSearchDomain) {
+    SPSearchDomainTopHits       = 0x00,
+    SPSearchDomainOther         = 0x01,
+    SPSearchDomainPerson        = 0x02,
+    SPSearchDomainMessage       = 0x03,
+    SPSearchDomainApplication   = 0x04,
+    SPSearchDomainNote          = 0x05,
+    SPSearchDomainMusic         = 0x06,
+    SPSearchDomainPodcast       = 0x07,
+    SPSearchDomainVideo         = 0x08,
+    SPSearchDomainAudiobook     = 0x09,
+    SPSearchDomainEvent         = 0x0a,
+    SPSearchDomainBookmark      = 0x0b,
+    SPSearchDomainVoiceMemo     = 0x0c,
+    SPSearchDomainReminder      = 0x0d,
+    SPSearchDomainDocument      = 0x0e,
+    SPSearchDomainCloudDocument = 0x0f,
+    SPSearchDomainParsec        = 0x10,
+    SPSearchDomainWebSearch     = 0x11,
+    SPSearchDomainSafari        = 0x12,
+    SPSearchDomainSettings      = 0x13,
+    SPSearchDomainPseudoContact = 0x14,
+    SPSearchDomainMapCategory   = 0x15,
+    SPSearchDomainZKWs          = 0x16,
+    SPSearchDomainCoreSpotlight = 0x17,
+    SPSearchDomainCalculation   = 0x18,
+    SPSearchDomainConversion    = 0x19,
+    SPSearchDomainMobileSMS     = 0x1a
+};
+
 @interface SPSearchResult : NSObject
 @property (nonatomic) NSUInteger identifier;
+@property (nonatomic) unsigned int searchResultDomain; // iOS 9
+@property (retain, nonatomic) NSString *externalIdentifier; // iOS 9
 @property (retain, nonatomic) NSString *title;
 @end
 
@@ -770,8 +805,16 @@ extern NSString *PUTCreatePathForPersistentURL(NSURL *url);
 
 @interface CouriaSearchAgent : SPSearchAgent <SPSearchAgentDelegate>
 @property (copy) void (^ updateHandler)(void);
+- (void)setQueryString:(NSString *)queryString inputMode:(UITextInputMode *)inputMode;
 - (BOOL)hasResults;
-- (SPSearchResultSection *)contactsSection;
+- (NSArray *)contactsResults;
+@end
+
+@interface CouriaAddressBook : NSObject
+- (BOOL)accessGranted;
+- (void)requestAccess;
+- (NSArray *)processSearchResults:(NSArray *)searchResults withBlock:(id (^)(NSString *identifier, NSString *nickname, UIImage *avatar))block;
+- (UIImage *)avatarImageForContacts:(NSArray *)contacts;
 @end
 
 @interface SBApplication : NSObject
@@ -862,9 +905,9 @@ extern void CouriaDismissViewController(void);
 extern void CouriaNotificationsInit(void);
 extern void CouriaGesturesInit(void);
 extern void CouriaUIViewServiceInit(void);
+extern void CouriaUIPhotosViewInit(void);
 extern void CouriaUIMobileSMSAppInit(void);
 extern void CouriaUIThirdPartyAppInit(void);
-extern void CouriaUIPhotosViewInit(void);
 
 CHInline void CouriaRegisterDefaults(NSUserDefaults *preferences, NSString *applicationIdentifier) {
     [preferences registerDefaults:@{
