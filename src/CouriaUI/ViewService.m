@@ -20,7 +20,7 @@ CHOptimizedMethod(0, super, id, CouriaInlineReplyViewController, init) {
             CKUIBehavior *uiBehavior = [CKUIBehavior sharedBehaviors];
             if ([CouriaConversationViewController instancesRespondToSelector:@selector(initWithConversation:balloonMaxWidth:marginInsets:)]) {
                 CGFloat transcriptWidth = self.view.bounds.size.width;
-                UIEdgeInsets marginInsets = UIEdgeInsetsMake(0, 16, 0, 16);
+                UIEdgeInsets marginInsets = UIEdgeInsetsMake(0, 20, 0, 20);
                 CGFloat balloonMaxWidth = [uiBehavior balloonMaxWidthForTranscriptWidth:transcriptWidth marginInsets:marginInsets shouldShowPhotoButton:YES shouldShowCharacterCount:NO];
                 controller = [[CouriaConversationViewController alloc]initWithConversation:nil balloonMaxWidth:balloonMaxWidth marginInsets:marginInsets];
             } else if ([CouriaConversationViewController instancesRespondToSelector:@selector(initWithConversation:rightBalloonMaxWidth:leftBalloonMaxWidth:)]) {
