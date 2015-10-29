@@ -1,6 +1,6 @@
 Package: me.qusic.couriaios8
 Name: Couria
-Version: 0.8.6
+Version: 0.9
 Description: Centralized Quick Reply System
 Section: Tweaks
 Depends: firmware (>= 8.0), mobilesubstrate, preferenceloader
