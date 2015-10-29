@@ -125,6 +125,15 @@ CHOptimizedMethod(1, new, void, CouriaInlineReplyViewController, photoButtonTapp
     }
 }
 
+CHOptimizedMethod(6, self, id ,CKMessageEntryView, initWithFrame, CGRect, frame, marginInsets, UIEdgeInsets, marginInsets, shouldShowSendButton, BOOL, shouldShowSendButton, shouldShowSubject, BOOL, shouldShowSubject, shouldShowPhotoButton, BOOL, shouldShowPhotoButton, shouldShowCharacterCount, BOOL, shouldShowCharacterCount) {
+    shouldShowPhotoButton = YES;
+    self = CHSuper(6, CKMessageEntryView, initWithFrame, frame, marginInsets, marginInsets, shouldShowSendButton, shouldShowSendButton, shouldShowSubject, shouldShowSubject, shouldShowPhotoButton, shouldShowPhotoButton, shouldShowCharacterCount, shouldShowCharacterCount);
+    if (self) {
+        self.shouldShowPhotoButton = NO;
+    }
+    return self;
+}
+
 CHOptimizedMethod(5, self, id, CKMessageEntryView, initWithFrame, CGRect, frame, shouldShowSendButton, BOOL, sendButton, shouldShowSubject, BOOL, subject, shouldShowPhotoButton, BOOL, photoButton, shouldShowCharacterCount, BOOL, characterCount) {
     photoButton = YES;
     self = CHSuper(5, CKMessageEntryView, initWithFrame, frame, shouldShowSendButton, sendButton, shouldShowSubject, subject, shouldShowPhotoButton, photoButton, shouldShowCharacterCount, characterCount);
@@ -206,6 +215,7 @@ void CouriaUIViewServiceInit(void) {
     }
     CHLoadClass(CKMessageEntryView);
     CHLoadClass(CKUIBehavior);
+    CHHook(6, CKMessageEntryView, initWithFrame, marginInsets, shouldShowSendButton, shouldShowSubject, shouldShowPhotoButton, shouldShowCharacterCount);
     CHHook(5, CKMessageEntryView, initWithFrame, shouldShowSendButton, shouldShowSubject, shouldShowPhotoButton, shouldShowCharacterCount);
     CHHook(1, CKMessageEntryView, setShouldShowPhotoButton);
     CHHook(0, CKMessageEntryView, updateEntryView);

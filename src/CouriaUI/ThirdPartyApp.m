@@ -69,6 +69,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
 
 CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp, setupView) {
     CHSuper(0, CouriaInlineReplyViewController_ThirdPartyApp, setupView);
+    self.entryView.shouldShowSubject = NO;
     self.entryView.shouldShowCharacterCount = NO;
     self.entryView.shouldShowPhotoButton = [self.context[CouriaIdentifier OptionsDomain][CanSendPhotosOption] boolValue];
 }

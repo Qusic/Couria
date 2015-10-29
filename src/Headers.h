@@ -552,7 +552,8 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 @property (retain, nonatomic) CKMessageEntryContentView *contentView;
 @property (retain, nonatomic) UIButton *sendButton;
 @property (retain, nonatomic) UIButton *photoButton;
-- (instancetype)initWithFrame:(CGRect)frame shouldShowSendButton:(BOOL)sendButton shouldShowSubject:(BOOL)subject shouldShowPhotoButton:(BOOL)photoButton shouldShowCharacterCount:(BOOL)characterCount;
+- (instancetype)initWithFrame:(CGRect)frame marginInsets:(UIEdgeInsets)marginInsets shouldShowSendButton:(BOOL)shouldShowSendButton shouldShowSubject:(BOOL)shouldShowSubject shouldShowPhotoButton:(BOOL)shouldShowPhotoButton shouldShowCharacterCount:(BOOL)shouldShowCharacterCount; // iOS 9
+- (instancetype)initWithFrame:(CGRect)frame shouldShowSendButton:(BOOL)sendButton shouldShowSubject:(BOOL)subject shouldShowPhotoButton:(BOOL)photoButton shouldShowCharacterCount:(BOOL)characterCount; // iOS 8
 - (void)updateEntryView;
 @end
 
