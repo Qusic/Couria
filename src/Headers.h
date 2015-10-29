@@ -374,7 +374,8 @@ typedef NS_ENUM(SInt8, CKBalloonColor) {
 - (NSArray *)conversations;
 - (NSArray *)activeConversations;
 - (CKConversation *)conversationForExistingChatWithGroupID:(NSString *)groupID;
-- (CKConversation *)conversationForHandles:(NSArray *)handled create:(BOOL)create;
+- (CKConversation *)conversationForHandles:(NSArray *)handles displayName:(NSString *)displayName joinedChatsOnly:(BOOL)joinedChatsOnly create:(BOOL)create; // iOS 9
+- (CKConversation *)conversationForHandles:(NSArray *)handles create:(BOOL)create; // iOS 8
 - (void)setNeedsReload;
 - (void)resort;
 - (void)resetCaches;

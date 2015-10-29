@@ -20,7 +20,11 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
             IMService *service = [[IMPreferredServiceManager sharedPreferredServiceManager]preferredServiceForHandles:@[entity.defaultIMHandle] newComposition:YES error:NULL serverCheckCompletionBlock:NULL];
             IMAccount *account = [[IMAccountController sharedInstance]__ck_defaultAccountForService:service];
             NSArray *handles = [account __ck_handlesFromAddressStrings:@[chatIdentifier]];
-            conversation = [conversationList conversationForHandles:handles create:YES];
+            if ([conversationList respondsToSelector:@selector(conversationForHandles:displayName:joinedChatsOnly:create:)]) {
+                conversation = [conversationList conversationForHandles:handles displayName:nil joinedChatsOnly:NO create:YES];
+            } else if ([conversationList respondsToSelector:@selector(conversationForHandles:create:)]) {
+                conversation = [conversationList conversationForHandles:handles create:YES];
+            }
         }
         static NSUInteger const messagesLimit = 51;
         conversation.limitToLoad = messagesLimit;
