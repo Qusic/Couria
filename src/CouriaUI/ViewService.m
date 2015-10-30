@@ -101,6 +101,18 @@ CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController, messageEntryV
     [self.view layoutIfNeeded];
 }
 
+CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController, messageEntryViewSendButtonHit, CKMessageEntryView *, entryView) {
+    if ([preferences boolForKey:[self.context[CouriaIdentifier ApplicationDomain]stringByAppendingString:DismissOnSendSetting]]) {
+        CHSuper(1, CouriaInlineReplyViewController, messageEntryViewSendButtonHit, entryView);
+    } else {
+        UITextView *typingView = [self viewForTyping];
+        [self sendMessage];
+        self.entryView.sendingMessage = NO;
+        self.entryView.composition = [CKComposition composition];
+        [typingView becomeFirstResponder];
+    }
+}
+
 CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController, sendMessage) {
     if (self.photosViewController.view.superview == self.view) {
         [self photoButtonTapped:nil];
@@ -204,6 +216,7 @@ void CouriaUIViewServiceInit(void) {
         CHHook(0, CouriaInlineReplyViewController, preferredContentHeight);
         CHHook(0, CouriaInlineReplyViewController, viewDidLayoutSubviews);
         CHHook(1, CouriaInlineReplyViewController, messageEntryViewDidChange);
+        CHHook(1, CouriaInlineReplyViewController, messageEntryViewSendButtonHit);
         CHHook(0, CouriaInlineReplyViewController, sendMessage);
         CHHook(1, CouriaInlineReplyViewController, photoButtonTapped);
     }

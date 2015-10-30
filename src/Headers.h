@@ -548,6 +548,7 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 @interface CKMessageEntryView : UIView
 @property (retain, nonatomic) CKConversation *conversation;
 @property (retain, nonatomic) CKComposition *composition;
+@property (assign, nonatomic, getter=isSendingMessage) BOOL sendingMessage;
 @property (assign, nonatomic) BOOL shouldShowSendButton;
 @property (assign, nonatomic) BOOL shouldShowSubject;
 @property (assign, nonatomic) BOOL shouldShowPhotoButton;
