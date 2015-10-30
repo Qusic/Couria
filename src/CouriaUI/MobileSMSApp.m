@@ -11,7 +11,9 @@ CHDeclareClass(CouriaInlineReplyViewController_MobileSMSApp)
 CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, setupConversation) {
     NSString *chatIdentifier = self.context[CKBBUserInfoKeyChatIdentifierKey];
     if (chatIdentifier != nil) {
-        [[IMDaemonController sharedInstance]setCapabilities:CKListenerPaginatedChatRegistryCapabilities() forListenerID:daemonListenerID];
+        if (CKListenerPaginatedChatRegistryCapabilities) {
+            [[IMDaemonController sharedInstance]setCapabilities:CKListenerPaginatedChatRegistryCapabilities() forListenerID:daemonListenerID];
+        }
         CHSuper(0, CouriaInlineReplyViewController_MobileSMSApp, setupConversation);
         CKConversationList *conversationList = [CKConversationList sharedConversationList];
         CKConversation *conversation = [conversationList conversationForExistingChatWithGroupID:chatIdentifier];
@@ -38,7 +40,9 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
         self.conversationViewController.chatItems = chatItems;
         self.entryView.conversation = conversation;
     } else {
-        [[IMDaemonController sharedInstance]setCapabilities:CKListenerCapabilities() forListenerID:daemonListenerID];
+        if (CKListenerCapabilities) {
+            [[IMDaemonController sharedInstance]setCapabilities:CKListenerCapabilities() forListenerID:daemonListenerID];
+        }
         [addressBook requestAccess];
         searchAgent.updateHandler = ^(void) {
             NSMutableArray *contacts = [NSMutableArray array];

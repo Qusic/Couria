@@ -297,8 +297,8 @@ extern NSString *IMStripFormattingFromAddress(NSString *formattedAddress);
 
 #define CKBBUserInfoKeyChatIdentifierKey @"CKBBUserInfoKeyChatIdentifier"
 extern NSBundle *CKFrameworkBundle(void);
-extern FZListenerCapability CKListenerCapabilities(void);
-extern FZListenerCapability CKListenerPaginatedChatRegistryCapabilities(void);
+extern FZListenerCapability CKListenerCapabilities(void) __attribute__((weak_import));
+extern FZListenerCapability CKListenerPaginatedChatRegistryCapabilities(void) __attribute__((weak_import));
 extern BOOL CKIsRunningInFullCKClient(void);
 extern BOOL CKIsRunningInMessages(void);
 extern BOOL CKIsRunningInMessagesOrSpringBoard(void);
