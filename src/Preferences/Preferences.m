@@ -171,13 +171,17 @@ static CPDistributedMessagingCenter *messagingCenter;
 
 - (NSArray *)mainSettingsSpecifiers {
     if (_mainSettingsSpecifiers == nil) {
-        _mainSettingsSpecifiers = @[({
+        _mainSettingsSpecifiers = @[[PSSpecifier emptyGroupSpecifier], ({
             PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"ENABLED") target:self set:@selector(setPreferenceValue:specifier:) get:@selector(readPreferenceValue:) detail:Nil cell:PSSwitchCell edit:Nil];
             [specifier setIdentifier:[self.specifier.identifier stringByAppendingString:EnabledSetting]];
             specifier;
-        }), ({
+        }), [PSSpecifier emptyGroupSpecifier], ({
             PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"AUTHENTICATION_REQUIRED") target:self set:@selector(setPreferenceValue:specifier:) get:@selector(readPreferenceValue:) detail:Nil cell:PSSwitchCell edit:Nil];
             [specifier setIdentifier:[self.specifier.identifier stringByAppendingString:AuthenticationRequiredSetting]];
+            specifier;
+        }), ({
+            PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"DISMISS_ON_SEND") target:self set:@selector(setPreferenceValue:specifier:) get:@selector(readPreferenceValue:) detail:Nil cell:PSSwitchCell edit:Nil];
+            [specifier setIdentifier:[self.specifier.identifier stringByAppendingString:DismissOnSendSetting]];
             specifier;
         })];
     }
@@ -186,7 +190,7 @@ static CPDistributedMessagingCenter *messagingCenter;
 
 - (NSArray *)themeSettingsSpecifiers {
     if (_themeSettingsSpecifiers == nil) {
-        _themeSettingsSpecifiers = @[({
+        _themeSettingsSpecifiers = @[[PSSpecifier groupSpecifierWithName:CouriaLocalizedString(@"BUBBLE_THEME")], ({
             PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:CouriaLocalizedString(@"BUBBLE_THEME") target:self set:@selector(setPreferenceValue:specifier:) get:@selector(readPreferenceValue:) detail:Nil cell:PSSegmentCell edit:Nil];
             [specifier setIdentifier:[self.specifier.identifier stringByAppendingString:BubbleThemeSetting]];
             [specifier setValues:@[@(CouriaBubbleThemeOriginal), @(CouriaBubbleThemeOutline), @(CouriaBubbleThemeCustom)] titles:@[CouriaLocalizedString(@"BUBBLE_THEME_ORIGINAL"), CouriaLocalizedString(@"BUBBLE_THEME_OUTLINE"), CouriaLocalizedString(@"BUBBLE_THEME_CUSTOM")]];
@@ -219,9 +223,7 @@ static CPDistributedMessagingCenter *messagingCenter;
 - (NSArray *)specifiers {
     if (_specifiers == nil) {
         NSMutableArray *specifiers = [NSMutableArray array];
-        [specifiers addObject:[PSSpecifier emptyGroupSpecifier]];
         [specifiers addObjectsFromArray:self.mainSettingsSpecifiers];
-        [specifiers addObject:[PSSpecifier groupSpecifierWithName:CouriaLocalizedString(@"BUBBLE_THEME")]];
         [specifiers addObjectsFromArray:self.themeSettingsSpecifiers];
         _specifiers = specifiers;
     }

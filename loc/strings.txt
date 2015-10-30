@@ -51,6 +51,9 @@
   [AUTHENTICATION_REQUIRED]
     en = Authentication Required
     zh_CN = 需要认证
+  [DISMISS_ON_SEND]
+    en = Dismiss On Send
+    zh_CN = 发送后关闭
   [BUBBLE_THEME]
     en = Bubble Theme
     zh_CN = 气泡主题

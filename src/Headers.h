@@ -54,6 +54,7 @@
 
 #define EnabledSetting @".enabled"
 #define AuthenticationRequiredSetting @".authenticationRequired"
+#define DismissOnSendSetting @".dismissOnSend"
 #define BubbleThemeSetting @".bubbleTheme"
 #define CustomMyBubbleColorSetting @".customMyBubbleColor"
 #define CustomMyBubbleTextColorSetting @".customMyBubbleTextColor"
@@ -917,6 +918,7 @@ CHInline void CouriaRegisterDefaults(NSUserDefaults *preferences, NSString *appl
     [preferences registerDefaults:@{
         [applicationIdentifier stringByAppendingString:EnabledSetting]: @(YES),
         [applicationIdentifier stringByAppendingString:AuthenticationRequiredSetting]: @(NO),
+        [applicationIdentifier stringByAppendingString:DismissOnSendSetting]: @(YES),
         [applicationIdentifier stringByAppendingString:BubbleThemeSetting]: @(CouriaBubbleThemeOutline)
     }];
 }
