@@ -2,6 +2,15 @@
 
 @implementation CouriaConversationViewController
 
+- (void)setConversation:(CKConversation *)conversation {
+    [super setConversation:conversation];
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+    [notificationCenter removeObserver:self name:IMChatItemsDidChangeNotification object:nil];
+    if (conversation.chat) {
+        [notificationCenter addObserver:self selector:@selector(chatItemsDidChange:) name:IMChatItemsDidChangeNotification object:conversation.chat];
+    }
+}
+
 - (void)configureCell:(CKTranscriptCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     [super configureCell:cell forItemAtIndexPath:indexPath];
     if ([cell isKindOfClass:CKTranscriptMessageCell.class]) {

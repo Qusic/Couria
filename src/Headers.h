@@ -172,6 +172,7 @@ extern void BBDataProviderSetApplicationBadgeString(BBDataProvider *dataProvider
 typedef unsigned int FZListenerCapability;
 
 extern FZListenerCapability kFZListenerCapOnDemandChatRegistry;
+extern NSString *IMChatItemsDidChangeNotification;
 extern NSString *IMAttachmentCharacterString;
 extern NSString *IMMessagePartAttributeName;
 extern NSString *IMFileTransferGUIDAttributeName;
@@ -497,6 +498,7 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 - (instancetype)initWithConversation:(CKConversation *)conversation rightBalloonMaxWidth:(CGFloat)rightBalloonMaxWidth leftBalloonMaxWidth:(CGFloat)leftBalloonMaxWidth; // iOS 8
 - (CKChatItem *)chatItemWithIMChatItem:(IMChatItem *)imChatItem;
 - (void)configureCell:(CKTranscriptCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath;
+- (void)chatItemsDidChange:(NSNotification *)notification;
 @end
 
 @interface CouriaConversationViewController : CKTranscriptCollectionViewController
