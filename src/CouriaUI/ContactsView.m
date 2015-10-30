@@ -59,6 +59,7 @@
 - (void)refreshData {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
+        [self.tableView __ck_scrollToTop:NO];
     });
 }
 

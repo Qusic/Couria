@@ -56,6 +56,7 @@
 - (void)refreshData {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.collectionView reloadData];
+        [self.collectionView __ck_scrollToBottom:NO];
     });
 }
 
