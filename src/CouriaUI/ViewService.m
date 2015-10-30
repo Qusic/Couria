@@ -94,12 +94,6 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController, viewDidLayout
     self.contactsViewController.view.frame = CGRectMake(0, 0, size.width, size.height);
     self.photosViewController.view.frame = CGRectMake(0, conversationHeight, size.width, photoHeight);
     self.entryView.frame = CGRectMake(0, conversationHeight + photoHeight * photoShowing, size.width, entryHeight);
-    if (!self.conversationViewController.collectionView.__ck_isScrolledToBottom) {
-        [self.conversationViewController.collectionView __ck_scrollToBottom:NO];
-    }
-    if (!self.contactsViewController.tableView.__ck_isScrolledToTop) {
-        [self.contactsViewController.tableView __ck_scrollToTop:NO];
-    }
 }
 
 CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController, messageEntryViewDidChange, CKMessageEntryView *, entryView) {
