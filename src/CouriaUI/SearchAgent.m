@@ -59,7 +59,7 @@
 }
 
 - (NSArray *)contactsResults {
-    if ([SPSearchResult instanceMethodForSelector:@selector(searchResultDomain)]) {
+    if ([self respondsToSelector:@selector(sections)] && [SPSearchResult instanceMethodForSelector:@selector(searchResultDomain)]) {
         NSMutableArray *results = [NSMutableArray array];
         [self.sections enumerateObjectsUsingBlock:^(SPSearchResultSection *section, NSUInteger index, BOOL *stop) {
             if (section.domain == SPSearchDomainPerson) {
@@ -76,12 +76,6 @@
     } else {
         return [self sectionAtIndex:0].results;
     }
-}
-
-- (SPSearchResultSection *)contactsSection {
-    return [self.sections filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(SPSearchResultSection *section, NSDictionary *bindings) {
-        return section.domain == SPSearchDomainPerson;
-    }]].firstObject;
 }
 
 @end
