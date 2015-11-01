@@ -36,7 +36,14 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_ThirdPartyApp,
                     IMBaseWritingDirectionAttributeName: @(NSWritingDirectionNatural)
                 }];
             }
-            messageItem.context = [IMMessage messageFromIMMessageItem:messageItem sender:nil subject:nil];
+            IMMessage *message = [IMMessage messageFromIMMessageItem:messageItem sender:nil subject:nil];
+            if ([IMMessageItem respondsToSelector:@selector(contextClass)]) {
+                IMMessageItemChatContext *context = [[[IMMessageItem contextClass]alloc]init];
+                CHIvar(context, _message, IMMessage * __strong) = message;
+                messageItem.context = context;
+            } else {
+                messageItem.context = message;
+            }
             CKChatItem *chatItem = [self.conversationViewController chatItemWithIMChatItem:messageItem._newChatItems];
             if (chatItem.transcriptDrawerText == nil) {
                 chatItem.transcriptDrawerText = [[NSAttributedString alloc]initWithString:@""];

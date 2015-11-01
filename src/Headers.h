@@ -201,6 +201,7 @@ extern NSString *IMStripFormattingFromAddress(NSString *formattedAddress);
 @interface IMItem : NSObject
 @property (retain, nonatomic) NSDate *time;
 @property (retain, nonatomic) id context;
++ (Class)contextClass;
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 - (IMChatItem *)_newChatItems;
 @end
@@ -217,6 +218,18 @@ extern NSString *IMStripFormattingFromAddress(NSString *formattedAddress);
 
 @interface IMMessage : NSObject
 + (instancetype)messageFromIMMessageItem:(IMMessageItem *)item sender:(id)sender subject:(id)subject;
+@end
+
+@interface IMItemChatContext : NSObject {
+    IMHandle *_otherHandle;
+    IMHandle *_senderHandle;
+}
+@end
+
+@interface IMMessageItemChatContext : IMItemChatContext {
+    BOOL _invitation;
+    IMMessage *_message;
+}
 @end
 
 @interface IMChatItem : NSObject
@@ -527,6 +540,14 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 @property (retain, nonatomic) UIImage *contactImage;
 @end
 
+@class CKAvatarView;
+
+@interface CKPhoneTranscriptMessageCell : CKTranscriptMessageCell
+@property (nonatomic, retain) CKAvatarView *avatarView;
+- (void)setAvatarView:(CKAvatarView *)avatarView;
+- (void)setShowAvatarView:(BOOL)showAvatarView withContact:(CNContact *)contact preferredHandle:(IMHandle *)preferredHandle avatarViewDelegate:(id)delegate;
+@end
+
 @interface CKTranscriptStatusCell : CKTranscriptLabelCell
 @end
 
@@ -701,6 +722,7 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 - (UIColor *)transcriptBackgroundColor;
 - (BOOL)shouldShowPhotoButton;
 - (BOOL)shouldShowCharacterCount;
+- (BOOL)shouldShowContactPhotosInTranscript;
 - (BOOL)transcriptCanUseOpaqueMask;
 - (CGFloat)photoPickerMaxPhotoHeight;
 - (BOOL)photoPickerShouldZoomOnSelection;
@@ -737,6 +759,9 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 @property (nonatomic, readonly) UIImage *contentImage;
 + (id<CNKeyDescriptor>)descriptorForRequiredKeys;
 - (void)_updateAvatarView;
+@end
+
+@interface CKAvatarView : CNAvatarView
 @end
 
 extern BOOL PUTIsPersistentURL(NSURL *url);

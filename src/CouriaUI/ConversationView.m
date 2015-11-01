@@ -32,7 +32,11 @@
         CKTranscriptMessageCell *messageCell = (CKTranscriptMessageCell *)cell;
         if (self.conversation == nil) {
             messageCell.wantsContactImageLayout = NO;
-            messageCell.contactImage = nil;
+            if ([messageCell respondsToSelector:@selector(setShowAvatarView:withContact:preferredHandle:avatarViewDelegate:)]) {
+                [(CKPhoneTranscriptMessageCell *)messageCell setShowAvatarView:NO withContact:nil preferredHandle:nil avatarViewDelegate:nil];
+            } else if ([messageCell respondsToSelector:@selector(setContactImage:)]) {
+                messageCell.contactImage = nil;
+            }
         }
         if ([messageCell isKindOfClass:CKTranscriptBalloonCell.class]) {
             CKTranscriptBalloonCell *balloonCell = (CKTranscriptBalloonCell *)cell;
