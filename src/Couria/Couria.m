@@ -34,6 +34,17 @@ UIImage *CouriaApplicationIcon(NSString *applicationIdentifier, BOOL small) {
     return [icon getIconImage:small ? 0 : 2];
 }
 
+static NSString *chatKitLocalizedString(NSArray *keys) {
+    NSString *result = nil;
+    for (NSString *key in keys) {
+        result = [CKFrameworkBundle() localizedStringForKey:key value:nil table:@"ChatKit"];
+        if (![result isEqualToString:key]) {
+            break;
+        }
+    }
+    return result;
+}
+
 void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest) {
     NSString *applicationIdentifier = bulletinRequest.sectionID;
     if (CouriaEnabled(applicationIdentifier)) {
@@ -53,7 +64,7 @@ void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest) {
             if (bulletinRequest._allSupplementaryActions.count == 0) {
                 BBAction *action = [BBAction actionWithIdentifier:CouriaIdentifier ActionDomain];
                 action.actionType = 7;
-                action.appearance = [BBAppearance appearanceWithTitle:CouriaLocalizedString(@"REPLY_NOTIFICATION_ACTION")];
+                action.appearance = [BBAppearance appearanceWithTitle:chatKitLocalizedString(@[@"REPLY", @"REPLY_NOTIFICATION_ACTION"])];
                 action.remoteServiceBundleIdentifier = MessagesNotificationViewServiceIdentifier;
                 action.remoteViewControllerClassName = @"CouriaInlineReplyViewController_MobileSMSApp";
                 action.authenticationRequired = [preferences boolForKey:[applicationIdentifier stringByAppendingString:AuthenticationRequiredSetting]];
@@ -66,7 +77,7 @@ void CouriaUpdateBulletinRequest(BBBulletinRequest *bulletinRequest) {
             }];
             BBAction *action = [BBAction actionWithIdentifier:CouriaIdentifier ActionDomain];
             action.actionType = 7;
-            action.appearance = [BBAppearance appearanceWithTitle:CouriaLocalizedString(@"REPLY_NOTIFICATION_ACTION")];
+            action.appearance = [BBAppearance appearanceWithTitle:chatKitLocalizedString(@[@"REPLY", @"REPLY_NOTIFICATION_ACTION"])];
             action.remoteServiceBundleIdentifier = MessagesNotificationViewServiceIdentifier;
             action.remoteViewControllerClassName = @"CouriaInlineReplyViewController_ThirdPartyApp";
             action.authenticationRequired = [preferences boolForKey:[applicationIdentifier stringByAppendingString:AuthenticationRequiredSetting]];
@@ -81,7 +92,7 @@ void CouriaPresentViewController(NSString *application, NSString *user) {
         BBBulletinRequest *bulletin = [[BBBulletinRequest alloc]init];
         [bulletin generateNewBulletinID];
         bulletin.sectionID = application;
-        bulletin.title = CouriaLocalizedString(@"NEW_MESSAGE");
+        bulletin.title = chatKitLocalizedString(@[@"NEW_MESSAGE"]);
         bulletin.defaultAction = [BBAction actionWithLaunchBundleID:application];
         CouriaUpdateBulletinRequest(bulletin);
         [bulletin setContextValue:user forKey:[application isEqualToString:MobileSMSIdentifier] ? CKBBUserInfoKeyChatIdentifierKey : CouriaIdentifier UserDomain];

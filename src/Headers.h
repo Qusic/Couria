@@ -959,11 +959,7 @@ CHInline UIImage *CouriaImage(NSString *name) {
 }
 
 CHInline NSString *CouriaLocalizedString(NSString *key) {
-    NSString *string = [CKFrameworkBundle() localizedStringForKey:key value:nil table:@"ChatKit"];
-    if ([string isEqualToString:key]) {
-        string = [CouriaResourcesBundle() localizedStringForKey:key value:nil table:nil];
-    }
-    return string;
+    return [CouriaResourcesBundle() localizedStringForKey:key value:nil table:nil];
 }
 
 CHInline UIColor *CouriaColor(NSString *colorString) {
