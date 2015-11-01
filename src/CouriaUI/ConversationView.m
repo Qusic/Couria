@@ -2,6 +2,21 @@
 
 @implementation CouriaConversationViewController
 
+- (instancetype)initWithConversation:(CKConversation *)conversation transcriptWidth:(CGFloat)transcriptWidth entryContentViewWidth:(CGFloat)entryContentViewWidth {
+    CKUIBehavior *uiBehavior = [CKUIBehavior sharedBehaviors];
+    if ([self respondsToSelector:@selector(initWithConversation:balloonMaxWidth:marginInsets:)]) {
+        UIEdgeInsets marginInsets = UIEdgeInsetsMake(0, 20, 0, 20);
+        CGFloat balloonMaxWidth = [uiBehavior balloonMaxWidthForTranscriptWidth:transcriptWidth marginInsets:marginInsets shouldShowPhotoButton:YES shouldShowCharacterCount:NO];
+        self = [super initWithConversation:nil balloonMaxWidth:balloonMaxWidth marginInsets:marginInsets];
+    } else if ([self respondsToSelector:@selector(initWithConversation:rightBalloonMaxWidth:leftBalloonMaxWidth:)]) {
+        UIEdgeInsets marginInsets = uiBehavior.transcriptMarginInsets;
+        CGFloat rightBalloonMaxWidth = [uiBehavior rightBalloonMaxWidthForEntryContentViewWidth:entryContentViewWidth];
+        CGFloat leftBalloonMaxWidth = [uiBehavior leftBalloonMaxWidthForTranscriptWidth:transcriptWidth marginInsets:marginInsets];
+        self = [super initWithConversation:nil rightBalloonMaxWidth:rightBalloonMaxWidth leftBalloonMaxWidth:leftBalloonMaxWidth];
+    }
+    return self;
+}
+
 - (void)setConversation:(CKConversation *)conversation {
     [super setConversation:conversation];
     NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];

@@ -505,6 +505,7 @@ typedef NS_ENUM(SInt8, CKBalloonOrientation) {
 @interface CouriaConversationViewController : CKTranscriptCollectionViewController
 @property (assign, nonatomic) CouriaBubbleTheme bubbleTheme;
 @property (retain, nonatomic) NSArray *bubbleColors;
+- (instancetype)initWithConversation:(CKConversation *)conversation transcriptWidth:(CGFloat)transcriptWidth entryContentViewWidth:(CGFloat)entryContentViewWidth;
 - (void)refreshData;
 @end
 

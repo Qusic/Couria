@@ -15,30 +15,9 @@ CHPropertyRetainNonatomic(CouriaInlineReplyViewController, CouriaPhotosViewContr
 CHOptimizedMethod(0, super, id, CouriaInlineReplyViewController, init) {
     self = CHSuper(0, CouriaInlineReplyViewController, init);
     if (self) {
-        self.conversationViewController = ({
-            CouriaConversationViewController *controller = nil;
-            CKUIBehavior *uiBehavior = [CKUIBehavior sharedBehaviors];
-            if ([CouriaConversationViewController instancesRespondToSelector:@selector(initWithConversation:balloonMaxWidth:marginInsets:)]) {
-                CGFloat transcriptWidth = self.view.bounds.size.width;
-                UIEdgeInsets marginInsets = UIEdgeInsetsMake(0, 20, 0, 20);
-                CGFloat balloonMaxWidth = [uiBehavior balloonMaxWidthForTranscriptWidth:transcriptWidth marginInsets:marginInsets shouldShowPhotoButton:YES shouldShowCharacterCount:NO];
-                controller = [[CouriaConversationViewController alloc]initWithConversation:nil balloonMaxWidth:balloonMaxWidth marginInsets:marginInsets];
-            } else if ([CouriaConversationViewController instancesRespondToSelector:@selector(initWithConversation:rightBalloonMaxWidth:leftBalloonMaxWidth:)]) {
-                CGFloat transcriptWidth = self.view.bounds.size.width;
-                CGFloat entryContentViewWidth = self.entryView.contentView.bounds.size.width;
-                UIEdgeInsets marginInsets = uiBehavior.transcriptMarginInsets;
-                CGFloat rightBalloonMaxWidth = [uiBehavior rightBalloonMaxWidthForEntryContentViewWidth:entryContentViewWidth];
-                CGFloat leftBalloonMaxWidth = [uiBehavior leftBalloonMaxWidthForTranscriptWidth:transcriptWidth marginInsets:marginInsets];
-                controller = [[CouriaConversationViewController alloc]initWithConversation:nil rightBalloonMaxWidth:rightBalloonMaxWidth leftBalloonMaxWidth:leftBalloonMaxWidth];
-            }
-            controller;
-        });
-        self.contactsViewController = ({
-            [[CouriaContactsViewController alloc]initWithStyle:UITableViewStylePlain];
-        });
-        self.photosViewController = ({
-            [[CouriaPhotosViewController alloc]init];
-        });
+        self.conversationViewController = [[CouriaConversationViewController alloc]initWithConversation:nil transcriptWidth:self.view.bounds.size.width entryContentViewWidth:self.entryView.contentView.bounds.size.width];
+        self.contactsViewController = [[CouriaContactsViewController alloc]initWithStyle:UITableViewStylePlain];
+        self.photosViewController = [[CouriaPhotosViewController alloc]init];
         [self addChildViewController:self.conversationViewController];
         [self addChildViewController:self.contactsViewController];
         [self addChildViewController:self.photosViewController.viewController];
