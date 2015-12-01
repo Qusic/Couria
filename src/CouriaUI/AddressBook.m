@@ -39,9 +39,11 @@
             NSString *name = [CNContactFormatter stringFromContact:contact style:CNContactFormatterStyleFullName];
             UIImage *avatar = [self avatarImageForContacts:@[contact]];
             void (^ processLabeledValue)(NSString *, NSString *) = ^(NSString *label, NSString *value) {
-                NSString *nickname = label.length > 0 ? [NSString stringWithFormat:@"%@ (%@)", name, [CNLabeledValue localizedStringForLabel:label]] : [NSString stringWithFormat:@"%@", name];
-                NSString *identifier = IMStripFormattingFromAddress(value);
-                [results addObject:block(identifier, nickname, avatar)];
+                if (value.length > 0) {
+                    NSString *nickname = label.length > 0 ? [NSString stringWithFormat:@"%@ (%@)", name, [CNLabeledValue localizedStringForLabel:label]] : [NSString stringWithFormat:@"%@", name];
+                    NSString *identifier = IMStripFormattingFromAddress(value);
+                    [results addObject:block(identifier, nickname, avatar)];
+                }
             };
             [contact.phoneNumbers enumerateObjectsUsingBlock:^(CNLabeledValue<CNPhoneNumber *> *labeledValue, NSUInteger index, BOOL *stop) {
                 processLabeledValue(labeledValue.label, labeledValue.value.stringValue);

@@ -52,20 +52,33 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
                 [conversationList setNeedsReload];
                 [conversationList resort];
                 [conversationList.activeConversations enumerateObjectsUsingBlock:^(CKConversation *conversation, NSUInteger index, BOOL *stop) {
-                    [contacts addObject:@{
-                        IdentifierKey: conversation.groupID,
-                        NicknameKey: conversation.hasDisplayName ? conversation.displayName : conversation.name,
-                        AvatarKey: CNContact.class ? [addressBook avatarImageForContacts:conversation.orderedContactsForAvatarView] : [CKEntity copyEntityForAddressString:conversation.groupID].transcriptContactImage
-                    }];
+                    NSString *identifier = conversation.groupID;
+                    if (identifier.length == 0) {
+                        return;
+                    }
+                    NSString *nickname = conversation.hasDisplayName ? conversation.displayName : conversation.name;
+                    if (nickname == nil) {
+                        nickname = IMStripFormattingFromAddress(identifier);
+                    }
+                    UIImage *avatar = CNContact.class ? [addressBook avatarImageForContacts:conversation.orderedContactsForAvatarView] : [CKEntity copyEntityForAddressString:conversation.groupID].transcriptContactImage;
+                    NSMutableDictionary *contact = [NSMutableDictionary dictionary];
+                    contact[IdentifierKey] = identifier;
+                    contact[NicknameKey] = nickname;
+                    if (avatar) {
+                        contact[AvatarKey] = avatar;
+                    }
+                    [contacts addObject:contact];
                 }];
             } else if (searchAgent.hasResults) {
                 if (addressBook.accessGranted) {
                     [contacts addObjectsFromArray:[addressBook processSearchResults:searchAgent.contactsResults withBlock:^(NSString *identifier, NSString *nickname, UIImage *avatar) {
-                        return @{
-                            IdentifierKey: identifier,
-                            NicknameKey: nickname,
-                            AvatarKey: avatar
-                        };
+                        NSMutableDictionary *contact = [NSMutableDictionary dictionary];
+                        contact[IdentifierKey] = identifier;
+                        contact[NicknameKey] = nickname;
+                        if (avatar) {
+                            contact[AvatarKey] = avatar;
+                        }
+                        return contact;
                     }]];
                 } else {
                     [contacts addObject:@{
