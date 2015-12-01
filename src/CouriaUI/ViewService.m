@@ -47,7 +47,7 @@ CHOptimizedMethod(0, super, void, CouriaInlineReplyViewController, setupView) {
     CHSuper(0, CouriaInlineReplyViewController, setupView);
     [self.view addSubview:self.conversationViewController.view];
     [self.view addSubview:self.contactsViewController.view];
-    [self.photosViewController.viewController loadView];
+    (void)self.photosViewController.viewController.view;
     [self.entryView.photoButton addTarget:self action:@selector(photoButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     self.conversationViewController.view.hidden = YES;
     self.contactsViewController.view.hidden = YES;

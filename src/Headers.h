@@ -4,8 +4,8 @@
 #import <Contacts/Contacts.h>
 #import <ContactsUI/ContactsUI.h>
 #import <AddressBook/AddressBook.h>
-#import <AssetsLibrary/AssetsLibrary.h>
 #import <Photos/Photos.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <Social/Social.h>
 #import <CaptainHook.h>

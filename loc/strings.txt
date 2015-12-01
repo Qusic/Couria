@@ -128,6 +128,9 @@
     tr = Yüklenmiş Program Yok
     zh_CN = 没有已安装的项目
     zh_TW = 沒有已安裝的項目
+  [NO_ACCESS_TO_PHOTOS]
+    en = No Access to Photos
+    zh_CN = 没有访问相册的权限
   [NO_ACCESS_TO_CONTACTS]
     en = No Access to Contacts
     zh_CN = 没有访问通讯录的权限

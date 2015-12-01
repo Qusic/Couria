@@ -7,10 +7,10 @@ Couria_PRIVATE_FRAMEWORKS = BulletinBoard AppSupport ChatKit
 Couria_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 
 CouriaUI_FILES = $(wildcard src/CouriaUI/*.m)
-CouriaUI_FRAMEWORKS = UIKit CoreGraphics AddressBook MobileCoreServices
+CouriaUI_FRAMEWORKS = UIKit CoreGraphics AddressBook AssetsLibrary MobileCoreServices
 CouriaUI_PRIVATE_FRAMEWORKS = ChatKit AppSupport IMCore AssetsLibraryServices Search
 CouriaUI_LIBRARIES = substrate
-CouriaUI_LDFLAGS = -weak_framework Contacts -weak_framework ContactsUI
+CouriaUI_LDFLAGS = -weak_framework Contacts -weak_framework ContactsUI -weak_framework Photos
 CouriaUI_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 
 CouriaPreferences_FILES = $(wildcard src/Preferences/*.m)
