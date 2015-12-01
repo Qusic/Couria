@@ -23,6 +23,8 @@
     [notificationCenter removeObserver:self name:IMChatItemsDidChangeNotification object:nil];
     if (conversation.chat) {
         [notificationCenter addObserver:self selector:@selector(chatItemsDidChange:) name:IMChatItemsDidChangeNotification object:conversation.chat];
+    } else {
+        //TODO: refresh conversation for third party extensions
     }
 }
 
