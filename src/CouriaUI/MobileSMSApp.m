@@ -144,15 +144,15 @@ CHOptimizedMethod(1, super, void, CouriaInlineReplyViewController_MobileSMSApp, 
     }
 }
 
-FHFunction(0, BOOL, CKIsRunningInFullCKClient) {
+FHFunction(BOOL, CKIsRunningInFullCKClient) {
     return YES;
 }
 
-FHFunction(0, BOOL, CKIsRunningInMessages) {
+FHFunction(BOOL, CKIsRunningInMessages) {
     return YES;
 }
 
-FHFunction(0, BOOL, CKIsRunningInMessagesOrSpringBoard) {
+FHFunction(BOOL, CKIsRunningInMessagesOrSpringBoard) {
     return YES;
 }
 
