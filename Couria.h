@@ -3,14 +3,11 @@
 
 @class BBBulletin;
 
-@protocol CouriaMessage <NSObject>
+@interface CouriaMessage : NSObject
 
-@required
-- (id)content; // The class of returned object must be: NSString for text messages, NSURL for images and any other attachments.
-- (BOOL)outgoing;
-
-@optional
-- (NSDate *)timestamp;
+@property (copy) id content; // The class of returned object must be: NSString for text messages, NSURL for images and any other attachments.
+@property (assign) BOOL outgoing;
+@property (copy) NSDate *timestamp;
 
 @end
 
@@ -25,7 +22,7 @@
 - (NSArray *)getContacts:(NSString *)keyword; // Search results of contacts by keyword. A non-nil NSArray of userIdentifiers should be returned when quick compose feature should be available currently. The default value is nil.
 
 @required
-- (void)sendMessage:(id<CouriaMessage>)message toUser:(NSString *)userIdentifier; // Send a message to a user identified by userIdentifier.
+- (void)sendMessage:(CouriaMessage *)message toUser:(NSString *)userIdentifier; // Send a message to a user identified by userIdentifier.
 @optional
 - (void)markRead:(NSString *)userIdentifier; // Mark all messages of a user identified by userIdentifier as read. The default implementation does nothing.
 

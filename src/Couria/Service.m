@@ -43,7 +43,7 @@ CHDeclareClass(BBServer)
         if ([request isEqualToString:GetMessagesMessage]) {
             if ([extension respondsToSelector:@selector(getMessages:)]) {
                 NSMutableArray *result = [NSMutableArray array];
-                [[extension getMessages:user]enumerateObjectsUsingBlock:^(id<CouriaMessage> message, NSUInteger idx, BOOL *stop) {
+                [[extension getMessages:user]enumerateObjectsUsingBlock:^(CouriaMessage *message, NSUInteger idx, BOOL *stop) {
                     NSMutableDictionary *messageDictionary = [NSMutableDictionary dictionary];
                     id content = message.content;
                     BOOL outgoing = message.outgoing;

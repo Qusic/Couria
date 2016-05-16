@@ -112,7 +112,10 @@ void CouriaDismissViewController(void) {
     }
 }
 
-@implementation Couria
+@interface CouriaSpringBoard : NSObject
+@end
+
+@implementation CouriaSpringBoard
 
 + (instancetype)sharedInstance {
     static id sharedInstance;
@@ -153,9 +156,6 @@ void CouriaDismissViewController(void) {
     CouriaPresentViewController(bulletin.sectionID, [CouriaExtension(bulletin.sectionID) getUserIdentifier:bulletin]);
 }
 
-@end
-
-@implementation CouriaMessage
 @end
 
 CHConstructor {

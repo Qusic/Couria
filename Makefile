@@ -1,4 +1,5 @@
 TWEAK_NAME = Couria CouriaUI
+LIBRARY_NAME = libCouria
 BUNDLE_NAME = CouriaPreferences
 
 Couria_FILES = $(wildcard src/Couria/*.m)
@@ -12,6 +13,9 @@ CouriaUI_PRIVATE_FRAMEWORKS = ChatKit AppSupport IMCore AssetsLibraryServices Se
 CouriaUI_LIBRARIES = substrate
 CouriaUI_LDFLAGS = -weak_framework Contacts -weak_framework ContactsUI -weak_framework Photos
 CouriaUI_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
+
+libCouria_FILES = $(wildcard src/Library/*.m)
+libCouria_INSTALL_PATH = /usr/lib
 
 CouriaPreferences_FILES = $(wildcard src/Preferences/*.m)
 CouriaPreferences_RESOURCE_DIRS = res
@@ -28,6 +32,7 @@ export TARGET = iphone:clang
 export ARCHS = armv7 arm64
 export TARGET_IPHONEOS_DEPLOYMENT_VERSION = 8.0
 export ADDITIONAL_OBJCFLAGS = -fobjc-arc -fvisibility=hidden
+export ADDITIONAL_LDFLAGS = -L$(THEOS_OBJ_DIR_NAME)
 export INSTALL_TARGET_PROCESSES = SpringBoard MessagesNotificationViewService
 
 include theos/makefiles/common.mk

@@ -984,12 +984,6 @@ CHInline NSString *CouriaColorString(UIColor *color) {
     return [NSString stringWithFormat:@"%02x%02x%02x%02x", (unsigned int)(red * 255), (unsigned int)(green * 255), (unsigned int)(blue * 255), (unsigned int)(alpha * 255)];
 }
 
-@interface CouriaMessage : NSObject <CouriaMessage>
-@property (copy) id content;
-@property (assign) BOOL outgoing;
-@property (copy) NSDate *timestamp;
-@end
-
 @interface CouriaService : NSObject
 + (instancetype)sharedInstance;
 - (void)run;
