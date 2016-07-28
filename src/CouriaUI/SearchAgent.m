@@ -1,6 +1,8 @@
 #import "../Headers.h"
 
-@implementation CouriaSearchAgent
+@implementation CouriaSearchAgent {
+    NSString *queryString;
+}
 
 - (instancetype)init {
     self = [super init];
@@ -27,7 +29,12 @@
     }
 }
 
-- (void)setQueryString:(NSString *)queryString inputMode:(UITextInputMode *)inputMode {
+- (NSString *)queryString {
+    return queryString;
+}
+
+- (void)setQueryString:(NSString *)string inputMode:(UITextInputMode *)mode {
+    queryString = string;
     if ([super respondsToSelector:@selector(setQueryString:keyboardLanguage:keyboardPrimaryLanguage:levelZKW:allowInternet:)]) {
         static NSString * (^ const inputTypeForInputMode)(UITextInputMode *) = ^(UITextInputMode *inputMode) {
             NSString *inputType = nil;
@@ -42,9 +49,9 @@
             }
             return inputType;
         };
-        [super setQueryString:queryString keyboardLanguage:inputTypeForInputMode(inputMode) keyboardPrimaryLanguage:inputMode.primaryLanguage levelZKW:0 allowInternet:NO];
+        [super setQueryString:string keyboardLanguage:inputTypeForInputMode(mode) keyboardPrimaryLanguage:mode.primaryLanguage levelZKW:0 allowInternet:NO];
     } else if ([super respondsToSelector:@selector(setQueryString:)]) {
-        [super setQueryString:queryString];
+        [super setQueryString:string];
     }
 }
 

@@ -4,6 +4,7 @@ static NSMutableDictionary *extensions;
 static NSUserDefaults *preferences;
 
 CHDeclareClass(SBApplicationController)
+CHDeclareClass(SBIconController)
 CHDeclareClass(SBIconViewMap)
 CHDeclareClass(SBBulletinBannerController)
 CHDeclareClass(SBBannerController)
@@ -30,7 +31,13 @@ NSString *CouriaApplicationName(NSString *applicationIdentifier) {
 }
 
 UIImage *CouriaApplicationIcon(NSString *applicationIdentifier, BOOL small) {
-    SBApplicationIcon *icon = [[CHClass(SBIconViewMap) homescreenMap].iconModel applicationIconForBundleIdentifier:applicationIdentifier];
+    SBIconViewMap *iconViewMap = nil;
+    if ([CHClass(SBIconController) instancesRespondToSelector:@selector(homescreenIconViewMap)]) {
+        iconViewMap = CHSharedInstance(SBIconController).homescreenIconViewMap;
+    } else if ([CHClass(SBIconViewMap) respondsToSelector:@selector(homescreenMap)]) {
+        iconViewMap = [CHClass(SBIconViewMap) homescreenMap];
+    }
+    SBApplicationIcon *icon = [iconViewMap.iconModel applicationIconForBundleIdentifier:applicationIdentifier];
     return [icon getIconImage:small ? 0 : 2];
 }
 
@@ -123,6 +130,7 @@ void CouriaDismissViewController(void) {
         preferences = [[NSUserDefaults alloc]initWithSuiteName:CouriaIdentifier];
         CouriaRegisterDefaults(preferences, MobileSMSIdentifier);
         CHLoadLateClass(SBApplicationController);
+        CHLoadLateClass(SBIconController);
         CHLoadLateClass(SBIconViewMap);
         CHLoadLateClass(SBBulletinBannerController);
         CHLoadLateClass(SBBannerController);

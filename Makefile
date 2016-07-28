@@ -24,7 +24,7 @@ Color-Picker-for-iOS_CFLAGS = -include external/Color-Picker-for-iOS/Project/Hay
 CouriaPreferences_FILES += $(Color-Picker-for-iOS_FILES)
 $(foreach file, $(Color-Picker-for-iOS_FILES), $(eval $(file)_CFLAGS = $(Color-Picker-for-iOS_CFLAGS)))
 
-export TARGET = iphone:clang
+export TARGET = iphone:clang:9.2
 export ARCHS = armv7 arm64
 export TARGET_IPHONEOS_DEPLOYMENT_VERSION = 8.0
 export ADDITIONAL_OBJCFLAGS = -fobjc-arc -fvisibility=hidden

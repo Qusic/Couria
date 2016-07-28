@@ -10,7 +10,7 @@
 #import <Social/Social.h>
 #import <CaptainHook.h>
 #import <FunctionHook.h>
-#import <Activator/libactivator.h>
+#import <libactivator/libactivator.h>
 #import <Flipswitch/Flipswitch.h>
 #import <dlfcn.h>
 #import "../Couria.h"
@@ -821,9 +821,10 @@ typedef NS_ENUM(UInt32, SPSearchDomain) {
 
 @interface SPSearchAgent : NSObject
 @property (retain, nonatomic) NSArray *searchDomains;
-@property (nonatomic, readonly) BOOL queryComplete;
+@property (assign, nonatomic, readonly) BOOL queryComplete;
+@property (retain, nonatomic) dispatch_queue_t queryProcessor;
 @property (assign, nonatomic) id<SPSearchAgentDelegate> delegate;
-@property (readonly) NSArray *sections;
+@property (retain, readonly) NSArray *sections;
 - (SPSearchResultSection *)sectionAtIndex:(NSUInteger)index;
 - (BOOL)hasResults; // iOS 9
 - (NSUInteger)sectionCount; // iOS 9
@@ -878,6 +879,11 @@ typedef NS_ENUM(UInt32, SPSearchDomain) {
 @interface SBIconViewMap : SBReusableViewMap
 @property (retain, nonatomic, readonly) SBIconModel *iconModel;
 + (SBIconViewMap *)homescreenMap;
+@end
+
+@interface SBIconController : NSObject
++ (instancetype)sharedInstance;
+- (SBIconViewMap *)homescreenIconViewMap;
 @end
 
 @interface SBUIBannerItem : NSObject
