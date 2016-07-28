@@ -1,6 +1,6 @@
 Package: me.qusic.couriaios8
 Name: Couria (iOS 8 & 9)
-Version: 0.9.4
+Version: 0.9.5
 Description: Centralized Quick Reply System
 Section: Tweaks
 Depends: firmware (>= 8.0), mobilesubstrate, preferenceloader
