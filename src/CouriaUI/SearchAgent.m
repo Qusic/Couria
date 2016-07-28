@@ -13,45 +13,33 @@
     return self;
 }
 
-- (void)searchAgentUpdatedResults:(SPSearchAgent *)agent {
-    if (self.updateHandler) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.updateHandler();
-        });
-    }
-}
-
-- (void)searchAgentClearedResults:(SPSearchAgent *)agent {
-    if (self.updateHandler) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.updateHandler();
-        });
-    }
-}
-
 - (NSString *)queryString {
     return queryString;
 }
 
 - (void)setQueryString:(NSString *)string inputMode:(UITextInputMode *)mode {
-    queryString = string;
-    if ([super respondsToSelector:@selector(setQueryString:keyboardLanguage:keyboardPrimaryLanguage:levelZKW:allowInternet:)]) {
-        static NSString * (^ const inputTypeForInputMode)(UITextInputMode *) = ^(UITextInputMode *inputMode) {
-            NSString *inputType = nil;
-            if ([inputMode isKindOfClass:UITextInputMode.class]) {
-                if ([inputMode.identifier isEqualToString:@"dictation"]) {
-                    inputType = @"dictation";
-                } else if (inputMode.extension != nil) {
-                    inputType = @"custom";
-                } else {
-                    inputType = inputMode.normalizedIdentifierLevels.firstObject;
+    if ([queryString isEqualToString:string]) {
+        [self notifyResults];
+    } else {
+        queryString = string;
+        if ([super respondsToSelector:@selector(setQueryString:keyboardLanguage:keyboardPrimaryLanguage:levelZKW:allowInternet:)]) {
+            static NSString * (^ const inputTypeForInputMode)(UITextInputMode *) = ^(UITextInputMode *inputMode) {
+                NSString *inputType = nil;
+                if ([inputMode isKindOfClass:UITextInputMode.class]) {
+                    if ([inputMode.identifier isEqualToString:@"dictation"]) {
+                        inputType = @"dictation";
+                    } else if (inputMode.extension != nil) {
+                        inputType = @"custom";
+                    } else {
+                        inputType = inputMode.normalizedIdentifierLevels.firstObject;
+                    }
                 }
-            }
-            return inputType;
-        };
-        [super setQueryString:string keyboardLanguage:inputTypeForInputMode(mode) keyboardPrimaryLanguage:mode.primaryLanguage levelZKW:0 allowInternet:NO];
-    } else if ([super respondsToSelector:@selector(setQueryString:)]) {
-        [super setQueryString:string];
+                return inputType;
+            };
+            [super setQueryString:string keyboardLanguage:inputTypeForInputMode(mode) keyboardPrimaryLanguage:mode.primaryLanguage levelZKW:0 allowInternet:NO];
+        } else if ([super respondsToSelector:@selector(setQueryString:)]) {
+            [super setQueryString:string];
+        }
     }
 }
 
@@ -83,6 +71,22 @@
     } else {
         return [self sectionAtIndex:0].results;
     }
+}
+
+- (void)notifyResults {
+    if (self.updateHandler) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.updateHandler();
+        });
+    }
+}
+
+- (void)searchAgentUpdatedResults:(SPSearchAgent *)agent {
+    [self notifyResults];
+}
+
+- (void)searchAgentClearedResults:(SPSearchAgent *)agent {
+    [self notifyResults];
 }
 
 @end
